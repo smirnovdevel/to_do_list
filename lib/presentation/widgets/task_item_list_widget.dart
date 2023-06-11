@@ -35,41 +35,9 @@ class _TaskItemListWidgetState extends State<TaskItemListWidget> {
     return !widget.task.delete
         ? Card(
             child: ListTile(
-              leading: IconButton(
-                  onPressed: null,
-                  icon: Icon(widget.task.active
-                      ? AppIcons.unchecked
-                      : AppIcons.checked),
-                  color: widget.task.active
-                      ? widget.task.priority == 0
-                          ? Colors.red
-                          : Colors.grey
-                      : Colors.green),
-              title: widget.task.priority == 0
-                  ? Text(widget.task.title)
-                  : RichText(
-                      text: TextSpan(
-                          text: widget.task.priority == 2 ? '‼ ' : '↓',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red,
-                              fontSize:
-                                  widget.task.priority == 2 ? 18.0 : 22.0),
-                          children: [
-                            TextSpan(
-                                text: widget.task.title,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black,
-                                    fontSize: 18.0))
-                          ]),
-                    ),
-              subtitle: widget.task.unlimited
-                  ? null
-                  : Text(
-                      dateFormat.format(widget.task.deadline),
-                      style: const TextStyle(color: Colors.blue),
-                    ),
+              leading: _leading(),
+              title: _title(),
+              subtitle: _subtitle(),
               trailing: IconButton(
                 onPressed: () {
                   _showEditTaskPage(context, widget.task);
@@ -80,6 +48,106 @@ class _TaskItemListWidgetState extends State<TaskItemListWidget> {
             ),
           )
         : Container();
+  }
+
+  Widget _leading() {
+    if (!widget.task.active) {
+      return IconButton(
+          onPressed: () {
+            widget.task.active = !widget.task.active;
+            setState(() {});
+          },
+          icon: const Icon(AppIcons.checked),
+          color: Colors.green);
+    } else if (widget.task.priority == 2) {
+      return IconButton(
+          onPressed: () {
+            widget.task.active = !widget.task.active;
+            setState(() {});
+          },
+          icon: const Icon(AppIcons.unchecked),
+          color: const Color(0xFFFF3B30));
+    } else {
+      return IconButton(
+          onPressed: () {
+            widget.task.active = !widget.task.active;
+            setState(() {});
+          },
+          icon: const Icon(AppIcons.unchecked),
+          color: Colors.grey);
+    }
+  }
+
+  Widget _title() {
+    if (!widget.task.active) {
+      return Text(
+        widget.task.title,
+        style: const TextStyle(
+          fontWeight: FontWeight.w400,
+          fontSize: 18.0,
+          color: Colors.grey,
+          decoration: TextDecoration.lineThrough,
+          decorationColor: Colors.grey,
+          decorationStyle: TextDecorationStyle.solid,
+        ),
+      );
+    }
+    switch (widget.task.priority) {
+      case 1:
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(
+              AppIcons.arrowDown,
+              size: 14.0,
+              color: Colors.grey,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 5.5),
+              child: Text(widget.task.title,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                      fontSize: 18.0)),
+            ),
+          ],
+        );
+      case 2:
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(
+              AppIcons.priority,
+              size: 16.0,
+              color: Color(0xFFFF3B30),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 6.0),
+              child: Text(widget.task.title,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                      fontSize: 18.0)),
+            ),
+          ],
+        );
+      default:
+        return Text(
+          widget.task.title,
+        );
+    }
+  }
+
+  Widget? _subtitle() {
+    if (widget.task.unlimited) {
+      return null;
+    }
+    return Text(
+      dateFormat.format(widget.task.deadline),
+      style: widget.task.active
+          ? const TextStyle(color: Colors.blue)
+          : const TextStyle(color: Colors.grey),
+    );
   }
 
   Future<void> _showEditTaskPage(BuildContext context, TaskModel task) async {
