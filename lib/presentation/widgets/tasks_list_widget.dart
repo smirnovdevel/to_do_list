@@ -4,7 +4,9 @@ import 'package:to_do_list/bloc/task_bloc.dart';
 import 'package:to_do_list/models/task.dart';
 
 import '../../common/app_icons.dart';
+import '../../routes/navigation.dart';
 import '../screens/edit_page.dart';
+import 'item_list_tasks_widget.dart';
 import 'loading_indicator.dart';
 import 'task_item_list_widget.dart';
 
@@ -32,7 +34,7 @@ class _TasksListWidgetState extends State<TasksListWidget> {
         } else if (state is TasksLoading) {
           return loadingIndicator();
         } else if (state is TasksLoaded && tasks.isEmpty) {
-          tasks.addAll(state.tasksList.where((item) => !item.delete));
+          tasks.addAll(state.tasksList);
         } else if (state is TasksUpdate) {
           if (tasks.isEmpty) {
             context.read<TaskBloc>().add(TasksInit());
@@ -51,14 +53,26 @@ class _TasksListWidgetState extends State<TasksListWidget> {
               padding: const EdgeInsets.all(8.0),
               child: CustomScrollView(
                 slivers: [
-                  SliverList.builder(
-                    itemCount: tasks.length,
-                    itemBuilder: (context, index) {
-                      return TaskItemListWidget(task: tasks[index]);
-                    },
+                  SliverAppBar(
+                      pinned: true,
+                      expandedHeight: 150.0,
+                      flexibleSpace: FlexibleSpaceBar(
+                        title: Text('Available seats'),
+                        background: Image.network(
+                          'https://r-cf.bstatic.com/images/hotel/max1024x768/116/116281457.jpg',
+                          fit: BoxFit.fitWidth,
+                        ),
+                      )),
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        return ItemListTasks(task: tasks[index]);
+                      },
+                      childCount: tasks.length,
+                    ),
                   ),
                   SliverToBoxAdapter(
-                    child: _cardNewTaskWidget(context),
+                    child: _newTaskItemWidget(context),
                   ),
                 ],
               ),
@@ -77,22 +91,44 @@ class _TasksListWidgetState extends State<TasksListWidget> {
     );
   }
 
-  GestureDetector _cardNewTaskWidget(BuildContext context) {
+  GestureDetector _newTaskItemWidget(BuildContext context) {
     return GestureDetector(
       onTap: () {
         _showEditTaskPage(context);
       },
-      child: Card(
-        child: ListTile(
-          leading: _leadingInvisiblePlus(),
-          title: _titleNewTask(),
+      child: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 19.0, bottom: 15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [_activityInvisible()],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0, top: 14.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _titleNewTask(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _leadingInvisiblePlus() {
-    return const Icon(AppIcons.add, color: Colors.white);
+  Widget _activityInvisible() {
+    return const Padding(
+      padding: EdgeInsets.only(top: 15.0),
+      child: Icon(AppIcons.add, color: Colors.white),
+    );
   }
 
   Widget _titleNewTask() {
@@ -114,8 +150,8 @@ class _TasksListWidgetState extends State<TasksListWidget> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditTaskPage(
-          TaskModel(
+        builder: (context) => EditPage(
+          task: TaskModel(
             id: id,
             title: '',
             active: true,
@@ -124,13 +160,11 @@ class _TasksListWidgetState extends State<TasksListWidget> {
             deadline: DateTime.now(),
             delete: false,
           ),
-          true,
+          newTask: true,
         ),
       ),
     );
 
-    // When a BuildContext is used from a StatefulWidget, the mounted property
-    // must be checked after an asynchronous gap.
     if (!mounted) return;
 
     if (result != null) {
