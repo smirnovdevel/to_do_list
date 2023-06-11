@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_list/bloc/task_bloc.dart';
 
-import 'presentation/screens/home_page.dart';
+import 'routes/navigation.dart';
+import 'routes/routes.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -19,7 +20,15 @@ class App extends StatelessWidget {
                 background: const Color(0xFFF7F6F2)),
             useMaterial3: true,
           ),
-          home: const HomePage(),
+          // navigator key
+          navigatorKey: NavigationManager.instance.key,
+          // named routes setup
+          initialRoute: RouteNames.initialRoute,
+          onGenerateRoute: RoutesBuilder.onGenerateRoute,
+          onUnknownRoute: RoutesBuilder.onUnknownRoute,
+          onGenerateInitialRoutes: RoutesBuilder.onGenerateInitialRoutes,
+          // navigator observers
+          navigatorObservers: NavigationManager.instance.observers,
         ),
       );
 }

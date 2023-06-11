@@ -5,13 +5,12 @@ import 'package:to_do_list/models/task.dart';
 
 import '../../common/app_icons.dart';
 import '../../routes/navigation.dart';
-import '../screens/edit_page.dart';
+import 'button_new_task_widget.dart';
 import 'item_list_tasks_widget.dart';
 import 'loading_indicator.dart';
-import 'task_item_list_widget.dart';
 
 class TasksListWidget extends StatefulWidget {
-  TasksListWidget({
+  const TasksListWidget({
     super.key,
   });
 
@@ -72,7 +71,12 @@ class _TasksListWidgetState extends State<TasksListWidget> {
                     ),
                   ),
                   SliverToBoxAdapter(
-                    child: _newTaskItemWidget(context),
+                    child: GestureDetector(
+                      onTap: () {
+                        _onCreateTask();
+                      },
+                      child: const ButtonNewTaskWidget(),
+                    ),
                   ),
                 ],
               ),
@@ -80,7 +84,7 @@ class _TasksListWidgetState extends State<TasksListWidget> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              _showEditTaskPage(context);
+              _onCreateTask();
             },
             tooltip: 'Add task',
             backgroundColor: Colors.blue,
@@ -91,77 +95,21 @@ class _TasksListWidgetState extends State<TasksListWidget> {
     );
   }
 
-  GestureDetector _newTaskItemWidget(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        _showEditTaskPage(context);
-      },
-      child: Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 19.0, bottom: 15.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [_activityInvisible()],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0, top: 14.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _titleNewTask(),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _activityInvisible() {
-    return const Padding(
-      padding: EdgeInsets.only(top: 15.0),
-      child: Icon(AppIcons.add, color: Colors.white),
-    );
-  }
-
-  Widget _titleNewTask() {
-    return const Text(
-      'Новое',
-      style: TextStyle(
-        fontWeight: FontWeight.w400,
-        fontSize: 18.0,
-        color: Colors.grey,
-      ),
-    );
-  }
-
-  Future<void> _showEditTaskPage(BuildContext context) async {
+  Future<void> _onCreateTask() async {
     int id = 0;
     if (tasks.isNotEmpty) {
       id = tasks.last.id + 1;
     }
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditPage(
-          task: TaskModel(
-            id: id,
-            title: '',
-            active: true,
-            priority: 0,
-            unlimited: true,
-            deadline: DateTime.now(),
-            delete: false,
-          ),
-          newTask: true,
-        ),
+
+    final result = await NavigationManager.instance.openCreatePage(
+      TaskModel(
+        id: id,
+        title: '',
+        active: true,
+        priority: 0,
+        unlimited: true,
+        deadline: DateTime.now(),
+        delete: false,
       ),
     );
 

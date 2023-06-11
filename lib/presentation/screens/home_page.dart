@@ -14,9 +14,6 @@ class HomePage extends StatelessWidget {
     return BlocProvider(
       create: (context) => TaskBloc(),
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        ),
         body: TasksListWidget(),
       ),
     );

@@ -1,28 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_list/models/task.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import '../../routes/navigation.dart';
 import '../widgets/build_items_popup_menu.dart';
 import '../widgets/row_delete_item_widget.dart';
 import '../widgets/task_title_widget.dart';
 
-class EditTaskPage extends StatefulWidget {
+class EditPage extends StatefulWidget {
+  const EditPage({
+    super.key,
+    required this.task,
+    required this.isCreate,
+  });
+
   final TaskModel task;
-  final bool newTask;
-  const EditTaskPage(this.task, this.newTask, {super.key});
+  final bool isCreate;
 
   @override
-  EditTaskPageState createState() => EditTaskPageState();
+  State<EditPage> createState() => _EditPageState();
 }
 
-class EditTaskPageState extends State<EditTaskPage> {
+class _EditPageState extends State<EditPage> {
   final TextEditingController _controller = TextEditingController();
   List<String> popupMenuHints = ['Нет', 'Низкий', 'Высокий'];
-  final DateFormat dateFormat = DateFormat('dd MMMM yyyy', 'ru');
+  DateFormat dateFormat = DateFormat('dd MMMM yyyy');
   late bool _active;
   late int _priority;
   late bool _unlimited;
   late DateTime _deadline;
-  late bool _isNewTask;
+  late bool _isCreate;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -44,8 +51,8 @@ class EditTaskPageState extends State<EditTaskPage> {
     _priority = widget.task.priority;
     _unlimited = widget.task.unlimited;
     _deadline = widget.task.deadline;
-    _isNewTask = widget.newTask;
-
+    _isCreate = widget.isCreate;
+    initializeDateFormatting();
     super.initState();
   }
 
@@ -55,6 +62,10 @@ class EditTaskPageState extends State<EditTaskPage> {
     super.dispose();
   }
 
+  void _onGoBack(TaskModel? task) {
+    NavigationManager.instance.pop(task);
+  }
+
   @override
   Widget build(BuildContext context) {
     final popupMenuItems = buildItemsPopupMenu();
@@ -62,8 +73,11 @@ class EditTaskPageState extends State<EditTaskPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () => Navigator.pop(context, null)),
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            _onGoBack(null);
+          },
+        ),
         actions: [
           TextButton(
               onPressed: () {
@@ -72,7 +86,7 @@ class EditTaskPageState extends State<EditTaskPage> {
                 widget.task.priority = _priority;
                 widget.task.unlimited = _unlimited;
                 widget.task.deadline = _deadline;
-                Navigator.pop(context, widget.task);
+                _onGoBack(widget.task);
               },
               child: const Text(
                 'СОХРАНИТЬ',
@@ -104,7 +118,7 @@ class EditTaskPageState extends State<EditTaskPage> {
                 height: 0.2,
                 color: Colors.grey,
               ),
-              RowDeleteItemWidget(isNewTask: _isNewTask, widget: widget)
+              RowDeleteItemWidget(isCreate: _isCreate, widget: widget)
             ],
           ),
         ),
@@ -133,7 +147,7 @@ class EditTaskPageState extends State<EditTaskPage> {
                 _unlimited
                     ? Container()
                     : Text(
-                        dateFormat.format(_deadline),
+                        DateFormat('dd MMMM yyyy', 'ru').format(_deadline),
                         style: const TextStyle(color: Colors.blue),
                       ),
               ],

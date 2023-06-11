@@ -21,13 +21,12 @@ class TaskItemListWidget extends StatefulWidget {
 }
 
 class _TaskItemListWidgetState extends State<TaskItemListWidget> {
-  late DateFormat dateFormat;
+  final DateFormat dateFormat = DateFormat('dd MMMM yyyy', 'ru');
 
   @override
   void initState() {
-    super.initState();
     initializeDateFormatting();
-    dateFormat = DateFormat('dd MMMM yyyy', 'ru');
+    super.initState();
   }
 
   @override
@@ -150,7 +149,7 @@ class _TaskItemListWidgetState extends State<TaskItemListWidget> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditTaskPage(task, false),
+        builder: (context) => EditPage(task: task, isCreate: false),
       ),
     );
 

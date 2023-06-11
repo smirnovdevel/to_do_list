@@ -6,12 +6,12 @@ import '../screens/edit_page.dart';
 class RowDeleteItemWidget extends StatelessWidget {
   const RowDeleteItemWidget({
     super.key,
-    required bool isNewTask,
+    required bool isCreate,
     required this.widget,
-  }) : _isNewTask = isNewTask;
+  }) : _isCreate = isCreate;
 
-  final bool _isNewTask;
-  final EditTaskPage widget;
+  final bool _isCreate;
+  final EditPage widget;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class RowDeleteItemWidget extends StatelessWidget {
       padding: const EdgeInsets.only(top: 22.0, left: 8.0),
       child: GestureDetector(
         onTap: () {
-          if (!_isNewTask) {
+          if (!_isCreate) {
             widget.task.delete = true;
             Navigator.pop(context, widget.task);
           }
@@ -28,7 +28,7 @@ class RowDeleteItemWidget extends StatelessWidget {
           children: [
             Icon(
               AppIcons.delete,
-              color: _isNewTask ? Colors.grey : Colors.red,
+              color: _isCreate ? Colors.grey : Colors.red,
               size: 21.0,
             ),
             Padding(
@@ -38,7 +38,7 @@ class RowDeleteItemWidget extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 18.0,
-                    color: _isNewTask ? Colors.grey : Colors.red),
+                    color: _isCreate ? Colors.grey : Colors.red),
               ),
             )
           ],
