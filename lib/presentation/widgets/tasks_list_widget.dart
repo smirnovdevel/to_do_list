@@ -31,12 +31,12 @@ class _TasksListWidgetState extends State<TasksListWidget> {
           return loadingIndicator();
         } else if (state is TasksLoading) {
           return loadingIndicator();
-        } else if (state is TasksLoaded) {
-          tasks.clear();
+        } else if (state is TasksLoaded && tasks.isEmpty) {
           tasks.addAll(state.tasksList);
         } else if (state is TasksUpdate) {
-          tasks.clear();
-          context.read<TaskBloc>().add(TasksInit());
+          if (tasks.isEmpty) {
+            context.read<TaskBloc>().add(TasksInit());
+          }
           return loadingIndicator();
         } else if (state is TasksError) {
           return Text(
@@ -45,32 +45,21 @@ class _TasksListWidgetState extends State<TasksListWidget> {
           );
         }
 
-        return tasks.isNotEmpty
-            ? Scaffold(
-                body: ListView.builder(
-                    itemCount: tasks.length,
-                    itemBuilder: (context, index) {
-                      return TaskItemListWidget(task: tasks[index]);
-                    }),
-                floatingActionButton: FloatingActionButton(
-                  onPressed: () {
-                    _showEditTaskPage(context);
-                  },
-                  tooltip: 'Add task',
-                  backgroundColor: Colors.blue,
-                  child: const Icon(AppIcons.add),
-                ),
-              )
-            : const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Задач не найдено',
-                    ),
-                  ],
-                ),
-              );
+        return Scaffold(
+          body: ListView.builder(
+              itemCount: tasks.length,
+              itemBuilder: (context, index) {
+                return TaskItemListWidget(task: tasks[index]);
+              }),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              _showEditTaskPage(context);
+            },
+            tooltip: 'Add task',
+            backgroundColor: Colors.blue,
+            child: const Icon(AppIcons.add),
+          ),
+        );
       },
     );
   }
@@ -78,7 +67,7 @@ class _TasksListWidgetState extends State<TasksListWidget> {
   Future<void> _showEditTaskPage(BuildContext context) async {
     int id = 0;
     if (tasks.isNotEmpty) {
-      id = tasks.last.id! + 1;
+      id = tasks.last.id + 1;
     }
     final result = await Navigator.push(
       context,
@@ -91,7 +80,9 @@ class _TasksListWidgetState extends State<TasksListWidget> {
             priority: 0,
             unlimited: true,
             deadline: DateTime.now(),
+            delete: false,
           ),
+          true,
         ),
       ),
     );
@@ -102,13 +93,9 @@ class _TasksListWidgetState extends State<TasksListWidget> {
 
     if (result != null) {
       // Is new task
-
-      setState(() {
-        tasks.add(result);
-      });
-
+      tasks.add(result);
+      setState(() {});
       context.read<TaskBloc>().add(UpdateTask(task: result));
-      context.read<TaskBloc>().add(TasksInit());
     }
   }
 }

@@ -32,49 +32,74 @@ class _TaskItemListWidgetState extends State<TaskItemListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: IconButton(
-            onPressed: null,
-            icon: Icon(
-                widget.task.active ? AppIcons.unchecked : AppIcons.checked)),
-        title: widget.task.priority == 0
-            ? Text(widget.task.title)
-            : RichText(
-                text: TextSpan(
-                    text: '!!',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                    children: [TextSpan(text: widget.task.title)]),
+    return !widget.task.delete
+        ? Card(
+            child: ListTile(
+              leading: IconButton(
+                  onPressed: null,
+                  icon: Icon(widget.task.active
+                      ? AppIcons.unchecked
+                      : AppIcons.checked),
+                  color: widget.task.active
+                      ? widget.task.priority == 0
+                          ? Colors.red
+                          : Colors.grey
+                      : Colors.green),
+              title: widget.task.priority == 0
+                  ? Text(widget.task.title)
+                  : RichText(
+                      text: TextSpan(
+                          text: widget.task.priority == 2 ? '‼ ' : '↓',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                              fontSize:
+                                  widget.task.priority == 2 ? 18.0 : 22.0),
+                          children: [
+                            TextSpan(
+                                text: widget.task.title,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black,
+                                    fontSize: 18.0))
+                          ]),
+                    ),
+              subtitle: widget.task.unlimited
+                  ? null
+                  : Text(
+                      dateFormat.format(widget.task.deadline),
+                      style: const TextStyle(color: Colors.blue),
+                    ),
+              trailing: IconButton(
+                onPressed: () {
+                  _showEditTaskPage(context, widget.task);
+                },
+                icon: const Icon(AppIcons.infoOutline),
+                color: Colors.grey,
               ),
-        subtitle: widget.task.unlimited
-            ? null
-            : Text(
-                dateFormat.format(widget.task.deadline),
-                style: const TextStyle(color: Colors.blue),
-              ),
-        trailing: IconButton(
-          onPressed: () {
-            _showEditTaskPage(context, widget.task);
-          },
-          icon: const Icon(AppIcons.infoOutline),
-          color: Colors.grey,
-        ),
-      ),
-    );
+            ),
+          )
+        : Container();
   }
 
   Future<void> _showEditTaskPage(BuildContext context, TaskModel task) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => EditTaskPage(task)),
+      MaterialPageRoute(
+        builder: (context) => EditTaskPage(task, false),
+      ),
     );
 
     // When a BuildContext is used from a StatefulWidget, the mounted property
     // must be checked after an asynchronous gap.
 
     if (result != null) {
-      // Is new task
-      context.read<TaskBloc>().add(UpdateTask(task: result));
+      if (result.delete) {
+        context.read<TaskBloc>().add(DeleteTask(task: result));
+      } else {
+        context.read<TaskBloc>().add(UpdateTask(task: result));
+      }
+      setState(() {});
     }
   }
 }

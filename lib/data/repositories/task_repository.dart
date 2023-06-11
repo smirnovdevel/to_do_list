@@ -1,6 +1,5 @@
 import 'dart:developer' as console;
 
-import 'package:to_do_list/bloc/task_bloc.dart';
 import 'package:to_do_list/core/error/exception.dart';
 
 import '../../models/task.dart';
@@ -9,6 +8,7 @@ import '../datasources/task_local_data_source.dart';
 abstract class TaskRepository {
   Future<List<TaskModel>> getAllTask();
   updateTask({required TaskModel task});
+  deleteTask({required TaskModel task});
 }
 
 class TaskRepositoryImpl implements TaskRepository {
@@ -43,6 +43,18 @@ class TaskRepositoryImpl implements TaskRepository {
     } on DBException {
       console.log(
           '\u001b[1;33m Task repository: \u001b[1;34m updateTaskInDB \u001b[0m error');
+    }
+  }
+
+  @override
+  Future deleteTask({required TaskModel task}) async {
+    console.log(
+        '\u001b[1;33m Task repository: \u001b[1;34m deleteTask \u001b[0m id: \u001b[1;32m ${task.id}');
+    try {
+      await localDataSource.deleteTaskFromDB(task: task);
+    } on DBException {
+      console.log(
+          '\u001b[1;33m Task repository: \u001b[1;34m deleteTask \u001b[0m error');
     }
   }
 }

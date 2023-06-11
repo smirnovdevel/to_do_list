@@ -29,7 +29,13 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         developer.log(
             '\u001b[1;33m TaskBloc: \u001b[1;34m UpdateTask \u001b[0m task: \u001b[1;32m ${event.task.title}');
         await _taskRepositoryImpl.updateTask(task: event.task);
-        emit(TasksEmpty());
+      },
+    );
+    on<DeleteTask>(
+      (event, emit) async {
+        developer.log(
+            '\u001b[1;33m TaskBloc: \u001b[1;34m DeleteTask \u001b[0m task id: \u001b[1;32m ${event.task.id}');
+        await _taskRepositoryImpl.deleteTask(task: event.task);
       },
     );
   }

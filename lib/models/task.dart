@@ -2,20 +2,22 @@ import 'package:equatable/equatable.dart';
 
 // ignore: must_be_immutable
 class TaskModel extends Equatable {
-  int? id;
+  int id;
   String title;
   bool active;
   int priority;
   bool unlimited;
   DateTime deadline;
+  bool delete;
 
   TaskModel(
-      {this.id,
+      {required this.id,
       required this.title,
       required this.active,
       required this.priority,
       required this.unlimited,
-      required this.deadline});
+      required this.deadline,
+      required this.delete});
 
   @override
   List<Object?> get props => [id, title, active, priority, unlimited, deadline];
@@ -39,6 +41,7 @@ class TaskModel extends Equatable {
       priority: map['priority'],
       unlimited: (map['unlimited'] == 1) ? true : false,
       deadline: DateTime.tryParse(map['deadline']) ?? DateTime.now(),
+      delete: false,
     );
   }
 }

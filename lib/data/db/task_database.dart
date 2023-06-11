@@ -43,7 +43,7 @@ class DBProvider {
       tasksList.add(TaskModel.fromMap(taskMap));
     }
     tasksList.sort((a, b) {
-      return a.id!.compareTo(b.id!);
+      return a.id.compareTo(b.id);
     });
     console.log(
         '\u001b[1;33m Task database: \u001b[1;34m getAllTasksFromDB \u001b[0m loaded \u001b[1;32m ${tasksList.length} \u001b[0m record from DB');
@@ -80,6 +80,8 @@ class DBProvider {
   // DELETE Task
   Future<int> deleteTask({required int id}) async {
     Database db = await database;
+    console.log(
+        '\u001b[1;33m Task database: \u001b[1;34m deleteTask \u001b[0m id: \u001b[1;32m $id');
     return await db.delete(
       AppDB.nameTaskTable,
       where: '$id = ?',
