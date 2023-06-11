@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TaskTitleWidget extends StatelessWidget {
-  const TaskTitleWidget({
+class TaskTextFieldWidget extends StatelessWidget {
+  const TaskTextFieldWidget({
     super.key,
     required TextEditingController controller,
   }) : _controller = controller;

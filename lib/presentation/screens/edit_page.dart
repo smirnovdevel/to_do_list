@@ -104,7 +104,7 @@ class _EditPageState extends State<EditPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TaskTitleWidget(controller: _controller),
+              TaskTextFieldWidget(controller: _controller),
               popupMenuWidget(popupMenuItems),
               const Padding(
                 padding: EdgeInsets.only(top: 18.0),
@@ -118,7 +118,7 @@ class _EditPageState extends State<EditPage> {
                 height: 0.2,
                 color: Colors.grey,
               ),
-              RowDeleteItemWidget(isCreate: _isCreate, widget: widget)
+              RowDeleteItemWidget(isCreate: _isCreate, task: widget.task)
             ],
           ),
         ),

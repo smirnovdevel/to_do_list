@@ -8,12 +8,6 @@ class TasksEmpty extends TaskState {
   List<Object?> get props => [];
 }
 
-// Начальное состояние
-class TasksUpdate extends TaskState {
-  @override
-  List<Object?> get props => [];
-}
-
 // Taks loaded in progress
 class TasksLoading extends TaskState {
   @override

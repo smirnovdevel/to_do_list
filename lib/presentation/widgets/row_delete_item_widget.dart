@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/task_bloc.dart';
 import '../../common/app_icons.dart';
+import '../../models/task.dart';
+import '../../routes/navigation.dart';
 import '../screens/edit_page.dart';
 
 class RowDeleteItemWidget extends StatelessWidget {
   const RowDeleteItemWidget({
     super.key,
     required bool isCreate,
-    required this.widget,
+    required this.task,
   }) : _isCreate = isCreate;
 
   final bool _isCreate;
-  final EditPage widget;
+  final TaskModel task;
+
+  void _onGoBack(TaskModel? task) {
+    NavigationManager.instance.pop(task);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +28,9 @@ class RowDeleteItemWidget extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           if (!_isCreate) {
-            widget.task.delete = true;
-            Navigator.pop(context, widget.task);
+            task.delete = true;
+            context.read<TaskBloc>().add(DeleteTask(task: task));
+            _onGoBack(task);
           }
         },
         child: Row(

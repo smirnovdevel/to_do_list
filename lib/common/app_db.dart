@@ -8,5 +8,5 @@ class AppDB {
   // Table tasks
   static const nameTaskTable = 'tasks';
   static const tableTasks =
-      'CREATE TABLE $nameTaskTable(id INTEGER PRIMARY KEY, title TEXT, active INTEGER, priority INTEGER,  unlimited INTEGER, deadline TEXT, delete INTEGER)';
+      'CREATE TABLE $nameTaskTable(id INTEGER PRIMARY KEY, title TEXT, active INTEGER, priority INTEGER,  unlimited INTEGER, deadline TEXT)';
 }

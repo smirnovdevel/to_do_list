@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
     globals.widthScreen = MediaQuery.of(context).size.width;
     return BlocProvider(
       create: (context) => TaskBloc(),
-      child: Scaffold(
+      child: const Scaffold(
         body: TasksListWidget(),
       ),
     );

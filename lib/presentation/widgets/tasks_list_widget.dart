@@ -6,7 +6,7 @@ import 'package:to_do_list/models/task.dart';
 import '../../common/app_icons.dart';
 import '../../routes/navigation.dart';
 import 'button_new_task_widget.dart';
-import 'item_list_tasks_widget.dart';
+import 'item_task_widget.dart';
 import 'loading_indicator.dart';
 
 class TasksListWidget extends StatefulWidget {
@@ -34,11 +34,6 @@ class _TasksListWidgetState extends State<TasksListWidget> {
           return loadingIndicator();
         } else if (state is TasksLoaded && tasks.isEmpty) {
           tasks.addAll(state.tasksList);
-        } else if (state is TasksUpdate) {
-          if (tasks.isEmpty) {
-            context.read<TaskBloc>().add(TasksInit());
-          }
-          return loadingIndicator();
         } else if (state is TasksError) {
           return Text(
             state.message,
@@ -65,11 +60,12 @@ class _TasksListWidgetState extends State<TasksListWidget> {
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
-                        return ItemListTasks(task: tasks[index]);
+                        return ItemTaskWidget(task: tasks[index]);
                       },
                       childCount: tasks.length,
                     ),
                   ),
+                  // кнопка Новое внизу списка
                   SliverToBoxAdapter(
                     child: GestureDetector(
                       onTap: () {
