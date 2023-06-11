@@ -46,11 +46,24 @@ class _TasksListWidgetState extends State<TasksListWidget> {
         }
 
         return Scaffold(
-          body: ListView.builder(
-              itemCount: tasks.length,
-              itemBuilder: (context, index) {
-                return TaskItemListWidget(task: tasks[index]);
-              }),
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CustomScrollView(
+                slivers: [
+                  SliverList.builder(
+                    itemCount: tasks.length,
+                    itemBuilder: (context, index) {
+                      return TaskItemListWidget(task: tasks[index]);
+                    },
+                  ),
+                  SliverToBoxAdapter(
+                    child: _cardNewTaskWidget(context),
+                  ),
+                ],
+              ),
+            ),
+          ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               _showEditTaskPage(context);
@@ -61,6 +74,40 @@ class _TasksListWidgetState extends State<TasksListWidget> {
           ),
         );
       },
+    );
+  }
+
+  GestureDetector _cardNewTaskWidget(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _showEditTaskPage(context);
+      },
+      child: Card(
+        child: ListTile(
+          leading: _leadingInvisiblePlus(),
+          title: _titleNewTask(),
+        ),
+      ),
+    );
+  }
+
+  Widget _leadingInvisiblePlus() {
+    return IconButton(
+        onPressed: () {
+          null;
+        },
+        icon: const Icon(AppIcons.add),
+        color: Colors.white);
+  }
+
+  Widget _titleNewTask() {
+    return const Text(
+      'Новое',
+      style: TextStyle(
+        fontWeight: FontWeight.w400,
+        fontSize: 18.0,
+        color: Colors.grey,
+      ),
     );
   }
 
