@@ -35,9 +35,23 @@ class _TaskItemListWidgetState extends State<TaskItemListWidget> {
     return !widget.task.delete
         ? Card(
             child: ListTile(
-              leading: _leading(),
-              title: _title(),
-              subtitle: _subtitle(),
+              leading: GestureDetector(
+                  onTap: () {
+                    widget.task.active = !widget.task.active;
+                    context.read<TaskBloc>().add(UpdateTask(task: widget.task));
+                    setState(() {});
+                  },
+                  child: _leading()),
+              title: GestureDetector(
+                  onTap: () {
+                    _showEditTaskPage(context, widget.task);
+                  },
+                  child: _title()),
+              subtitle: GestureDetector(
+                  onTap: () {
+                    _showEditTaskPage(context, widget.task);
+                  },
+                  child: _subtitle()),
               trailing: IconButton(
                 onPressed: () {
                   _showEditTaskPage(context, widget.task);
@@ -52,29 +66,11 @@ class _TaskItemListWidgetState extends State<TaskItemListWidget> {
 
   Widget _leading() {
     if (!widget.task.active) {
-      return IconButton(
-          onPressed: () {
-            widget.task.active = !widget.task.active;
-            setState(() {});
-          },
-          icon: const Icon(AppIcons.checked),
-          color: Colors.green);
+      return const Icon(AppIcons.checked, color: Colors.green);
     } else if (widget.task.priority == 2) {
-      return IconButton(
-          onPressed: () {
-            widget.task.active = !widget.task.active;
-            setState(() {});
-          },
-          icon: const Icon(AppIcons.unchecked),
-          color: const Color(0xFFFF3B30));
+      return const Icon(AppIcons.unchecked, color: Color(0xFFFF3B30));
     } else {
-      return IconButton(
-          onPressed: () {
-            widget.task.active = !widget.task.active;
-            setState(() {});
-          },
-          icon: const Icon(AppIcons.unchecked),
-          color: Colors.grey);
+      return const Icon(AppIcons.unchecked, color: Colors.grey);
     }
   }
 

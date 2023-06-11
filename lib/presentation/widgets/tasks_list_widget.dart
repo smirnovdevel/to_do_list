@@ -32,7 +32,7 @@ class _TasksListWidgetState extends State<TasksListWidget> {
         } else if (state is TasksLoading) {
           return loadingIndicator();
         } else if (state is TasksLoaded && tasks.isEmpty) {
-          tasks.addAll(state.tasksList);
+          tasks.addAll(state.tasksList.where((item) => !item.delete));
         } else if (state is TasksUpdate) {
           if (tasks.isEmpty) {
             context.read<TaskBloc>().add(TasksInit());
@@ -92,12 +92,7 @@ class _TasksListWidgetState extends State<TasksListWidget> {
   }
 
   Widget _leadingInvisiblePlus() {
-    return IconButton(
-        onPressed: () {
-          null;
-        },
-        icon: const Icon(AppIcons.add),
-        color: Colors.white);
+    return const Icon(AppIcons.add, color: Colors.white);
   }
 
   Widget _titleNewTask() {
