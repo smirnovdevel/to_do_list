@@ -70,7 +70,6 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
             _padding = offset - 72;
           });
         }
-        print(details.progress);
       },
       confirmDismiss: (direction) async {
         if (direction == DismissDirection.endToStart) {

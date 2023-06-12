@@ -35,11 +35,16 @@ class TitletWidget extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 5.5),
-              child: Text(task.title,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
-                      fontSize: 19.0)),
+              child: Expanded(
+                child: Text(task.title,
+                    textAlign: TextAlign.justify,
+                    overflow: TextOverflow.clip,
+                    maxLines: 3,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                        fontSize: 19.0)),
+              ),
             ),
           ],
         );

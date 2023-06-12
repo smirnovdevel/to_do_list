@@ -82,6 +82,10 @@ class _EditPageState extends State<EditPage> {
           },
         ),
         backgroundColor: const Color(0xFFF7F6F2),
+        shadowColor: Colors.black,
+        // elevation: 1.5,
+        // bottomOpacity: 4.0,
+        // scrolledUnderElevation: 4,
         // закрыть и сохранить
         actions: [
           TextButton(

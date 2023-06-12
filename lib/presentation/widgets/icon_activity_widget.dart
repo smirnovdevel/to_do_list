@@ -21,10 +21,10 @@ class IconActivityWidget extends StatelessWidget {
       );
     } else if (task.priority == 2) {
       return Padding(
-        padding: EdgeInsets.only(top: 15.0),
+        padding: const EdgeInsets.only(top: 15.0),
         child: Container(
-          color: Color(0x1FFF3B30),
-          child: Icon(
+          color: const Color(0x1FFF3B30),
+          child: const Icon(
             AppIcons.unchecked,
             color: Color(0xFFFF3B30),
             weight: 18.0,
