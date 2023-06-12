@@ -56,12 +56,22 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
     if (widget.task.delete) {
       return Container();
     }
+
+    ///
+    /// Swipe
+    ///
     return Dismissible(
       key: Key(widget.task.id.toString()),
+
+      /// swipe left
+      ///
       secondaryBackground: SwipeActionLeftWidget(
         padding: _padding,
       ),
-      // background: slideRightBackground(),
+
+      ///
+      /// swipe right
+      ///
       background: SwipeActionRightWidget(padding: _padding),
       onUpdate: (details) {
         final offset = (width - 16) * details.progress;
@@ -71,6 +81,10 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
           });
         }
       },
+
+      ///
+      /// confirm and action
+      ///
       confirmDismiss: (direction) async {
         if (direction == DismissDirection.endToStart) {
           if (!widget.task.active) {
@@ -88,6 +102,10 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
         }
         return false;
       },
+
+      ///
+      /// item task
+      ///
       child: Container(
         color: Colors.white,
         child: Padding(
@@ -95,6 +113,9 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              ///
+              /// Activity icon
+              ///
               GestureDetector(
                 onTap: () {
                   _changeActivityTask();
@@ -104,6 +125,10 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
                   children: [IconActivityWidget(task: widget.task)],
                 ),
               ),
+
+              ///
+              /// Title & Subtitle
+              ///
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -111,6 +136,7 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(left: 15.0, top: 14.0),
@@ -123,8 +149,12 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
                           ],
                         ),
                       ),
+
+                      ///
+                      /// Edit item icon
+                      ///
                       const Padding(
-                        padding: EdgeInsets.only(right: 17.0),
+                        padding: EdgeInsets.only(right: 17.0, top: 14.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
