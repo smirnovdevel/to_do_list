@@ -11,34 +11,25 @@ class IconActivityWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!task.active) {
-      return const Padding(
-        padding: EdgeInsets.only(top: 15.0),
-        child: Icon(
-          AppIcons.checked,
-          color: Colors.green,
-          weight: 18.0,
-        ),
+      return const Icon(
+        AppIcons.checked,
+        color: Colors.green,
+        weight: 18.0,
       );
     } else if (task.priority == 2) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 15.0),
-        child: Container(
-          color: const Color(0x1FFF3B30),
-          child: const Icon(
-            AppIcons.unchecked,
-            color: Color(0xFFFF3B30),
-            weight: 18.0,
-          ),
+      return Container(
+        color: const Color(0x1FFF3B30),
+        child: const Icon(
+          AppIcons.unchecked,
+          color: Color(0xFFFF3B30),
+          weight: 18.0,
         ),
       );
     } else {
-      return const Padding(
-        padding: EdgeInsets.only(top: 15.0),
-        child: Icon(
-          AppIcons.unchecked,
-          color: Colors.grey,
-          weight: 18.0,
-        ),
+      return const Icon(
+        AppIcons.unchecked,
+        color: Colors.grey,
+        weight: 18.0,
       );
     }
   }

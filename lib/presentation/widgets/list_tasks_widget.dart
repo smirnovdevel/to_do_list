@@ -78,8 +78,9 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
               ),
               SliverToBoxAdapter(
                 child: Card(
+                  margin: const EdgeInsets.all(0),
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
+                    padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
                     child: Column(
                       children: [
                         ListView.builder(

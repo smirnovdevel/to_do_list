@@ -109,9 +109,10 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
       child: Container(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.only(left: 19.0, bottom: 15.0),
+          padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ///
               /// Activity icon
@@ -120,53 +121,42 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
                 onTap: () {
                   _changeActivityTask();
                 },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [IconActivityWidget(task: widget.task)],
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 1.0),
+                  child: IconActivityWidget(task: widget.task),
                 ),
               ),
+              // ),
 
               ///
               /// Title & Subtitle
               ///
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    _onOpenEditPage(widget.task);
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              GestureDetector(
+                onTap: () {
+                  _onOpenEditPage(widget.task);
+                },
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width - 120,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15.0, top: 14.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TitletWidget(task: widget.task),
-                            SubTitleWidget(task: widget.task),
-                          ],
-                        ),
-                      ),
-
-                      ///
-                      /// Edit item icon
-                      ///
-                      const Padding(
-                        padding: EdgeInsets.only(right: 17.0, top: 14.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(
-                              AppIcons.infoOutline,
-                              color: Colors.grey,
-                              weight: 19.97,
-                            ),
-                          ],
-                        ),
-                      ),
+                      TitletWidget(task: widget.task),
+                      SubTitleWidget(task: widget.task),
                     ],
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  _onOpenEditPage(widget.task);
+                },
+                child: const Padding(
+                  padding: EdgeInsets.only(top: 1.0),
+                  child: Icon(
+                    AppIcons.infoOutline,
+                    color: Colors.grey,
+                    weight: 19.97,
                   ),
                 ),
               ),

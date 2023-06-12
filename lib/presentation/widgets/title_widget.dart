@@ -17,16 +17,26 @@ class TitletWidget extends StatelessWidget {
     /// Disactivate task icon
     ///
     if (!task.active) {
-      return Text(
-        task.title,
-        style: const TextStyle(
-          fontWeight: FontWeight.w400,
-          fontSize: 19.0,
-          color: Colors.grey,
-          decoration: TextDecoration.lineThrough,
-          decorationColor: Colors.grey,
-          decorationStyle: TextDecorationStyle.solid,
-        ),
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Flexible(
+            child: Text(
+              task.title,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+              maxLines: 3,
+              style: const TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 19.0,
+                color: Colors.grey,
+                decoration: TextDecoration.lineThrough,
+                decorationColor: Colors.grey,
+                decorationStyle: TextDecorationStyle.solid,
+              ),
+            ),
+          ),
+        ],
       );
     }
 
@@ -39,17 +49,17 @@ class TitletWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Padding(
-              padding: EdgeInsets.only(top: 4.5),
+              padding: EdgeInsets.only(top: 4.5, right: 5.5),
               child: Icon(
                 AppIcons.arrowDown,
                 size: 16.0,
                 color: Colors.grey,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 5.5),
+            Flexible(
               child: Text(task.title,
                   overflow: TextOverflow.ellipsis,
+                  softWrap: false,
                   maxLines: 3,
                   style: const TextStyle(
                       fontWeight: FontWeight.w400,
@@ -67,17 +77,17 @@ class TitletWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Padding(
-              padding: EdgeInsets.only(top: 4.5),
+              padding: EdgeInsets.only(top: 4.5, right: 6.0),
               child: Icon(
                 AppIcons.priority,
                 size: 18.0,
                 color: Color(0xFFFF3B30),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 6.0),
+            Flexible(
               child: Text(task.title,
                   overflow: TextOverflow.ellipsis,
+                  softWrap: false,
                   maxLines: 3,
                   style: const TextStyle(
                       fontWeight: FontWeight.w400,
@@ -93,14 +103,17 @@ class TitletWidget extends StatelessWidget {
       default:
         return Row(
           children: [
-            Text(
-              task.title,
-              softWrap: true,
-              maxLines: 3,
-              style: const TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 19.0,
-                color: Colors.black,
+            Flexible(
+              child: Text(
+                task.title,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+                maxLines: 3,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 19.0,
+                  color: Colors.black,
+                ),
               ),
             ),
           ],
