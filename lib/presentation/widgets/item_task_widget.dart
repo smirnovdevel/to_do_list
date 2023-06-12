@@ -11,6 +11,8 @@ import '../../routes/dialogs.dart';
 import '../../routes/navigation.dart';
 import 'icon_activity_widget.dart';
 import 'subtitle_widget.dart';
+import 'swipe_action_left_widget.dart';
+import 'swipe_action_right_widget.dart';
 import 'title_widget.dart';
 
 final log = logger(ItemTaskWidget);
@@ -29,6 +31,7 @@ class ItemTaskWidget extends StatefulWidget {
 
 class _ItemTaskWidgetState extends State<ItemTaskWidget> {
   DateFormat dateFormat = DateFormat('dd MMMM yyyy');
+  double _padding = 0;
 
   @override
   void initState() {
@@ -49,33 +52,25 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     if (widget.task.delete) {
       return Container();
     }
     return Dismissible(
       key: Key(widget.task.id.toString()),
-      secondaryBackground: Container(
-        alignment: AlignmentDirectional.centerEnd,
-        color: const Color(0XFFFF3B30),
-        child: const Padding(
-          padding: EdgeInsets.only(right: 29.02),
-          child: Icon(
-            AppIcons.delete,
-            color: Colors.white,
-          ),
-        ),
+      secondaryBackground: SwipeActionLeftWidget(
+        padding: _padding,
       ),
-      background: Container(
-        alignment: AlignmentDirectional.centerStart,
-        color: const Color(0xFF34C759),
-        child: const Padding(
-          padding: EdgeInsets.only(left: 27.42),
-          child: Icon(
-            AppIcons.check,
-            color: Colors.white,
-          ),
-        ),
-      ),
+      // background: slideRightBackground(),
+      background: SwipeActionRightWidget(padding: _padding),
+      onUpdate: (details) {
+        final offset = width * details.progress;
+        if (offset >= 100) {
+          setState(() {
+            _padding = offset - 100;
+          });
+        }
+      },
       confirmDismiss: (direction) async {
         if (direction == DismissDirection.endToStart) {
           if (!widget.task.active) {

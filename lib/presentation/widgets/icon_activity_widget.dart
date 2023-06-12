@@ -20,12 +20,15 @@ class IconActivityWidget extends StatelessWidget {
         ),
       );
     } else if (task.priority == 2) {
-      return const Padding(
+      return Padding(
         padding: EdgeInsets.only(top: 15.0),
-        child: Icon(
-          AppIcons.unchecked,
-          color: Color(0xFFFF3B30),
-          weight: 18.0,
+        child: Container(
+          color: Color(0x1FFF3B30),
+          child: Icon(
+            AppIcons.unchecked,
+            color: Color(0xFFFF3B30),
+            weight: 18.0,
+          ),
         ),
       );
     } else {
