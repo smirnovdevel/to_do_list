@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_list/bloc/task_bloc.dart';
 import '../../models/globals.dart' as globals;
 
-import '../widgets/tasks_list_widget.dart';
+import '../widgets/list_tasks_widget.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
     return BlocProvider(
       create: (context) => TaskBloc(),
       child: const Scaffold(
-        body: TasksListWidget(),
+        body: ListTasksWidget(),
       ),
     );
   }

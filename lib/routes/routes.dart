@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_list/models/task.dart';
+import 'dart:developer' as developer;
 
 import '../presentation/screens/edit_page.dart';
 import '../presentation/screens/home_page.dart';
@@ -73,7 +74,8 @@ abstract class RoutesBuilder {
     final routes = <Route>[];
 
     if (initialRoutes.isEmpty || !initialRoutes.startsWith('/')) {
-      print('invalid initialRoutes ($initialRoutes)');
+      developer.log(
+          '\u001b[1;33m Routes: \u001b[1;34m invalid initialRoutes \u001b[0m ($initialRoutes)');
     } else {
       final names = initialRoutes.substring(1).split('/');
       for (final name in names) {
@@ -90,7 +92,8 @@ abstract class RoutesBuilder {
     }
 
     if (routes.isEmpty) {
-      print('generated empty initial routes ($initialRoutes)');
+      developer.log(
+          '\u001b[1;33m Routes: \u001b[1;34m generated empty initial routes \u001b[0m ($initialRoutes)');
       routes.add(
         onGenerateRoute(const RouteSettings(name: RouteNames.home))!,
       );

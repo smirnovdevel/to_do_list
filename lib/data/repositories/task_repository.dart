@@ -1,13 +1,14 @@
-import 'dart:developer' as console;
-
 import 'package:to_do_list/core/error/exception.dart';
 
+import '../../core/logging.dart';
 import '../../models/task.dart';
 import '../datasources/task_local_data_source.dart';
 
+final log = logger(TaskRepository);
+
 abstract class TaskRepository {
   Future<List<TaskModel>> getAllTask();
-  updateTask({required TaskModel task});
+  Future<TaskModel> updateTask({required TaskModel task});
   deleteTask({required TaskModel task});
 }
 
@@ -21,40 +22,37 @@ class TaskRepositoryImpl implements TaskRepository {
   @override
   Future<List<TaskModel>> getAllTask() async {
     List<TaskModel> localTasksList = [];
-    console.log(
-        '\u001b[1;33m Task repository: \u001b[1;34m getTaskByStatus \u001b[0m start');
+    log.i('get tasks from DB...');
     try {
       localTasksList = await localDataSource.getAllTasksFromDB();
+      log.d('get ${localTasksList.length} tasks from DB');
     } on DBException {
-      console.log(
-          '\u001b[1;33m Task repository: \u001b[1;34m getTaskByStatus \u001b[0m start');
+      log.e('get task from DB tasks');
     }
-    console.log(
-        '\u001b[1;33m Task repository: \u001b[1;34m getTaskByStatus \u001b[0m load from DB: \u001b[1;32m ${localTasksList.length}');
     return localTasksList;
   }
 
   @override
-  Future updateTask({required TaskModel task}) async {
-    console.log(
-        '\u001b[1;33m Task repository: \u001b[1;34m updateTask \u001b[0m start');
+  Future<TaskModel> updateTask({required TaskModel task}) async {
+    log.i('update task id: ${task.id} ...');
     try {
-      await localDataSource.insertTaskInDB(task: task);
+      final result = await localDataSource.insertTaskInDB(task: task);
+      log.d('update task id: ${task.id}');
+      return result;
     } on DBException {
-      console.log(
-          '\u001b[1;33m Task repository: \u001b[1;34m updateTaskInDB \u001b[0m error');
+      log.e('update task id: ${task.id}');
     }
+    return task;
   }
 
   @override
   Future deleteTask({required TaskModel task}) async {
-    console.log(
-        '\u001b[1;33m Task repository: \u001b[1;34m deleteTask \u001b[0m id: \u001b[1;32m ${task.id}');
+    log.d('delete task id: ${task.id} ...');
     try {
       await localDataSource.deleteTaskFromDB(task: task);
+      log.d('delete task id: ${task.id}');
     } on DBException {
-      console.log(
-          '\u001b[1;33m Task repository: \u001b[1;34m deleteTask \u001b[0m error');
+      log.e('delete task id: ${task.id}');
     }
   }
 }

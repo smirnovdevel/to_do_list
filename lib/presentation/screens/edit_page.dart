@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_list/models/task.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import '../../bloc/task_bloc.dart';
 import '../../routes/navigation.dart';
 import '../widgets/build_items_popup_menu.dart';
 import '../widgets/row_delete_item_widget.dart';
@@ -72,12 +74,14 @@ class _EditPageState extends State<EditPage> {
 
     return Scaffold(
       appBar: AppBar(
+        // иконка закрыть без сохранения
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () {
             _onGoBack(null);
           },
         ),
+        // закрыть и сохранить
         actions: [
           TextButton(
               onPressed: () {
@@ -86,6 +90,7 @@ class _EditPageState extends State<EditPage> {
                 widget.task.priority = _priority;
                 widget.task.unlimited = _unlimited;
                 widget.task.deadline = _deadline;
+                context.read<TaskBloc>().add(UpdateTask(task: widget.task));
                 _onGoBack(widget.task);
               },
               child: const Text(

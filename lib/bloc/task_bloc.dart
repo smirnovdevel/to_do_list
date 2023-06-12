@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:developer' as developer;
+import 'package:to_do_list/core/logging.dart';
 
 import '../data/repositories/task_repository.dart';
 import '../di.dart';
@@ -9,33 +9,35 @@ import '../models/task.dart';
 part 'task_event.dart';
 part 'task_state.dart';
 
+final log = logger(TaskBloc);
+
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   final TaskRepositoryImpl _taskRepositoryImpl = getIt();
 
   TaskBloc() : super(TasksEmpty()) {
     on<TasksInit>(
       (event, emit) async {
-        developer
-            .log('\u001b[1;33m TaskBloc: \u001b[1;34m init \u001b[0m start');
+        log.i('loading tasks ...');
         emit(TasksLoading());
         final tasksList = await _taskRepositoryImpl.getAllTask();
-        developer.log(
-            '\u001b[1;33m TaskBloc: \u001b[1;34m init \u001b[0m load task: \u001b[1;32m ${tasksList.length}');
+        log.d('loaded ${tasksList.length} tasks');
         emit(TasksLoaded(tasksList));
       },
     );
     on<UpdateTask>(
       (event, emit) async {
-        developer.log(
-            '\u001b[1;33m TaskBloc: \u001b[1;34m UpdateTask \u001b[0m task: \u001b[1;32m ${event.task.title}');
-        await _taskRepositoryImpl.updateTask(task: event.task);
+        log.i('update task id: ${event.task.id} ...');
+        final task = await _taskRepositoryImpl.updateTask(task: event.task);
+        log.d('update task id: ${task.id}');
+        emit(TasksChanges());
       },
     );
     on<DeleteTask>(
       (event, emit) async {
-        developer.log(
-            '\u001b[1;33m TaskBloc: \u001b[1;34m DeleteTask \u001b[0m task id: \u001b[1;32m ${event.task.id}');
+        log.i('delete task id: ${event.task.id} ...');
         await _taskRepositoryImpl.deleteTask(task: event.task);
+        log.d('delete task id: ${event.task.id}');
+        emit(TasksChanges());
       },
     );
   }

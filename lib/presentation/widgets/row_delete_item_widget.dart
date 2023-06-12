@@ -5,7 +5,6 @@ import '../../bloc/task_bloc.dart';
 import '../../common/app_icons.dart';
 import '../../models/task.dart';
 import '../../routes/navigation.dart';
-import '../screens/edit_page.dart';
 
 class RowDeleteItemWidget extends StatelessWidget {
   const RowDeleteItemWidget({
