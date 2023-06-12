@@ -64,12 +64,13 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
       // background: slideRightBackground(),
       background: SwipeActionRightWidget(padding: _padding),
       onUpdate: (details) {
-        final offset = width * details.progress;
-        if (offset >= 100) {
+        final offset = (width - 16) * details.progress;
+        if (offset >= 72) {
           setState(() {
-            _padding = offset - 100;
+            _padding = offset - 72;
           });
         }
+        print(details.progress);
       },
       confirmDismiss: (direction) async {
         if (direction == DismissDirection.endToStart) {
