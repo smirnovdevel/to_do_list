@@ -5,11 +5,15 @@ import 'package:intl/intl.dart';
 
 import '../../bloc/task_bloc.dart';
 import '../../common/app_icons.dart';
+import '../../core/logging.dart';
 import '../../models/task.dart';
+import '../../routes/dialogs.dart';
 import '../../routes/navigation.dart';
 import 'icon_activity_widget.dart';
 import 'subtitle_widget.dart';
 import 'title_widget.dart';
+
+final log = logger(ItemTaskWidget);
 
 class ItemTaskWidget extends StatefulWidget {
   const ItemTaskWidget({
@@ -32,66 +36,117 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
     super.initState();
   }
 
+  _changeActivityTask() {
+    widget.task.active = !widget.task.active;
+    context.read<TaskBloc>().add(UpdateTask(task: widget.task));
+    setState(() {});
+  }
+
+  _deleteCurrentTask() {
+    widget.task.delete = true;
+    context.read<TaskBloc>().add(DeleteTask(task: widget.task));
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.task.delete) {
       return Container();
     }
-    return Container(
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 19.0, bottom: 15.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            GestureDetector(
-              onTap: () {
-                widget.task.active = !widget.task.active;
-                context.read<TaskBloc>().add(UpdateTask(task: widget.task));
-                setState(() {});
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [IconActivityWidget(task: widget.task)],
-              ),
-            ),
-            Expanded(
-              child: GestureDetector(
+    return Dismissible(
+      key: Key(widget.task.id.toString()),
+      secondaryBackground: Container(
+        alignment: AlignmentDirectional.centerEnd,
+        color: const Color(0XFFFF3B30),
+        child: const Padding(
+          padding: EdgeInsets.only(right: 29.02),
+          child: Icon(
+            AppIcons.delete,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      background: Container(
+        alignment: AlignmentDirectional.centerStart,
+        color: const Color(0xFF34C759),
+        child: const Padding(
+          padding: EdgeInsets.only(left: 27.42),
+          child: Icon(
+            AppIcons.check,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      confirmDismiss: (direction) async {
+        if (direction == DismissDirection.endToStart) {
+          if (!widget.task.active) {
+            _deleteCurrentTask();
+            return true;
+          }
+          final confirmed =
+              await Dialogs.showConfirmCloseCountDialog(context) ?? false;
+          if (confirmed) {
+            _deleteCurrentTask();
+          }
+          return confirmed;
+        } else if (direction == DismissDirection.startToEnd) {
+          _changeActivityTask();
+        }
+        return false;
+      },
+      child: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 19.0, bottom: 15.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
                 onTap: () {
-                  _onOpenEditPage(widget.task);
+                  _changeActivityTask();
                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15.0, top: 14.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TitletWidget(task: widget.task),
-                          SubTitleWidget(task: widget.task),
-                        ],
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(right: 17.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            AppIcons.infoOutline,
-                            color: Colors.grey,
-                            weight: 19.97,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [IconActivityWidget(task: widget.task)],
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    _onOpenEditPage(widget.task);
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15.0, top: 14.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TitletWidget(task: widget.task),
+                            SubTitleWidget(task: widget.task),
+                          ],
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(right: 17.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              AppIcons.infoOutline,
+                              color: Colors.grey,
+                              weight: 19.97,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
