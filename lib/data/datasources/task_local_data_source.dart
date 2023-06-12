@@ -7,7 +7,7 @@ final log = logger(TaskLocalDataSource);
 abstract class TaskLocalDataSource {
   Future<List<TaskModel>> getAllTasksFromDB();
   Future<void> insertTaskInDB({required TaskModel task});
-  Future<void> deleteTaskFromDB({required TaskModel task});
+  Future<void> deleteTaskByID({required int id});
 }
 
 class TaskLocalDataSourceImpl implements TaskLocalDataSource {
@@ -20,18 +20,16 @@ class TaskLocalDataSourceImpl implements TaskLocalDataSource {
   }
 
   @override
-  Future<TaskModel> insertTaskInDB({required TaskModel task}) {
+  Future<void> insertTaskInDB({required TaskModel task}) async {
     log.i('insert task id: ${task.id} ...');
-    DBProvider.db.insertTask(task);
+    await DBProvider.db.insertTask(task);
     log.d('insert task id: ${task.id}');
-    return Future.value(task);
   }
 
   @override
-  Future<TaskModel> deleteTaskFromDB({required TaskModel task}) {
-    log.i('delete task id: ${task.id} ...');
-    DBProvider.db.deleteTask(id: task.id);
-    log.d('delete task id: ${task.id}');
-    return Future.value(task);
+  Future<void> deleteTaskByID({required int id}) async {
+    log.i('delete task id: $id ...');
+    await DBProvider.db.deleteTaskByID(id: id);
+    log.d('delete task id: $id');
   }
 }

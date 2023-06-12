@@ -8,14 +8,16 @@ import '../../core/logging.dart';
 import '../../routes/navigation.dart';
 import 'button_new_task_widget.dart';
 import 'item_task_widget.dart';
-import 'loading_indicator.dart';
 
 final log = logger(ListTasksWidget);
 
 class ListTasksWidget extends StatefulWidget {
   const ListTasksWidget({
     super.key,
+    required this.tasks,
   });
+
+  final List<TaskModel> tasks;
 
   @override
   State<ListTasksWidget> createState() => _ListTasksWidgetState();
@@ -24,7 +26,6 @@ class ListTasksWidget extends StatefulWidget {
 class _ListTasksWidgetState extends State<ListTasksWidget> {
   final scrollController = ScrollController();
 
-  List<TaskModel> tasks = [];
   bool visibleCloseTask = false;
   bool haveCloseTask = true;
 
@@ -41,113 +42,85 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TaskBloc, TaskState>(
-      builder: (context, TaskState state) {
-        if (state is TasksEmpty) {
-          log.d('task state empty');
-          context.read<TaskBloc>().add(TasksInit());
-          return loadingIndicator();
-        } else if (state is TasksLoading) {
-          log.d('task state loading');
-          return loadingIndicator();
-        } else if (state is TasksLoaded) {
-          log.d('task state loaded');
-          tasks.clear();
-          tasks.addAll(state.tasksList);
-          haveCloseTask = tasks.where((el) => !el.active).isNotEmpty;
-        } else if (state is TasksChanges) {
-          log.d('task state changes');
-          context.read<TaskBloc>().add(TasksInit());
-          return loadingIndicator();
-        } else if (state is TasksError) {
-          log.d('task state error');
-          return Text(
-            state.message,
-            style: const TextStyle(color: Colors.white, fontSize: 25),
-          );
-        }
-
-        return Scaffold(
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CustomScrollView(
-                controller: scrollController,
-                slivers: [
-                  const SliverAppBar(
-                    pinned: true,
-                    expandedHeight: 124.0,
-                    titleSpacing: 0,
-                    backgroundColor: Color(0xFFF7F6F2),
-                    stretchTriggerOffset: 120,
-                    centerTitle: false,
-                    toolbarTextStyle: TextStyle(color: Colors.red),
-                    flexibleSpace: FlexibleSpaceBar(
-                      title: Text(
-                        'Мои дела',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: [
+              const SliverAppBar(
+                pinned: true,
+                expandedHeight: 124.0,
+                titleSpacing: 0,
+                backgroundColor: Color(0xFFF7F6F2),
+                stretchTriggerOffset: 120,
+                centerTitle: false,
+                toolbarTextStyle: TextStyle(color: Colors.red),
+                flexibleSpace: FlexibleSpaceBar(
+                  title: Text(
+                    'Мои дела',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  // SliverPersistentHeader(
-                  //   delegate: MyHeaderDelegate(),
-                  // ),
-                  // SliverToBoxAdapter(
-                  //   child: Card(
-                  //     child: ListView.builder(
-                  //       itemCount: tasks.length,
-                  //       itemBuilder: (BuildContext context, int index) {
-                  //         return ItemTaskWidget(task: tasks[index]);
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
-                  SliverAppBar(
-                    backgroundColor: const Color(0xFFF7F6F2),
-                    title: const Text('Мои дела'),
-                    elevation: 1,
-                    scrolledUnderElevation: 10,
-                    forceElevated: false,
-                    titleSpacing: 20,
-                  ),
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        return ItemTaskWidget(task: tasks[index]);
-                      },
-                      childCount: tasks.length,
-                    ),
-                  ),
-                  // кнопка Новое внизу списка
-                  SliverToBoxAdapter(
-                    child: GestureDetector(
-                      onTap: () {
-                        _onCreateTask();
-                      },
-                      child: const ButtonNewTaskWidget(),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+              // SliverPersistentHeader(
+              //   delegate: MyHeaderDelegate(),
+              // ),
+              // SliverToBoxAdapter(
+              //   child: Card(
+              //     child: ListView.builder(
+              //       itemCount: tasks.length,
+              //       itemBuilder: (BuildContext context, int index) {
+              //         return ItemTaskWidget(task: tasks[index]);
+              //       },
+              //     ),
+              //   ),
+              // ),
+              SliverAppBar(
+                backgroundColor: const Color(0xFFF7F6F2),
+                title: const Text('Мои дела'),
+                elevation: 1,
+                scrolledUnderElevation: 10,
+                forceElevated: false,
+                titleSpacing: 20,
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return ItemTaskWidget(task: widget.tasks[index]);
+                  },
+                  childCount: widget.tasks.length,
+                ),
+              ),
+              // кнопка Новое внизу списка
+              SliverToBoxAdapter(
+                child: GestureDetector(
+                  onTap: () {
+                    _onCreateTask();
+                  },
+                  child: const ButtonNewTaskWidget(),
+                ),
+              ),
+            ],
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              _onCreateTask();
-            },
-            tooltip: 'Add task',
-            backgroundColor: Colors.blue,
-            child: const Icon(AppIcons.add),
-          ),
-        );
-      },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _onCreateTask();
+        },
+        tooltip: 'Add task',
+        backgroundColor: Colors.blue,
+        child: const Icon(AppIcons.add),
+      ),
     );
   }
 
   Future<void> _onCreateTask() async {
     int id = 0;
-    if (tasks.isNotEmpty) {
-      id = tasks.last.id + 1;
+    if (widget.tasks.isNotEmpty) {
+      id = widget.tasks.last.id + 1;
     }
 
     final result = await NavigationManager.instance.openCreatePage(
@@ -166,8 +139,7 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
 
     if (result != null) {
       // Is new task
-      tasks.add(result);
-      setState(() {});
+      widget.tasks.add(result);
       context.read<TaskBloc>().add(UpdateTask(task: result));
     }
   }

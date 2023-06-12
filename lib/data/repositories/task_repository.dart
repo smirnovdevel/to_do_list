@@ -9,7 +9,7 @@ final log = logger(TaskRepository);
 abstract class TaskRepository {
   Future<List<TaskModel>> getAllTask();
   Future<TaskModel> updateTask({required TaskModel task});
-  deleteTask({required TaskModel task});
+  Future<int?> deleteTaskByID({required int id});
 }
 
 class TaskRepositoryImpl implements TaskRepository {
@@ -36,9 +36,8 @@ class TaskRepositoryImpl implements TaskRepository {
   Future<TaskModel> updateTask({required TaskModel task}) async {
     log.i('update task id: ${task.id} ...');
     try {
-      final result = await localDataSource.insertTaskInDB(task: task);
+      await localDataSource.insertTaskInDB(task: task);
       log.d('update task id: ${task.id}');
-      return result;
     } on DBException {
       log.e('update task id: ${task.id}');
     }
@@ -46,13 +45,14 @@ class TaskRepositoryImpl implements TaskRepository {
   }
 
   @override
-  Future deleteTask({required TaskModel task}) async {
-    log.d('delete task id: ${task.id} ...');
+  Future<int?> deleteTaskByID({required int id}) async {
+    log.d('delete task id: $id ...');
     try {
-      await localDataSource.deleteTaskFromDB(task: task);
-      log.d('delete task id: ${task.id}');
+      await localDataSource.deleteTaskByID(id: id);
+      log.d('delete task id: $id');
     } on DBException {
-      log.e('delete task id: ${task.id}');
+      log.e('delete task id: $id');
     }
+    return null;
   }
 }

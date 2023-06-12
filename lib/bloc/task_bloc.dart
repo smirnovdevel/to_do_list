@@ -27,17 +27,17 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<UpdateTask>(
       (event, emit) async {
         log.i('update task id: ${event.task.id} ...');
-        final task = await _taskRepositoryImpl.updateTask(task: event.task);
-        log.d('update task id: ${task.id}');
-        emit(TasksChanges());
+        await _taskRepositoryImpl.updateTask(task: event.task);
+        log.i('update task id: ${event.task.id}');
+        emit(TasksEmpty());
       },
     );
     on<DeleteTask>(
       (event, emit) async {
         log.i('delete task id: ${event.task.id} ...');
-        await _taskRepositoryImpl.deleteTask(task: event.task);
+        await _taskRepositoryImpl.deleteTaskByID(id: event.task.id);
         log.d('delete task id: ${event.task.id}');
-        emit(TasksChanges());
+        emit(TasksEmpty());
       },
     );
   }

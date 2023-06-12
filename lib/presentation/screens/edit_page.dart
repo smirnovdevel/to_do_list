@@ -90,7 +90,9 @@ class _EditPageState extends State<EditPage> {
                 widget.task.priority = _priority;
                 widget.task.unlimited = _unlimited;
                 widget.task.deadline = _deadline;
-                context.read<TaskBloc>().add(UpdateTask(task: widget.task));
+                if (!_isCreate) {
+                  context.read<TaskBloc>().add(UpdateTask(task: widget.task));
+                }
                 _onGoBack(widget.task);
               },
               child: const Text(

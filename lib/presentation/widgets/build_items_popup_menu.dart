@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../models/globals.dart' as globals;
-
 List<PopupMenuEntry<int>> buildItemsPopupMenu() {
   List<PopupMenuEntry<int>> list = [];
   list.add(const PopupMenuItem<int>(
@@ -19,12 +17,12 @@ List<PopupMenuEntry<int>> buildItemsPopupMenu() {
         style: TextStyle(color: Colors.black),
       )));
   list.add(
-    PopupMenuItem<int>(
+    const PopupMenuItem<int>(
       value: 2,
-      padding: const EdgeInsets.only(left: 16),
+      padding: EdgeInsets.only(left: 16),
       child: SizedBox(
-        width: (globals.widthScreen - 64) / 2,
-        child: const Text(
+        width: 120,
+        child: Text(
           '!! Высокий',
           style:
               TextStyle(color: Color(0xFFFF3B30), fontWeight: FontWeight.w400),

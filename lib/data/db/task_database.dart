@@ -102,18 +102,20 @@ class DBProvider {
   }
 
   // DELETE Task
-  Future<void> deleteTask({required int id}) async {
+  Future<int?> deleteTaskByID({required int id}) async {
     log.i('delete task id: $id ...');
     Database db = await database;
     try {
-      await db.delete(
+      final resault = await db.delete(
         AppDB.nameTaskTable,
-        where: '$id = ?',
+        where: 'id = ?',
         whereArgs: [id],
       );
       log.d('delete task id: $id');
+      return resault;
     } catch (e) {
       log.e('delete task id: $id ${e.toString()}');
     }
+    return null;
   }
 }
