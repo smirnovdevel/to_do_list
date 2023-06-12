@@ -24,12 +24,6 @@ class TasksLoaded extends TaskState {
   List<Object?> get props => [];
 }
 
-// Список изменился
-class TasksChanges extends TaskState {
-  @override
-  List<Object?> get props => [];
-}
-
 class TasksError extends TaskState {
   final String message;
 

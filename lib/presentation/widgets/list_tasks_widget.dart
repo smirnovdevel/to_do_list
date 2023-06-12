@@ -52,67 +52,70 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
               const SliverAppBar(
                 pinned: true,
                 expandedHeight: 124.0,
-                titleSpacing: 0,
                 backgroundColor: Color(0xFFF7F6F2),
-                stretchTriggerOffset: 120,
                 centerTitle: false,
-                toolbarTextStyle: TextStyle(color: Colors.red),
+                title: Text(
+                  'Мои дела',
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 32),
+                ),
                 flexibleSpace: FlexibleSpaceBar(
                   title: Text(
                     'Мои дела',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontFamily: 'RobotoMono',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 32),
                   ),
                 ),
               ),
-              // SliverPersistentHeader(
-              //   delegate: MyHeaderDelegate(),
-              // ),
-              // SliverToBoxAdapter(
-              //   child: Card(
-              //     child: ListView.builder(
-              //       itemCount: tasks.length,
-              //       itemBuilder: (BuildContext context, int index) {
-              //         return ItemTaskWidget(task: tasks[index]);
-              //       },
-              //     ),
-              //   ),
-              // ),
-              SliverAppBar(
-                backgroundColor: const Color(0xFFF7F6F2),
-                title: const Text('Мои дела'),
+              const SliverAppBar(
+                backgroundColor: Color(0xFFF7F6F2),
+                title: Text('Мои дела'),
                 elevation: 1,
                 scrolledUnderElevation: 10,
                 forceElevated: false,
                 titleSpacing: 20,
               ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    return ItemTaskWidget(task: widget.tasks[index]);
-                  },
-                  childCount: widget.tasks.length,
-                ),
-              ),
-              // кнопка Новое внизу списка
               SliverToBoxAdapter(
-                child: GestureDetector(
-                  onTap: () {
-                    _onCreateTask();
-                  },
-                  child: const ButtonNewTaskWidget(),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          controller: scrollController,
+                          shrinkWrap: true,
+                          itemCount: widget.tasks.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ItemTaskWidget(task: widget.tasks[index]);
+                          },
+                        ),
+                        // кнопка Новое внизу списка
+                        GestureDetector(
+                          onTap: () {
+                            _onCreateTask();
+                          },
+                          child: const ButtonNewTaskWidget(),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _onCreateTask();
-        },
-        tooltip: 'Add task',
-        backgroundColor: Colors.blue,
-        child: const Icon(AppIcons.add),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 40.0, right: 16.0),
+        child: FloatingActionButton(
+          onPressed: () {
+            _onCreateTask();
+          },
+          tooltip: 'Add task',
+          backgroundColor: Colors.blue,
+          child: const Icon(AppIcons.add),
+        ),
       ),
     );
   }

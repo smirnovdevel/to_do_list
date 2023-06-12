@@ -81,6 +81,7 @@ class _EditPageState extends State<EditPage> {
             _onGoBack(null);
           },
         ),
+        backgroundColor: const Color(0xFFF7F6F2),
         // закрыть и сохранить
         actions: [
           TextButton(
@@ -105,9 +106,9 @@ class _EditPageState extends State<EditPage> {
               ))
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

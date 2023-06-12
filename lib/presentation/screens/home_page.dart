@@ -36,9 +36,6 @@ class HomePage extends StatelessWidget {
             tasks.clear();
             tasks.addAll(state.tasksList);
             return ListTasksWidget(tasks: tasks);
-          } else if (state is TasksChanges) {
-            log.d('builder task state changes');
-            return loadingIndicator();
           } else if (state is TasksError) {
             log.d('builder - task state error');
             return Text(

@@ -15,6 +15,7 @@ class App extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'TODO лист',
           theme: ThemeData(
+            fontFamily: 'Roboto',
             colorScheme: ColorScheme.light(
                 primary: Colors.grey.shade100,
                 background: const Color(0xFFF7F6F2)),
