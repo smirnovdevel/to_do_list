@@ -61,10 +61,7 @@ class TitletWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   softWrap: false,
                   maxLines: 3,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
-                      fontSize: 19.0)),
+                  style: Theme.of(context).textTheme.bodyMedium),
             ),
           ],
         );
@@ -76,23 +73,22 @@ class TitletWidget extends StatelessWidget {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 4.5, right: 6.0),
+            Padding(
+              padding: const EdgeInsets.only(top: 2.5, right: 6.0),
               child: Icon(
                 AppIcons.priority,
                 size: 18.0,
-                color: Color(0xFFFF3B30),
+                color: Theme.of(context).colorScheme.secondaryContainer,
               ),
             ),
             Flexible(
-              child: Text(task.title,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                  maxLines: 3,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
-                      fontSize: 19.0)),
+              child: Text(
+                task.title,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+                maxLines: 3,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
             ),
           ],
         );
@@ -109,11 +105,7 @@ class TitletWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 softWrap: false,
                 maxLines: 3,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 19.0,
-                  color: Colors.black,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
           ],

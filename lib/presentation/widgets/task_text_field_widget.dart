@@ -19,11 +19,10 @@ class TaskTextFieldWidget extends StatelessWidget {
           maxLines: null,
           minLines: 3,
           showCursor: true,
-          cursorColor: Colors.black,
-          style: const TextStyle(
-              color: Colors.black, fontWeight: FontWeight.w400, fontSize: 16.0),
+          cursorColor: Theme.of(context).primaryColor,
+          style: Theme.of(context).textTheme.bodyMedium,
           decoration: const InputDecoration(
-              contentPadding: EdgeInsets.all(0),
+              contentPadding: EdgeInsets.zero,
               border: InputBorder.none,
               focusedBorder: InputBorder.none,
               enabledBorder: InputBorder.none,
@@ -31,9 +30,11 @@ class TaskTextFieldWidget extends StatelessWidget {
               disabledBorder: InputBorder.none,
               hintText: 'Что надо сделать...',
               hintStyle: TextStyle(
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16.0)),
+                color: Colors.grey,
+                fontWeight: FontWeight.w400,
+                fontSize: 16.0,
+                height: 18 / 16,
+              )),
         ),
       ),
     );

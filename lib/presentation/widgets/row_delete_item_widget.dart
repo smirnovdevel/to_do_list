@@ -36,7 +36,9 @@ class RowDeleteItemWidget extends StatelessWidget {
           children: [
             Icon(
               AppIcons.delete,
-              color: _isCreate ? Colors.grey : Colors.red,
+              color: _isCreate
+                  ? Theme.of(context).colorScheme.outlineVariant
+                  : Theme.of(context).colorScheme.onSecondary,
               size: 21.0,
             ),
             Padding(
@@ -45,8 +47,12 @@ class RowDeleteItemWidget extends StatelessWidget {
                 'Удалить',
                 style: TextStyle(
                     fontWeight: FontWeight.w400,
-                    fontSize: 18.0,
-                    color: _isCreate ? Colors.grey : Colors.red),
+                    fontSize: 16.0,
+                    height: 20 / 16,
+                    fontFamily: 'Roboto',
+                    color: _isCreate
+                        ? Theme.of(context).colorScheme.outlineVariant
+                        : Theme.of(context).colorScheme.onSecondary),
               ),
             )
           ],

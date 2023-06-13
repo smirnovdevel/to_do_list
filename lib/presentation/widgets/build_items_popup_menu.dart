@@ -1,31 +1,41 @@
 import 'package:flutter/material.dart';
 
-List<PopupMenuEntry<int>> buildItemsPopupMenu() {
+import '../../common/app_icons.dart';
+
+List<PopupMenuEntry<int>> buildItemsPopupMenu(BuildContext context) {
   List<PopupMenuEntry<int>> list = [];
-  list.add(const PopupMenuItem<int>(
+  list.add(PopupMenuItem<int>(
       value: 0,
-      padding: EdgeInsets.only(left: 16),
+      padding: const EdgeInsets.only(left: 16),
       child: Text(
         'Нет',
-        style: TextStyle(color: Colors.black),
+        style: Theme.of(context).textTheme.bodyMedium,
       )));
-  list.add(const PopupMenuItem<int>(
+  list.add(PopupMenuItem<int>(
       value: 1,
-      padding: EdgeInsets.only(left: 16),
+      padding: const EdgeInsets.only(left: 16),
       child: Text(
         'Низкий',
-        style: TextStyle(color: Colors.black),
+        style: Theme.of(context).textTheme.bodyMedium,
       )));
   list.add(
-    const PopupMenuItem<int>(
+    PopupMenuItem<int>(
       value: 2,
-      padding: EdgeInsets.only(left: 16),
+      padding: const EdgeInsets.only(left: 16),
       child: SizedBox(
         width: 120,
-        child: Text(
-          '!! Высокий',
-          style:
-              TextStyle(color: Color(0xFFFF3B30), fontWeight: FontWeight.w400),
+        child: Row(
+          children: [
+            Icon(
+              AppIcons.priority,
+              size: 16.0,
+              color: Theme.of(context).colorScheme.secondaryContainer,
+            ),
+            Text('Высокий',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.onSecondary,
+                    )),
+          ],
         ),
       ),
     ),

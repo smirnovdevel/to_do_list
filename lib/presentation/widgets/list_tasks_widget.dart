@@ -7,6 +7,7 @@ import '../../common/app_icons.dart';
 import '../../core/logging.dart';
 import '../../routes/navigation.dart';
 import 'button_new_task_widget.dart';
+import 'header_task_widget.dart';
 import 'item_task_widget.dart';
 
 final log = logger(ListTasksWidget);
@@ -44,37 +45,17 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        top: false,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: CustomScrollView(
             controller: scrollController,
             slivers: [
-              const SliverAppBar(
+              SliverAppBar(
                 pinned: true,
-                expandedHeight: 124.0,
-                backgroundColor: Color(0xFFF7F6F2),
-                centerTitle: false,
-                title: Text(
-                  'Мои дела',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 32),
-                ),
-                flexibleSpace: FlexibleSpaceBar(
-                  title: Text(
-                    'Мои дела',
-                    style: TextStyle(
-                        fontFamily: 'RobotoMono',
-                        fontWeight: FontWeight.w500,
-                        fontSize: 32),
-                  ),
-                ),
-              ),
-              const SliverAppBar(
-                backgroundColor: Color(0xFFF7F6F2),
-                title: Text('Мои дела'),
-                elevation: 1,
-                scrolledUnderElevation: 10,
-                forceElevated: false,
-                titleSpacing: 20,
+                expandedHeight: 120.0,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                flexibleSpace: const HeaderTaskWidget(),
               ),
               SliverToBoxAdapter(
                 child: Card(
@@ -84,6 +65,7 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
                     child: Column(
                       children: [
                         ListView.builder(
+                          padding: EdgeInsets.zero,
                           controller: scrollController,
                           shrinkWrap: true,
                           itemCount: widget.tasks.length,
@@ -114,8 +96,12 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
             _onCreateTask();
           },
           tooltip: 'Add task',
-          backgroundColor: Colors.blue,
-          child: const Icon(AppIcons.add),
+          backgroundColor: Theme.of(context).iconTheme.color,
+          child: const Icon(
+            AppIcons.add,
+            color: Colors.white,
+            weight: 14.0,
+          ),
         ),
       ),
     );
@@ -147,59 +133,4 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
       context.read<TaskBloc>().add(UpdateTask(task: result));
     }
   }
-}
-
-class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
-  const MyHeaderDelegate();
-
-  @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
-    final progress = shrinkOffset / maxExtent;
-
-    return Material(
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          AnimatedOpacity(
-            duration: const Duration(milliseconds: 150),
-            opacity: 1 - progress,
-            child: const Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text('11')],
-            ),
-          ),
-          // AnimatedContainer(
-          //   duration: const Duration(milliseconds: 100),
-          //   padding: EdgeInsets.lerp(
-          //     EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          //     EdgeInsets.only(bottom: 16),
-          //     progress,
-          //   ),
-          //   alignment: Alignment.lerp(
-          //     Alignment.bottomLeft,
-          //     Alignment.bottomCenter,
-          //     progress,
-          //   ),
-          //   child: Text(
-          //     'Mountains',
-          //   ),
-          // ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  double get maxExtent => 20;
-
-  @override
-  double get minExtent => 0;
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      true;
 }

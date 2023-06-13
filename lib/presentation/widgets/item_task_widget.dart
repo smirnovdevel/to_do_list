@@ -107,7 +107,7 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
       /// item task
       ///
       child: Container(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.primary,
         child: Padding(
           padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
           child: Row(
@@ -151,11 +151,11 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
                 onTap: () {
                   _onOpenEditPage(widget.task);
                 },
-                child: const Padding(
-                  padding: EdgeInsets.only(top: 1.0),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 1.0),
                   child: Icon(
                     AppIcons.infoOutline,
-                    color: Colors.grey,
+                    color: Theme.of(context).colorScheme.inverseSurface,
                     weight: 19.97,
                   ),
                 ),

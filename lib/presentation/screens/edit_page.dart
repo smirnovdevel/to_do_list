@@ -7,7 +7,7 @@ import '../../bloc/task_bloc.dart';
 import '../../routes/navigation.dart';
 import '../widgets/build_items_popup_menu.dart';
 import '../widgets/row_delete_item_widget.dart';
-import '../widgets/task_title_widget.dart';
+import '../widgets/task_text_field_widget.dart';
 
 class EditPage extends StatefulWidget {
   const EditPage({
@@ -70,19 +70,22 @@ class _EditPageState extends State<EditPage> {
 
   @override
   Widget build(BuildContext context) {
-    final popupMenuItems = buildItemsPopupMenu();
+    final popupMenuItems = buildItemsPopupMenu(context);
 
     return Scaffold(
       appBar: AppBar(
         // иконка закрыть без сохранения
         leading: IconButton(
-          icon: const Icon(Icons.close),
+          icon: Icon(
+            Icons.close,
+            color: Theme.of(context).primaryColor,
+          ),
           onPressed: () {
             _onGoBack(null);
           },
         ),
-        backgroundColor: const Color(0xFFF7F6F2),
-        shadowColor: Colors.black,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        shadowColor: Theme.of(context).shadowColor,
         // elevation: 1.5,
         // bottomOpacity: 4.0,
         // scrolledUnderElevation: 4,
@@ -100,13 +103,9 @@ class _EditPageState extends State<EditPage> {
                 }
                 _onGoBack(widget.task);
               },
-              child: const Text(
+              child: Text(
                 'СОХРАНИТЬ',
-                style: TextStyle(
-                  fontSize: 14.0,
-                  color: Colors.blue,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: Theme.of(context).textTheme.titleMedium,
               ))
         ],
       ),
@@ -122,13 +121,11 @@ class _EditPageState extends State<EditPage> {
                 padding: EdgeInsets.only(top: 18.0),
                 child: Divider(
                   height: 0.2,
-                  color: Colors.grey,
                 ),
               ),
               rowDeadLineWithSwith(),
               const Divider(
                 height: 0.2,
-                color: Colors.grey,
               ),
               RowDeleteItemWidget(isCreate: _isCreate, task: widget.task)
             ],
@@ -151,28 +148,28 @@ class _EditPageState extends State<EditPage> {
               }
             },
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Сделать до',
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16.0),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 _unlimited
                     ? Container()
                     : Text(
-                        DateFormat('dd MMMM yyyy', 'ru').format(_deadline),
-                        style: const TextStyle(color: Colors.blue),
+                        DateFormat('dd MMMM yyyy', 'ru')
+                            .format(_deadline)
+                            .toString(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(color: Theme.of(context).iconTheme.color),
                       ),
               ],
             ),
           ),
           Switch(
               value: !_unlimited,
-              activeColor: const Color(0xFF007AFF),
-              activeTrackColor: const Color(0x44007AFF),
-              inactiveThumbColor: Colors.white,
-              inactiveTrackColor: const Color(0xFFD1D1D6),
-              trackOutlineColor:
-                  const MaterialStatePropertyAll<Color>(Color(0xFFF7F6F2)),
               onChanged: (bool value) {
                 _unlimited = !value;
                 setState(() {});
@@ -186,9 +183,9 @@ class _EditPageState extends State<EditPage> {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: PopupMenuButton<int>(
-        // padding: EdgeInsets.only(right: width),
         initialValue: null,
         position: PopupMenuPosition.over,
+        color: Theme.of(context).popupMenuTheme.color,
         onSelected: (value) {
           _priority = value;
           setState(() {});
@@ -196,13 +193,13 @@ class _EditPageState extends State<EditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Важность',
-              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16.0),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             Text(
               popupMenuHints[_priority],
-              style: const TextStyle(color: Colors.grey),
+              style: Theme.of(context).textTheme.titleSmall,
             ),
           ],
         ),

@@ -10,9 +10,9 @@ class ButtonNewTaskWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
-      child: const Padding(
-        padding: EdgeInsets.only(left: 19.0, bottom: 15.0),
+      color: Theme.of(context).colorScheme.primary,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 19.0, bottom: 15.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -20,12 +20,13 @@ class ButtonNewTaskWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(top: 15.0),
-                  child: Icon(AppIcons.add, color: Colors.white),
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: Icon(AppIcons.add,
+                      color: Theme.of(context).colorScheme.primary),
                 )
               ],
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(left: 15.0, top: 14.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

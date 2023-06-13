@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_list/bloc/task_bloc.dart';
+import 'package:to_do_list/theme/dark_theme.dart';
+import 'package:to_do_list/theme/light_theme.dart';
 
 import 'routes/navigation.dart';
 import 'routes/routes.dart';
@@ -14,13 +16,8 @@ class App extends StatelessWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'TODO лист',
-          theme: ThemeData(
-            fontFamily: 'Roboto',
-            colorScheme: ColorScheme.light(
-                primary: Colors.grey.shade100,
-                background: const Color(0xFFF7F6F2)),
-            useMaterial3: true,
-          ),
+          theme: lightTheme,
+          darkTheme: darkTheme,
           // navigator key
           navigatorKey: NavigationManager.instance.key,
           // named routes setup
