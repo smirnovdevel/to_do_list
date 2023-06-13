@@ -71,26 +71,33 @@ ThemeData darkTheme = ThemeData(
   ),
   //
   textTheme: TextTheme(
-      titleLarge: const TextStyle(color: AppColor.white),
-      // кнопка СОХРАНИТЬ
-      titleMedium: const TextStyle(
-        fontSize: 14.0,
-        height: 24 / 14,
-        fontWeight: FontWeight.w500,
-        color: AppColor.darkBlue,
-      ),
-      bodyMedium: const TextStyle(
-        fontSize: 16.0,
-        height: 20 / 16,
-        fontWeight: FontWeight.w400,
-        color: AppColor.white,
-      ),
-      // серые подписи
-      titleSmall: TextStyle(
-        fontSize: 14.0,
-        height: 20 / 14,
-        fontWeight: FontWeight.w400,
-        color: AppColor.darkLabelTertiary.withOpacity(0.4),
-      )),
+    titleLarge: const TextStyle(color: AppColor.white),
+    // кнопка СОХРАНИТЬ
+    titleMedium: const TextStyle(
+      fontSize: 14.0,
+      height: 24 / 14,
+      fontWeight: FontWeight.w500,
+      color: AppColor.darkBlue,
+    ),
+    bodyMedium: const TextStyle(
+      fontSize: 16.0,
+      height: 20 / 16,
+      fontWeight: FontWeight.w400,
+      color: AppColor.white,
+    ),
+    // серые подписи
+    titleSmall: TextStyle(
+      fontSize: 14.0,
+      height: 20 / 14,
+      fontWeight: FontWeight.w400,
+      color: AppColor.darkLabelTertiary.withOpacity(0.4),
+    ),
+    labelSmall: TextStyle(
+      fontSize: 16.0,
+      height: 20 / 16,
+      fontWeight: FontWeight.w400,
+      color: AppColor.white.withOpacity(0.4),
+    ),
+  ),
   useMaterial3: true,
 );

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../../bloc/task_bloc.dart';
 import '../../common/app_icons.dart';
 import '../../core/logging.dart';
 import '../../models/task.dart';
+import '../../provider/task_provider.dart';
 import '../../routes/dialogs.dart';
 import '../../routes/navigation.dart';
 import 'icon_activity_widget.dart';
@@ -53,7 +55,19 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    TaskProvider provider = Provider.of<TaskProvider>(context);
+
+    ///
+    /// Hide delete task
+    ///
     if (widget.task.delete) {
+      return Container();
+    }
+
+    ///
+    /// Hide complted task
+    ///
+    if (!provider.visible && !widget.task.active) {
       return Container();
     }
 

@@ -1,13 +1,17 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do_list/common/app_icons.dart';
+import 'package:to_do_list/provider/task_provider.dart';
 
 class HeaderTaskWidget extends StatelessWidget {
-  const HeaderTaskWidget({super.key});
+  const HeaderTaskWidget({super.key, required this.count});
 
+  final int count;
   @override
   Widget build(BuildContext context) {
+    TaskProvider provider = Provider.of<TaskProvider>(context);
     return LayoutBuilder(builder: (context, constraints) {
       final settings = context
           .dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
@@ -38,23 +42,35 @@ class HeaderTaskWidget extends StatelessWidget {
                       fontSize: 20 + 12 * currentValue,
                       fontWeight: FontWeight.w500),
                 ),
-                Opacity(
-                  opacity: 0.3 * currentValue,
-                  child: Text(
-                    'Выполнено - 5',
-                    style: TextStyle(fontSize: 16 * currentValue),
-                  ),
-                )
+                count == 0
+                    ? Container()
+                    : Text(
+                        'Выполнено - $count',
+                        // style: TextStyle(fontSize: 16 * currentValue),
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelSmall!
+                            .copyWith(fontSize: 16 * currentValue),
+                      ),
               ],
             ),
-            const Spacer(),
-            const Align(
-                alignment: Alignment.bottomRight,
-                child: Icon(
-                  AppIcons.visibility,
-                  size: 18,
-                  // color: Theme.of(context).iconTheme.color,
-                )),
+            count == 0 ? Container() : const Spacer(),
+            count == 0
+                ? Container()
+                : GestureDetector(
+                    onTap: () {
+                      provider.changeVisible();
+                    },
+                    child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: Icon(
+                          provider.visible
+                              ? AppIcons.visibility
+                              : AppIcons.visibilityOff,
+                          weight: provider.visible ? 18 : 22,
+                          size: 20,
+                        )),
+                  ),
           ],
         ),
       );

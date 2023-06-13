@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do_list/bloc/task_bloc.dart';
 import 'package:to_do_list/models/task.dart';
+import 'package:to_do_list/provider/task_provider.dart';
 
 import '../../common/app_icons.dart';
 import '../../core/logging.dart';
@@ -46,46 +48,56 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
     return Scaffold(
       body: SafeArea(
         top: false,
+        bottom: false,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: [
-              SliverAppBar(
-                pinned: true,
-                expandedHeight: 120.0,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                flexibleSpace: const HeaderTaskWidget(),
-              ),
-              SliverToBoxAdapter(
-                child: Card(
-                  margin: const EdgeInsets.all(0),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-                    child: Column(
-                      children: [
-                        ListView.builder(
-                          padding: EdgeInsets.zero,
-                          controller: scrollController,
-                          shrinkWrap: true,
-                          itemCount: widget.tasks.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return ItemTaskWidget(task: widget.tasks[index]);
-                          },
-                        ),
-                        // кнопка Новое внизу списка
-                        GestureDetector(
-                          onTap: () {
-                            _onCreateTask();
-                          },
-                          child: const ButtonNewTaskWidget(),
-                        ),
-                      ],
+          child: MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (_) => TaskProvider(),
+              )
+            ],
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: [
+                SliverAppBar(
+                  pinned: true,
+                  shadowColor: Theme.of(context).colorScheme.shadow,
+                  expandedHeight: 120.0,
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  flexibleSpace: HeaderTaskWidget(
+                      count: widget.tasks.where((task) => !task.active).length),
+                ),
+                SliverToBoxAdapter(
+                  child: Card(
+                    margin: const EdgeInsets.all(0),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+                      child: Column(
+                        children: [
+                          ListView.builder(
+                            padding: EdgeInsets.zero,
+                            controller: scrollController,
+                            shrinkWrap: true,
+                            itemCount: widget.tasks.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return ItemTaskWidget(task: widget.tasks[index]);
+                            },
+                          ),
+                          // кнопка Новое внизу списка
+                          GestureDetector(
+                            onTap: () {
+                              _onCreateTask();
+                            },
+                            child: const ButtonNewTaskWidget(),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

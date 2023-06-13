@@ -74,6 +74,7 @@ class _EditPageState extends State<EditPage> {
 
     return Scaffold(
       appBar: AppBar(
+        shadowColor: Theme.of(context).colorScheme.shadow,
         // иконка закрыть без сохранения
         leading: IconButton(
           icon: Icon(
@@ -85,7 +86,6 @@ class _EditPageState extends State<EditPage> {
           },
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        shadowColor: Theme.of(context).shadowColor,
         // elevation: 1.5,
         // bottomOpacity: 4.0,
         // scrolledUnderElevation: 4,

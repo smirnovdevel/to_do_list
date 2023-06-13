@@ -71,26 +71,33 @@ ThemeData lightTheme = ThemeData(
   ),
   //
   textTheme: TextTheme(
-      titleLarge: const TextStyle(color: AppColor.black),
-      // кнопка СОХРАНИТЬ
-      titleMedium: const TextStyle(
-        fontSize: 14.0,
-        height: 24 / 14,
-        fontWeight: FontWeight.w500,
-        color: AppColor.lightBlue,
-      ),
-      bodyMedium: const TextStyle(
-        fontSize: 16.0,
-        height: 20 / 16,
-        fontWeight: FontWeight.w400,
-        color: AppColor.black,
-      ),
-      // серые подписи
-      titleSmall: TextStyle(
-        fontSize: 14.0,
-        height: 20 / 14,
-        fontWeight: FontWeight.w400,
-        color: AppColor.lightLabelTertiary.withOpacity(0.4),
-      )),
+    titleLarge: const TextStyle(color: AppColor.black),
+    // кнопка СОХРАНИТЬ
+    titleMedium: const TextStyle(
+      fontSize: 14.0,
+      height: 24 / 14,
+      fontWeight: FontWeight.w500,
+      color: AppColor.lightBlue,
+    ),
+    bodyMedium: const TextStyle(
+      fontSize: 16.0,
+      height: 20 / 16,
+      fontWeight: FontWeight.w400,
+      color: AppColor.black,
+    ),
+    // серые подписи
+    titleSmall: TextStyle(
+      fontSize: 14.0,
+      height: 20 / 14,
+      fontWeight: FontWeight.w400,
+      color: AppColor.lightLabelTertiary.withOpacity(0.4),
+    ),
+    labelSmall: TextStyle(
+      fontSize: 16.0,
+      height: 20 / 16,
+      fontWeight: FontWeight.w400,
+      color: AppColor.black.withOpacity(0.3),
+    ),
+  ),
   useMaterial3: true,
 );
