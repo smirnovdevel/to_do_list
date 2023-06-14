@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_list/screens/main_screen.dart';
+import 'app.dart';
+import 'di.dart' as di;
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  //инициализация зависимостей
+  await di.initializeDependencies();
+
+  //инициализируем задержку при запуске приложения
+  await initialization(null);
+
+  runApp(const App());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'TODO лист',
-      theme: ThemeData(
-        colorScheme: ColorScheme.light(primary: Colors.grey.shade100),
-        useMaterial3: true,
-      ),
-      home: const MainScreen(),
-    );
-  }
+// задержка при запуске приложения в секундах
+Future initialization(BuildContext? context) async {
+  await Future.delayed(const Duration(seconds: 1));
 }
