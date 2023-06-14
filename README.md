@@ -20,7 +20,6 @@
 <br><br>
 Локально данные сохраняются в базе с помощью пакета sqlite
 
-<br><br>
 
 <img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/340151d4-ab8a-4d2a-8010-7aec45456749" alt="drawing" width="200"/>
 
