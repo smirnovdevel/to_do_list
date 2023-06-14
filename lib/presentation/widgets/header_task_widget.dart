@@ -65,8 +65,8 @@ class HeaderTaskWidget extends StatelessWidget {
                         alignment: Alignment.bottomRight,
                         child: Icon(
                           provider.visible
-                              ? AppIcons.visibility
-                              : AppIcons.visibilityOff,
+                              ? AppIcons.visibilityOff
+                              : AppIcons.visibility,
                           weight: provider.visible ? 18 : 22,
                           size: 20,
                         )),

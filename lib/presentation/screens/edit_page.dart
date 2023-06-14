@@ -7,6 +7,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import '../../bloc/task_bloc.dart';
 import '../../routes/navigation.dart';
 import '../widgets/build_items_popup_menu.dart';
+import '../widgets/hint_popup_menu_widget.dart';
 import '../widgets/row_delete_item_widget.dart';
 import '../widgets/task_text_field_widget.dart';
 
@@ -26,7 +27,7 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> {
   final TextEditingController _controller = TextEditingController();
-  List<String> popupMenuHints = ['Нет', 'Низкий', 'Высокий'];
+
   DateFormat dateFormat = DateFormat('dd MMMM yyyy');
   late bool _active;
   late int _priority;
@@ -204,12 +205,13 @@ class _EditPageState extends State<EditPage> {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: PopupMenuButton<int>(
-        initialValue: null,
+        initialValue: _priority,
         position: PopupMenuPosition.over,
         color: Theme.of(context).popupMenuTheme.color,
         onSelected: (value) {
-          _priority = value;
-          setState(() {});
+          setState(() {
+            _priority = value;
+          });
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,10 +220,7 @@ class _EditPageState extends State<EditPage> {
               'Важность',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            Text(
-              popupMenuHints[_priority],
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
+            HintPopupMenuWidget(value: _priority),
           ],
         ),
         itemBuilder: (BuildContext context) => popupMenuItems,
