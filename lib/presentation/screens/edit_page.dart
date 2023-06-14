@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:to_do_list/common/app_color.dart';
 import 'package:to_do_list/models/task.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -35,10 +36,32 @@ class _EditPageState extends State<EditPage> {
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
+        locale: const Locale('ru'),
         context: context,
+        cancelText: 'ОТМЕНА',
+        confirmText: 'ГОТОВО',
         initialDate: _deadline,
         firstDate: DateTime(2015),
-        lastDate: DateTime(2050));
+        lastDate: DateTime(2050),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: Theme.of(context).colorScheme.copyWith(
+                    primary: AppColor.darkBlue,
+                    primaryContainer: Colors.white,
+                    secondaryContainer: Colors.white,
+                    onSecondary: Colors.red,
+                    onSurface: Theme.of(context).primaryColor,
+                    onPrimary: Colors.green,
+                    surface: Theme.of(context).brightness == Brightness.light
+                        ? Colors.white
+                        : const Color(0xFF252528),
+                    secondary: Colors.blue,
+                  ),
+            ),
+            child: child!,
+          );
+        });
     if (pickedDate != null && pickedDate != _deadline) {
       setState(() {
         _deadline = pickedDate;
@@ -86,9 +109,7 @@ class _EditPageState extends State<EditPage> {
           },
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        // elevation: 1.5,
-        // bottomOpacity: 4.0,
-        // scrolledUnderElevation: 4,
+
         // закрыть и сохранить
         actions: [
           TextButton(
