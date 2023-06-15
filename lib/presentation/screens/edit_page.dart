@@ -53,12 +53,17 @@ class _EditPageState extends State<EditPage> {
                     secondaryContainer: Colors.white,
                     onSecondary: Colors.red,
                     onSurface: Theme.of(context).primaryColor,
-                    onPrimary: Colors.green,
                     surface: Theme.of(context).brightness == Brightness.light
                         ? Colors.white
                         : const Color(0xFF252528),
                     secondary: Colors.blue,
                   ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).iconTheme.color,
+                  // primary: Colors.green, // button text color
+                ),
+              ),
             ),
             child: child!,
           );
@@ -157,6 +162,9 @@ class _EditPageState extends State<EditPage> {
     );
   }
 
+  ///
+  /// Строка выбора времени задачи
+  ///
   Padding rowDeadLineWithSwith() {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0, bottom: 34.0),
@@ -201,6 +209,9 @@ class _EditPageState extends State<EditPage> {
     );
   }
 
+  ///
+  /// Строка выбора важности задачи
+  ///
   Padding popupMenuWidget(List<PopupMenuEntry<int>> popupMenuItems) {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
