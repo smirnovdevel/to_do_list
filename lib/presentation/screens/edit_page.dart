@@ -52,8 +52,10 @@ class _EditPageState extends State<EditPage> {
                     primaryContainer: Colors.white,
                     secondaryContainer: Colors.white,
                     onSecondary: Colors.red,
-                    // onSurfaceVariant: Colors.amber,
-                    onSurface: Theme.of(context).primaryColor,
+                    surface: Theme.of(context).colorScheme.primary,
+                    onSurface: Theme.of(context).brightness == Brightness.light
+                        ? const Color(0xFF252528)
+                        : Colors.white,
                     onSurfaceVariant:
                         Theme.of(context).brightness == Brightness.light
                             ? const Color(0xFF252528)
