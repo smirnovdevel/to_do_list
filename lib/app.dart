@@ -28,6 +28,7 @@ class App extends StatelessWidget {
           title: 'TODO лист',
           theme: lightTheme,
           darkTheme: darkTheme,
+          themeMode: ThemeMode.system,
           // navigator key
           navigatorKey: NavigationManager.instance.key,
           // named routes setup
