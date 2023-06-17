@@ -37,10 +37,10 @@ class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
       child: GestureDetector(
         onTap: () async {
           if (widget.task.id != null) {
-            widget.task.deleted = true;
             final confirmed =
                 await Dialogs.showConfirmCloseCountDialog(context) ?? false;
             if (confirmed) {
+              widget.task.deleted = true;
               _deleteCurrentTask();
               _onGoBack(widget.task);
             }
