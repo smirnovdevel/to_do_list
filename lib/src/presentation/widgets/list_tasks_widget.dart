@@ -67,8 +67,11 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
                   shadowColor: Theme.of(context).colorScheme.shadow,
                   expandedHeight: 120.0,
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  flexibleSpace: HeaderTaskWidget(
-                      count: widget.tasks.where((task) => !task.active).length),
+                  flexibleSpace: Consumer<TaskProvider>(
+                    builder: (context, count, child) => HeaderTaskWidget(
+                        count:
+                            widget.tasks.where((task) => !task.active).length),
+                  ),
                 ),
                 SliverToBoxAdapter(
                   child: Card(
@@ -143,7 +146,10 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
     if (result != null) {
       // Is new task
       result.id = uuid.v1();
-      widget.tasks.add(result);
+      setState(() {
+        widget.tasks.add(result);
+      });
+
       context.read<TaskBloc>().add(UpdateTask(task: result));
     }
   }

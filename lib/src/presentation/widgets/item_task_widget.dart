@@ -34,6 +34,7 @@ class ItemTaskWidget extends StatefulWidget {
 
 class _ItemTaskWidgetState extends State<ItemTaskWidget> {
   DateFormat dateFormat = DateFormat('dd MMMM yyyy');
+
   double _padding = 0;
 
   @override
@@ -97,18 +98,16 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
       ///
       confirmDismiss: (direction) async {
         if (direction == DismissDirection.endToStart) {
-          if (!widget.task.active) {
-            _deleteCurrentTask();
-            return true;
-          }
           final confirmed =
               await Dialogs.showConfirmCloseCountDialog(context) ?? false;
           if (confirmed) {
             _deleteCurrentTask();
+            provider.changeStatusTask();
           }
           return confirmed;
         } else if (direction == DismissDirection.startToEnd) {
           _changeActivityTask();
+          provider.changeStatusTask();
         }
         return false;
       },
@@ -128,6 +127,7 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
               GestureDetector(
                 onTap: () {
                   _changeActivityTask();
+                  provider.changeStatusTask();
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 1.0),

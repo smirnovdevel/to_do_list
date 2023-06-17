@@ -9,7 +9,7 @@ import '../../data/datasources/task_local_data_source.dart';
 abstract class ITaskRepository {
   Future<List<TaskModel>> getAllTask();
   Future<TaskModel> updateTask({required TaskModel task});
-  Future<int?> deleteTask({required TaskModel task});
+  Future<void> deleteTask({required TaskModel task});
 }
 
 final log = Logger('TaskRepository');
@@ -140,7 +140,7 @@ class TaskRepository implements ITaskRepository {
   /// DELETE Task
   ///
   @override
-  Future<int?> deleteTask({required TaskModel task}) async {
+  Future<void> deleteTask({required TaskModel task}) async {
     log.info('delete task id: ${task.id} ...');
     if (task.upload) {
       await remoteDataSource.deleteTaskFromServer(task: task);
@@ -151,6 +151,5 @@ class TaskRepository implements ITaskRepository {
     } on DBException {
       log.warning('delete task id: ${task.id}');
     }
-    return null;
   }
 }

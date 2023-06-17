@@ -7,6 +7,11 @@ class TaskProvider extends ChangeNotifier {
   bool visibleCompltedTask = true;
   bool get visible => visibleCompltedTask;
 
+  void changeStatusTask() {
+    log.warning('change status task');
+    notifyListeners();
+  }
+
   void changeVisible() {
     visibleCompltedTask = !visibleCompltedTask;
     log.fine('change visible to $visibleCompltedTask');
