@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'app.dart';
-import 'core/error/http_overrides.dart';
-import 'core/logging.dart';
-import 'di.dart' as di;
+import 'src/utils/error/http_overrides.dart';
+import 'src/utils/core/logging.dart';
+import 'src/locator.dart' as locator;
 
 Future<void> main() async {
   //инициализация зависимостей
-  await di.initializeDependencies();
+  await locator.initializeDependencies();
 
   //инициализируем задержку при запуске приложения
   await initialization(null);
