@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 import 'package:to_do_list/bloc/task_bloc.dart';
 
-import '../../core/logging.dart';
+import '../../bloc/task_event.dart';
+import '../../bloc/task_state.dart';
 import '../../models/task.dart';
 import '../widgets/list_tasks_widget.dart';
 import '../widgets/loading_indicator.dart';
 
-final log = logger(HomePage);
+final log = Logger('HomePage');
 List<TaskModel> tasks = [];
 
 class HomePage extends StatelessWidget {
@@ -20,24 +22,24 @@ class HomePage extends StatelessWidget {
       child: BlocConsumer<TaskBloc, TaskState>(
         listener: (context, TaskState state) {
           if (state is TasksEmpty) {
-            log.d('listener task state empty');
+            log.info('listener task state empty');
             context.read<TaskBloc>().add(TasksInit());
           }
         },
         builder: (context, TaskState state) {
           if (state is TasksEmpty) {
-            log.d('builder - task state empty');
+            log.info('builder - task state empty');
             return loadingIndicator();
           } else if (state is TasksLoading) {
-            log.d('builder - task state loading');
+            log.info('builder - task state loading');
             return loadingIndicator();
           } else if (state is TasksLoaded) {
-            log.d('builder - task state loaded');
+            log.info('builder - task state loaded');
             tasks.clear();
             tasks.addAll(state.tasksList);
             return ListTasksWidget(tasks: tasks);
           } else if (state is TasksError) {
-            log.d('builder - task state error');
+            log.info('builder - task state error');
             return Text(
               state.message,
               style: const TextStyle(color: Colors.white, fontSize: 25),

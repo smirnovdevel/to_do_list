@@ -13,7 +13,6 @@ abstract class RouteNames {
 
   static const home = '/';
   static const edit = '/edit';
-  static const create = '/create';
 }
 
 abstract class RoutesBuilder {
@@ -23,11 +22,6 @@ abstract class RoutesBuilder {
     RouteNames.home: (_) => const HomePage(),
     RouteNames.edit: (context) => EditPage(
           task: ModalRoute.of(context)?.settings.arguments as TaskModel,
-          isCreate: false,
-        ),
-    RouteNames.create: (context) => EditPage(
-          task: ModalRoute.of(context)?.settings.arguments as TaskModel,
-          isCreate: true,
         ),
   };
 
@@ -43,16 +37,6 @@ abstract class RoutesBuilder {
         return MaterialPageRoute<TaskModel?>(
           builder: (_) => EditPage(
             task: settings.arguments as TaskModel,
-            isCreate: false,
-          ),
-          settings: settings,
-        );
-
-      case RouteNames.create:
-        return MaterialPageRoute<TaskModel?>(
-          builder: (_) => EditPage(
-            task: settings.arguments as TaskModel,
-            isCreate: true,
           ),
           settings: settings,
         );

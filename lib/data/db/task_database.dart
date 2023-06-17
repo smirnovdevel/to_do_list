@@ -1,13 +1,12 @@
 import 'dart:io';
 
+import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:to_do_list/common/app_db.dart';
 import 'package:to_do_list/models/task.dart';
 
-import '../../core/logging.dart';
-
-final log = logger(DBProvider);
+final log = Logger('DBProvider');
 
 class DBProvider {
   DBProvider._();
@@ -23,20 +22,28 @@ class DBProvider {
   }
 
   Future<Database> _initDB() async {
-    Directory dir = await getApplicationDocumentsDirectory();
-    String path = '${dir.path}/${AppDB.nameDB}';
-    log.d('init DB $path');
-    return await openDatabase(path,
-        version: AppDB.version, onCreate: _createDB);
+    final Directory appDirectory = await getApplicationDocumentsDirectory();
+    final String pathDB = '${appDirectory.path}/${AppDB.nameDB}';
+    log.info('init DB $pathDB');
+    return await openDatabase(pathDB,
+        version: AppDB.newVersion, onCreate: _createDB, onUpgrade: _upgradeDB);
   }
 
-  void _createDB(Database db, int version) async {
-    await db.execute(AppDB.tableTasks);
+  void _createDB(Database db, int version) {
+    db.execute(AppDB.tableTasks);
+  }
+
+  void _upgradeDB(Database db, int oldVersion, int newVersion) {
+    // int newVersion = AppDB.newVersion;
+    if (oldVersion < newVersion) {
+      log.info('upgrade DB from $oldVersion to $newVersion version');
+      db.update(AppDB.tableTasks, AppDB.addRow);
+    }
   }
 
   // GET All Tasks
   Future<List<TaskModel>> getAllTasksFromDB() async {
-    log.i('get tasks ...');
+    log.info('get tasks ...');
     Database db = await database;
     final List<Map<String, dynamic>> tasksMapList =
         await db.query(AppDB.nameTaskTable);
@@ -45,15 +52,15 @@ class DBProvider {
       tasksList.add(TaskModel.fromMap(taskMap));
     }
     tasksList.sort((a, b) {
-      return a.id.compareTo(b.id);
+      return a.created.compareTo(b.created);
     });
-    log.d('get ${tasksList.length} tasks');
+    log.info('get ${tasksList.length} tasks');
     return tasksList;
   }
 
   // INSERT Task
   Future<TaskModel> insertTask(TaskModel task) async {
-    log.i('insert task id: ${task.id} ...');
+    log.info('insert task id: ${task.id} ...');
     Database db = await database;
     final List<Map<String, dynamic>> tasksMapList = await db.query(
       AppDB.nameTaskTable,
@@ -63,12 +70,12 @@ class DBProvider {
     if (tasksMapList.isEmpty) {
       try {
         await db.insert(AppDB.nameTaskTable, task.toMap());
-        log.d('insert task id: ${task.id}');
+        log.info('insert task id: ${task.id}');
       } catch (e) {
-        log.e('insert task id: ${task.id} ${e.toString()}');
+        log.warning('insert task id: ${task.id} ${e.toString()}');
       }
     } else {
-      log.i('task id: ${task.id} found, update ...');
+      log.info('task id: ${task.id} found, update ...');
       try {
         await db.update(
           AppDB.nameTaskTable,
@@ -76,9 +83,9 @@ class DBProvider {
           where: 'id = ?',
           whereArgs: [task.id],
         );
-        log.d('update task id: ${task.id}');
+        log.info('update task id: ${task.id}');
       } catch (e) {
-        log.e('update task id: ${task.id} ${e.toString()}');
+        log.warning('update task id: ${task.id} ${e.toString()}');
       }
     }
     return task;
@@ -86,7 +93,7 @@ class DBProvider {
 
   // UPDATE Task
   Future<void> updateTask({required TaskModel task}) async {
-    log.i('update task id: ${task.id} ...');
+    log.info('update task id: ${task.id} ...');
     Database db = await database;
     try {
       await db.update(
@@ -95,15 +102,15 @@ class DBProvider {
         where: 'id = ?',
         whereArgs: [task.id],
       );
-      log.d('update task id: ${task.id}');
+      log.info('update task id: ${task.id}');
     } catch (e) {
-      log.e('update task id: ${task.id} ${e.toString()}');
+      log.warning('update task id: ${task.id} ${e.toString()}');
     }
   }
 
   // DELETE Task
-  Future<int?> deleteTaskByID({required int id}) async {
-    log.i('delete task id: $id ...');
+  Future<int?> deleteTaskByID({required String id}) async {
+    log.info('delete task id: $id ...');
     Database db = await database;
     try {
       final resault = await db.delete(
@@ -111,10 +118,10 @@ class DBProvider {
         where: 'id = ?',
         whereArgs: [id],
       );
-      log.d('delete task id: $id');
+      log.info('delete task id: $id');
       return resault;
     } catch (e) {
-      log.e('delete task id: $id ${e.toString()}');
+      log.warning('delete task id: $id ${e.toString()}');
     }
     return null;
   }

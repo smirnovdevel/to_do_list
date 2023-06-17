@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_list/bloc/task_bloc.dart';
 import 'package:to_do_list/models/task.dart';
 import 'package:to_do_list/provider/task_provider.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../bloc/task_event.dart';
 import '../../common/app_icons.dart';
-import '../../core/logging.dart';
 import '../../routes/navigation.dart';
 import 'button_new_task_widget.dart';
 import 'header_task_widget.dart';
 import 'item_task_widget.dart';
 
-final log = logger(ListTasksWidget);
+final log = Logger('ListTasksWidget');
 
 class ListTasksWidget extends StatefulWidget {
   const ListTasksWidget({
@@ -30,6 +32,7 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
 
   bool visibleCloseTask = false;
   bool haveCloseTask = true;
+  var uuid = const Uuid();
 
   @override
   void dispose() {
@@ -119,27 +122,27 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
   }
 
   Future<void> _onCreateTask() async {
-    int id = 0;
-    if (widget.tasks.isNotEmpty) {
-      id = widget.tasks.last.id + 1;
-    }
-
-    final result = await NavigationManager.instance.openCreatePage(
+    final result = await NavigationManager.instance.openEditPage(
       TaskModel(
-        id: id,
-        title: '',
-        active: true,
-        priority: 0,
-        unlimited: true,
-        deadline: DateTime.now(),
-        delete: false,
-      ),
+          id: null,
+          title: '',
+          active: true,
+          priority: 0,
+          unlimited: true,
+          deadline: DateTime.now(),
+          deleted: false,
+          created: DateTime.now(),
+          changed: DateTime.now(),
+          upload: false,
+          // TODO
+          autor: 'global'),
     );
 
     if (!mounted) return;
 
     if (result != null) {
       // Is new task
+      result.id = uuid.v1();
       widget.tasks.add(result);
       context.read<TaskBloc>().add(UpdateTask(task: result));
     }

@@ -1,4 +1,8 @@
-part of 'task_bloc.dart';
+// part of 'task_bloc.dart';
+
+import 'package:equatable/equatable.dart';
+
+import '../models/task.dart';
 
 abstract class TaskState extends Equatable {}
 

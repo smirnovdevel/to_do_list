@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../../bloc/task_bloc.dart';
+import '../../bloc/task_event.dart';
 import '../../common/app_icons.dart';
-import '../../core/logging.dart';
 import '../../models/task.dart';
 import '../../provider/task_provider.dart';
 import '../../routes/dialogs.dart';
@@ -16,7 +17,7 @@ import 'swipe_action_left_widget.dart';
 import 'swipe_action_right_widget.dart';
 import 'title_widget.dart';
 
-final log = logger(ItemTaskWidget);
+final log = Logger('ItemTaskWidget');
 
 class ItemTaskWidget extends StatefulWidget {
   const ItemTaskWidget({
@@ -47,7 +48,7 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
   }
 
   _deleteCurrentTask() {
-    widget.task.delete = true;
+    widget.task.deleted = true;
     context.read<TaskBloc>().add(DeleteTask(task: widget.task));
   }
 
@@ -59,7 +60,7 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
     ///
     /// Hide delete task
     ///
-    if (widget.task.delete) {
+    if (widget.task.deleted) {
       return Container();
     }
 

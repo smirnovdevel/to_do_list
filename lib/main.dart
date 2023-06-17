@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'app.dart';
+import 'core/error/http_overrides.dart';
+import 'core/logging.dart';
 import 'di.dart' as di;
 
 Future<void> main() async {
@@ -8,6 +12,10 @@ Future<void> main() async {
 
   //инициализируем задержку при запуске приложения
   await initialization(null);
+
+  HttpOverrides.global = MyHttpOverrides();
+
+  initLogger();
 
   runApp(const App());
 }

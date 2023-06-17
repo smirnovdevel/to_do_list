@@ -1,4 +1,6 @@
-part of 'task_bloc.dart';
+// part of 'task_bloc.dart';
+
+import '../models/task.dart';
 
 abstract class TaskEvent {
   const TaskEvent();

@@ -24,13 +24,6 @@ class NavigationManager {
     );
   }
 
-  Future<TaskModel?> openCreatePage(TaskModel task) {
-    return _navigator.pushNamed<TaskModel?>(
-      RouteNames.create,
-      arguments: task,
-    );
-  }
-
   void pop<T extends Object>([T? result]) {
     _navigator.pop(result);
   }

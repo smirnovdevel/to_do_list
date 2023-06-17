@@ -5,6 +5,7 @@ import 'package:to_do_list/models/task.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import '../../bloc/task_bloc.dart';
+import '../../bloc/task_event.dart';
 import '../../routes/navigation.dart';
 import '../widgets/build_items_popup_menu.dart';
 import '../widgets/hint_popup_menu_widget.dart';
@@ -15,11 +16,9 @@ class EditPage extends StatefulWidget {
   const EditPage({
     super.key,
     required this.task,
-    required this.isCreate,
   });
 
   final TaskModel task;
-  final bool isCreate;
 
   @override
   State<EditPage> createState() => _EditPageState();
@@ -86,7 +85,6 @@ class _EditPageState extends State<EditPage> {
     _priority = widget.task.priority;
     _unlimited = widget.task.unlimited;
     _deadline = widget.task.deadline;
-    _isCreate = widget.isCreate;
     initializeDateFormatting();
     super.initState();
   }
@@ -129,7 +127,8 @@ class _EditPageState extends State<EditPage> {
                 widget.task.priority = _priority;
                 widget.task.unlimited = _unlimited;
                 widget.task.deadline = _deadline;
-                if (!_isCreate) {
+                widget.task.changed = DateTime.now();
+                if (widget.task.id != null) {
                   context.read<TaskBloc>().add(UpdateTask(task: widget.task));
                 }
                 _onGoBack(widget.task);
@@ -158,7 +157,7 @@ class _EditPageState extends State<EditPage> {
               const Divider(
                 height: 0.2,
               ),
-              RowDeleteItemWidget(isCreate: _isCreate, task: widget.task)
+              RowDeleteItemWidget(task: widget.task)
             ],
           ),
         ),

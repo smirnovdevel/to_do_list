@@ -1,30 +1,46 @@
-import 'package:logger/logger.dart';
+import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
+import 'dart:developer' as console;
 
-/// Уровни детализации
-/// verbose
-/// debug
-/// info
-/// warning
-/// error
-/// wtf
-///
+// console.log( "\u001b[1;31m Red message" );
+// console.log( "\u001b[1;32m Green message" );
+// console.log( "\u001b[1;33m Yellow message" );
+// console.log( "\u001b[1;34m Blue message" );
+// console.log( "\u001b[1;35m Purple message" );
+// console.log( "\u001b[1;36m Cyan message" );
 
-class CustomPrinter extends LogPrinter {
-  final String className;
-  CustomPrinter(this.className);
+void initLogger() {
+  if (kDebugMode) {
+    Logger.root.level = Level.ALL;
+    Logger.root.onRecord.listen((record) {
+      switch (record.level) {
+        case Level.FINE:
+          {
+            // green
+            console.log(
+                '\u001b[1;32m ${record.loggerName}:\u001b[1;32m ${record.message}');
 
-  @override
-  List<String> log(LogEvent event) {
-    final color = PrettyPrinter.levelColors[event.level];
-    final emoji = PrettyPrinter.levelEmojis[event.level];
-    final message = event.message;
-    return [color!('$emoji $className: $message')];
+            break;
+          }
+        case Level.INFO:
+          {
+            // blue
+            console.log(
+                '\u001b[1;32m ${record.loggerName}:\u001b[1;34m ${record.message}');
+            break;
+          }
+        case Level.WARNING:
+          {
+            // red
+            console.log(
+                '\u001b[1;32m ${record.loggerName}:\u001b[1;31m ${record.message}');
+            break;
+          }
+        default:
+          {
+            console.log('\u001b[1;32m ${record.loggerName}: record.message');
+          }
+      }
+    });
   }
 }
-
-// ignore: prefer_function_declarations_over_variables
-final logger = (Type type) => Logger(
-      // уровень логгирования - всё
-      level: Level.verbose,
-      printer: CustomPrinter(type.toString()),
-    );

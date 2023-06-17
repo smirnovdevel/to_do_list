@@ -1,18 +1,17 @@
 import 'package:flutter/widgets.dart';
+import 'package:logging/logging.dart';
 
-import '../core/logging.dart';
-
-final log = logger(NavigationLogger);
+final log = Logger('NavigationLogger');
 
 class NavigationLogger extends NavigatorObserver {
   @override
   void didPush(Route route, Route? previousRoute) {
-    log.i('didPush: ${route.settings.name}');
+    log.info('didPush: ${route.settings.name}');
   }
 
   @override
   void didPop(Route route, Route? previousRoute) {
-    log.i('didPop: ${route.settings.name}');
+    log.info('didPop: ${route.settings.name}');
   }
 
   @override
