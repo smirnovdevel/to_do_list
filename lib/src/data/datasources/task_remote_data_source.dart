@@ -105,7 +105,6 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
 
   /// UPDATE Task to Server
   ///
-  @override
   Future<TaskModel> updateTaskToServer({required TaskModel task}) async {
     final String url = '${AppUrls.urlTask}/list/${task.id}';
     // TODO
@@ -144,7 +143,6 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
 
   /// DELETE Task From Server
   ///
-  @override
   Future<TaskModel> deleteTaskFromServer({required TaskModel task}) async {
     final String url = '${AppUrls.urlTask}/list/${task.id}';
     // TODO
@@ -154,7 +152,7 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
     });
     log.info('deleteTaskFromServer post revision: $revision body: $body');
     try {
-      final response = await client.put(
+      final response = await client.delete(
         Uri.parse(url),
         headers: {
           'X-Last-Known-Revision': revision.toString(),

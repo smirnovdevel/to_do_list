@@ -1,6 +1,9 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:logging/logging.dart';
+
+final log = Logger('getDeviceID');
 
 Future<String> getDeviceID() async {
   final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
@@ -43,10 +46,7 @@ Future<String> getDeviceID() async {
       }
     }
   } on PlatformException {
-    var deviceData = <String, dynamic>{
-      'Error:': 'Failed to get platform version.'
-    };
+    log.warning('Unknown device ID');
+    return 'Unknown device ID';
   }
-
-  return 'Unknown device ID';
 }

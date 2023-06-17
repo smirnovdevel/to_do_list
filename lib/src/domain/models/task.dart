@@ -67,7 +67,7 @@ class TaskModel extends Equatable {
     return TaskModel(
       id: parsedJson['id'],
       title: parsedJson['text'],
-      active: parsedJson['done'],
+      active: !parsedJson['done'],
       priority: parsedJson['importance'] == 'low'
           ? 0
           : parsedJson['importance'] == 'basic'
