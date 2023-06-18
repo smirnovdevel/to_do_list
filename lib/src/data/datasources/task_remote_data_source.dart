@@ -9,7 +9,7 @@ import 'package:to_do_list/src/domain/models/task.dart';
 import '../../config/common/app_urls.dart';
 import '../../utils/error/exception.dart';
 
-final log = Logger('ITaskRemoteDataSource');
+final log = Logger('TaskRemoteDataSource');
 
 abstract class ITaskRemoteDataSource {
   /// Calls the https://beta.mrdekk.ru/todobackend endpoint.
@@ -37,7 +37,7 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
     // TODO
     // final token = getToken();
 
-    log.info('getAllTasksFromServer get from: $url');
+    log.info('Get ALL Tasks from: $url ...');
     try {
       final response = await client.get(
         Uri.parse(url),
@@ -47,19 +47,22 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
       );
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
+        int i = 1;
         for (Map<String, dynamic> task in result['list']) {
+          log.info('Get $i task: $task');
           tasksList.add(TaskModel.fromJson(task));
+          i++;
         }
         revision = result['revision'];
         log.info(
-            'getAllTasksFromServer load ${tasksList.length} tasks revision: $revision');
+            'Get ALL Tasks, load ${tasksList.length} tasks revision: $revision');
       } else {
         log.info(
-            'getAllTasksFromServer response code: ${response.statusCode.toString()}');
+            'Get ALL Tasks, response code: ${response.statusCode.toString()}');
         throw ServerException(response.statusCode.toString());
       }
     } catch (e) {
-      log.warning('getAllTasksFromServer ${e.toString()}');
+      log.warning('Get ALL Tasks: ${e.toString()}');
     }
     return tasksList;
   }
@@ -74,7 +77,7 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
     final body = jsonEncode({
       'element': task.toJson(),
     });
-    log.info('postTaskToServer post revision: $revision body: $body');
+    log.info('ADD Task, revision: $revision body: $body');
     try {
       final response = await client.post(
         Uri.parse(url),
@@ -90,15 +93,14 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
         final result = json.decode(response.body);
         revision = result['revision'];
         task.upload = true;
-        log.info(
-            'postTaskToServer post task id: ${task.id} revision: $revision');
+        log.info('ADD Task id: ${task.id} revision: $revision');
       } else {
         log.info(
-            'postTaskToServer response code: ${response.statusCode.toString()} revision: $revision');
+            'ADD Task, response code: ${response.statusCode.toString()} revision: $revision');
         throw ServerException(response.statusCode.toString());
       }
     } catch (e) {
-      log.warning('postTaskToServer ${e.toString()}');
+      log.warning('ADD Task: ${e.toString()}');
     }
     return task;
   }
@@ -112,7 +114,7 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
     final body = jsonEncode({
       'element': task.toJson(),
     });
-    log.info('postTaskToServer post revision: $revision body: $body');
+    log.info('UPDATE Task id: ${task.id} revision: $revision  body: $body');
     try {
       final response = await client.put(
         Uri.parse(url),
@@ -128,15 +130,14 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
         final result = json.decode(response.body);
         revision = result['revision'];
         task.upload = true;
-        log.info(
-            'updateTaskToServer post task id: ${task.id} revision: $revision');
+        log.info('UPDATE Task id: ${task.id} revision: $revision');
       } else {
         log.info(
-            'updateTaskToServer response code: ${response.statusCode.toString()} revision: $revision');
+            'UPDATE Task response code: ${response.statusCode.toString()} revision: $revision');
         throw ServerException(response.statusCode.toString());
       }
     } catch (e) {
-      log.warning('updateTaskToServer ${e.toString()}');
+      log.warning('UPDATE Task: ${e.toString()}');
     }
     return task;
   }
@@ -150,7 +151,7 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
     final body = jsonEncode({
       'element': task.toJson(),
     });
-    log.info('deleteTaskFromServer post revision: $revision body: $body');
+    log.info('DELETE Task id: ${task.id} revision: $revision  body: $body');
     try {
       final response = await client.delete(
         Uri.parse(url),
@@ -166,15 +167,14 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
         final result = json.decode(response.body);
         revision = result['revision'];
         task.upload = true;
-        log.info(
-            'deleteTaskFromServer post task id: ${task.id} revision: $revision');
+        log.info('DELETE Task id: ${task.id} revision: $revision');
       } else {
         log.info(
-            'deleteTaskFromServer response code: ${response.statusCode.toString()} revision: $revision');
+            'DELETE Task response code: ${response.statusCode.toString()} revision: $revision');
         throw ServerException(response.statusCode.toString());
       }
     } catch (e) {
-      log.warning('deleteTaskFromServer ${e.toString()}');
+      log.warning('DELETE Task: ${e.toString()}');
     }
     return task;
   }

@@ -21,9 +21,10 @@ class HomePage extends StatelessWidget {
       create: (context) => TaskBloc()..add(TasksInit()),
       child: BlocConsumer<TaskBloc, TaskState>(
         listener: (context, TaskState state) {
-          if (state is TasksEmpty) {
-            log.info('listener task state empty');
-            context.read<TaskBloc>().add(TasksInit());
+          if (state is TaskDeleted) {
+            log.info('listener delete task id: ${state.task.id}');
+            tasks.removeWhere((task) => task.id == state.task.id);
+            context.read<TaskBloc>().add(TasksUpdating());
           }
         },
         builder: (context, TaskState state) {
@@ -37,6 +38,10 @@ class HomePage extends StatelessWidget {
             log.info('builder - task state loaded');
             tasks.clear();
             tasks.addAll(state.tasksList);
+            context.read<TaskBloc>().add(TasksUpdating());
+            return loadingIndicator();
+          } else if (state is TasksUpdated) {
+            log.info('builder - task state updated');
             return ListTasksWidget(tasks: tasks);
           } else if (state is TasksError) {
             log.info('builder - task state error');

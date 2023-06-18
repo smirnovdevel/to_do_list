@@ -19,3 +19,7 @@ class DeleteTask extends TaskEvent {
 
   DeleteTask({required this.task});
 }
+
+class TasksUpdating extends TaskEvent {
+  TasksUpdating();
+}

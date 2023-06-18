@@ -9,7 +9,7 @@ import '../../data/datasources/task_local_data_source.dart';
 abstract class ITaskRepository {
   Future<List<TaskModel>> getAllTask();
   Future<TaskModel> updateTask({required TaskModel task});
-  Future<void> deleteTask({required TaskModel task});
+  Future<int?> deleteTask({required TaskModel task});
 }
 
 final log = Logger('TaskRepository');
@@ -71,8 +71,7 @@ class TaskRepository implements ITaskRepository {
             // чем в локальной, добавляем в список и обновляем в базе
             //
             if (localTask.changed.isBefore(remoteTask.changed)) {
-              localTask = remoteTask;
-              localTask.upload = true;
+              localTask = TaskModel.copyFrom(remoteTask);
               tasksList.add(localTask);
               updateTask(task: localTask);
 
@@ -84,8 +83,7 @@ class TaskRepository implements ITaskRepository {
             }
           } on StateError catch (_) {
             // задачи нет в локальной базе, добавляем
-            TaskModel localTask = remoteTask;
-            localTask.upload = true;
+            TaskModel localTask = TaskModel.copyFrom(remoteTask);
             tasksList.add(localTask);
             updateTask(task: localTask);
           }
@@ -105,7 +103,7 @@ class TaskRepository implements ITaskRepository {
             remoteDataSource.postTaskToServer(task: task);
           }
           // все задачи разобраны, очищаем на всякий случай
-          localTasksList.clear();
+          // localTasksList.clear();
         }
       }
     }
@@ -140,7 +138,7 @@ class TaskRepository implements ITaskRepository {
   /// DELETE Task
   ///
   @override
-  Future<void> deleteTask({required TaskModel task}) async {
+  Future<int?> deleteTask({required TaskModel task}) async {
     log.info('delete task id: ${task.id} ...');
     if (task.upload) {
       await remoteDataSource.deleteTaskFromServer(task: task);
@@ -151,5 +149,6 @@ class TaskRepository implements ITaskRepository {
     } on DBException {
       log.warning('delete task id: ${task.id}');
     }
+    return null;
   }
 }

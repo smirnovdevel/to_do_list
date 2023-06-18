@@ -34,7 +34,6 @@ class ItemTaskWidget extends StatefulWidget {
 
 class _ItemTaskWidgetState extends State<ItemTaskWidget> {
   DateFormat dateFormat = DateFormat('dd MMMM yyyy');
-
   double _padding = 0;
 
   @override
@@ -44,13 +43,16 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
   }
 
   _changeActivityTask() {
-    widget.task.active = !widget.task.active;
+    setState(() {
+      widget.task.active = !widget.task.active;
+    });
     context.read<TaskBloc>().add(UpdateTask(task: widget.task));
-    setState(() {});
   }
 
   _deleteCurrentTask() {
+    // setState(() {
     widget.task.deleted = true;
+    // });
     context.read<TaskBloc>().add(DeleteTask(task: widget.task));
   }
 
@@ -58,12 +60,6 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     TaskProvider provider = Provider.of<TaskProvider>(context);
-
-    /// Hide delete task
-    ///
-    if (widget.task.deleted) {
-      return Container();
-    }
 
     /// Hide complted task
     ///
@@ -102,12 +98,11 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
               await Dialogs.showConfirmCloseCountDialog(context) ?? false;
           if (confirmed) {
             _deleteCurrentTask();
-            provider.changeStatusTask();
           }
           return confirmed;
         } else if (direction == DismissDirection.startToEnd) {
           _changeActivityTask();
-          provider.changeStatusTask();
+          provider.changesStatusTask();
         }
         return false;
       },
@@ -127,7 +122,7 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
               GestureDetector(
                 onTap: () {
                   _changeActivityTask();
-                  provider.changeStatusTask();
+                  provider.changesStatusTask();
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 1.0),
@@ -177,7 +172,11 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
   Future<void> _onOpenEditPage(TaskModel task) async {
     final result = await NavigationManager.instance.openEditPage(task);
     if (result != null) {
-      setState(() {});
+      if (result.deleted) {
+        _deleteCurrentTask();
+      } else {
+        setState(() {});
+      }
     }
   }
 }

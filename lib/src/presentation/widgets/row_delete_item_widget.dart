@@ -27,7 +27,7 @@ class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
 
   _deleteCurrentTask() {
     widget.task.deleted = true;
-    context.read<TaskBloc>().add(DeleteTask(task: widget.task));
+    // context.read<TaskBloc>().add(DeleteTask(task: widget.task));
   }
 
   @override
@@ -40,7 +40,6 @@ class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
             final confirmed =
                 await Dialogs.showConfirmCloseCountDialog(context) ?? false;
             if (confirmed) {
-              widget.task.deleted = true;
               _deleteCurrentTask();
               _onGoBack(widget.task);
             }

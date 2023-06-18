@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,11 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
     super.dispose();
   }
 
+  Future<void> _updateTaskList() async {
+    context.read<TaskBloc>().add(TasksInit());
+    await Future.delayed(const Duration(seconds: 0));
+  }
+
   void toTop() {
     scrollController.animateTo(0,
         duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
@@ -68,10 +74,18 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
                   expandedHeight: 120.0,
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   flexibleSpace: Consumer<TaskProvider>(
-                    builder: (context, count, child) => HeaderTaskWidget(
-                        count:
-                            widget.tasks.where((task) => !task.active).length),
+                    builder: (context, count, child) {
+                      return HeaderTaskWidget(
+                          count: widget.tasks
+                              .where((task) => !task.active && !task.deleted)
+                              .length);
+                    },
                   ),
+                ),
+                CupertinoSliverRefreshControl(
+                  onRefresh: () async {
+                    await _updateTaskList();
+                  },
                 ),
                 SliverToBoxAdapter(
                   child: Card(
@@ -80,14 +94,25 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
                       padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
                       child: Column(
                         children: [
-                          ListView.builder(
-                            padding: EdgeInsets.zero,
-                            controller: scrollController,
-                            shrinkWrap: true,
-                            itemCount: widget.tasks.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return ItemTaskWidget(task: widget.tasks[index]);
+                          RefreshIndicator(
+                            // displacement: 250,
+                            backgroundColor: Colors.yellow,
+                            color: Colors.red,
+                            strokeWidth: 2,
+                            triggerMode: RefreshIndicatorTriggerMode.onEdge,
+                            onRefresh: () async {
+                              await _updateTaskList();
                             },
+                            child: ListView.builder(
+                              padding: EdgeInsets.zero,
+                              controller: scrollController,
+                              shrinkWrap: true,
+                              itemCount: widget.tasks.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ItemTaskWidget(
+                                    task: widget.tasks[index]);
+                              },
+                            ),
                           ),
                           // кнопка Новое внизу списка
                           GestureDetector(

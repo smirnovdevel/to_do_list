@@ -63,6 +63,20 @@ class TaskModel extends Equatable {
     );
   }
 
+  factory TaskModel.copyFrom(TaskModel task) {
+    return TaskModel(
+        id: task.id,
+        title: task.title,
+        active: task.active,
+        priority: task.priority,
+        unlimited: task.unlimited,
+        deadline: task.deadline,
+        deleted: task.deleted,
+        created: task.created,
+        changed: task.changed,
+        upload: task.upload,
+        autor: task.autor);
+  }
   factory TaskModel.fromJson(Map<String, dynamic> parsedJson) {
     return TaskModel(
       id: parsedJson['id'],
@@ -89,7 +103,23 @@ class TaskModel extends Equatable {
     );
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() {
+    if (unlimited) {
+      return {
+        'id': id, // уникальный идентификатор элемента
+        'text': title,
+        'importance': priority == 0
+            ? 'low'
+            : priority == 1
+                ? 'basic'
+                : 'important',
+        'done': !active,
+        'created_at': created.millisecondsSinceEpoch,
+        'changed_at': changed.millisecondsSinceEpoch,
+        'last_updated_by': autor
+      };
+    } else {
+      return {
         'id': id, // уникальный идентификатор элемента
         'text': title,
         'importance': priority == 0
@@ -101,6 +131,8 @@ class TaskModel extends Equatable {
         'done': !active,
         'created_at': created.millisecondsSinceEpoch,
         'changed_at': changed.millisecondsSinceEpoch,
-        'last_updated_by': autor,
+        'last_updated_by': autor
       };
+    }
+  }
 }

@@ -30,19 +30,20 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         log.info('update task id: ${event.task.id} ...');
         await _taskRepository.updateTask(task: event.task);
         log.info('update task id: ${event.task.id}');
-        // emit(TasksEmpty());
       },
     );
     on<DeleteTask>(
       (event, emit) async {
         log.info('delete task id: ${event.task.id} ...');
-        try {
-          await _taskRepository.deleteTask(task: event.task);
-          log.info('delete task id: ${event.task.id}');
-        } catch (e) {
-          log.warning('delete task id: ${event.task.id} ${e.toString()}');
-        }
-        // emit(TasksEmpty());
+        await _taskRepository.deleteTask(task: event.task);
+        log.info('delete task id: ${event.task.id}');
+        emit(TaskDeleted(event.task));
+      },
+    );
+    on<TasksUpdating>(
+      (event, emit) {
+        log.info('task updated ...');
+        emit(TasksUpdated());
       },
     );
   }
