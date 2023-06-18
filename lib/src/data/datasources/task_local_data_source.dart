@@ -1,36 +1,37 @@
 import 'package:logging/logging.dart';
 
 import '../../domain/models/task.dart';
-import '../db/task_database.dart';
+import '../db/isar_database.dart';
+// import '../db/sql_database.dart';
 
-final log = Logger('TaskLocalDataSource');
+final Logger log = Logger('TaskLocalDataSource');
 
 abstract class ITaskLocalDataSource {
-  Future<List<TaskModel>> getAllTasksFromDB();
-  Future<void> insertTaskInDB({required TaskModel task});
-  Future<void> deleteTaskByID({required String id});
+  Future<List<TaskModel>> getTasks();
+  Future<void> saveTask({required TaskModel task});
+  Future<void> deleteTask({required TaskModel task});
 }
 
 class TaskLocalDataSource implements ITaskLocalDataSource {
   @override
-  Future<List<TaskModel>> getAllTasksFromDB() async {
+  Future<List<TaskModel>> getTasks() async {
     log.info('get tasks ...');
-    final tasksList = await DBProvider.db.getAllTasksFromDB();
+    final List<TaskModel> tasksList = await DBProvider.db.getTasks();
     log.info('get ${tasksList.length} tasks');
     return Future.value(tasksList);
   }
 
   @override
-  Future<void> insertTaskInDB({required TaskModel task}) async {
-    log.info('insert task id: ${task.id} ...');
-    await DBProvider.db.insertTask(task);
-    log.info('insert task id: ${task.id}');
+  Future<void> saveTask({required TaskModel task}) async {
+    log.info('insert task uuid: ${task.uuid} ...');
+    await DBProvider.db.saveTask(task: task);
+    log.info('insert task uuid: ${task.uuid}');
   }
 
   @override
-  Future<void> deleteTaskByID({required String id}) async {
-    log.info('delete task id: $id ...');
-    await DBProvider.db.deleteTaskByID(id: id);
-    log.info('delete task id: $id');
+  Future<void> deleteTask({required TaskModel task}) async {
+    log.info('delete task uuid: ${task.uuid} ...');
+    await DBProvider.db.deleteTask(task: task);
+    log.info('delete task uuid: ${task.uuid}');
   }
 }

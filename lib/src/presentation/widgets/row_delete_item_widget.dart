@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../config/routes/dialogs.dart';
 import '../../config/common/app_icons.dart';
-import '../../domain/models/task.dart';
+import '../../config/routes/dialogs.dart';
 import '../../config/routes/navigation.dart';
+import '../../domain/models/task.dart';
 
 class RowDeleteItemWidget extends StatefulWidget {
   const RowDeleteItemWidget({
@@ -28,8 +28,8 @@ class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
       padding: const EdgeInsets.only(top: 22.0, left: 8.0),
       child: GestureDetector(
         onTap: () async {
-          if (widget.task.id != null) {
-            final confirmed =
+          if (widget.task.uuid != null) {
+            final bool confirmed =
                 await Dialogs.showConfirmCloseCountDialog(context) ?? false;
             if (confirmed) {
               widget.task.deleted = true;
@@ -41,11 +41,10 @@ class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Icon(
                   AppIcons.delete,
-                  color: widget.task.id == null
+                  color: widget.task.uuid == null
                       ? Theme.of(context).colorScheme.outlineVariant
                       : Theme.of(context).colorScheme.onSecondary,
                   size: 21.0,
@@ -59,7 +58,7 @@ class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
                         fontSize: 16.0,
                         height: 20 / 16,
                         fontFamily: 'Roboto',
-                        color: widget.task.id == null
+                        color: widget.task.uuid == null
                             ? Theme.of(context).colorScheme.outlineVariant
                             : Theme.of(context).colorScheme.onSecondary),
                   ),

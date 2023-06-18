@@ -10,13 +10,13 @@ abstract class Dialogs {
         name: '/alert_confirm_delete_task',
       ),
       barrierDismissible: false,
-      builder: (context) => const ConfirmCloseCountDialog(),
+      builder: (BuildContext context) => const ConfirmCloseCountDialog(),
     );
   }
 }
 
 class ConfirmCloseCountDialog extends StatelessWidget {
-  const ConfirmCloseCountDialog({Key? key}) : super(key: key);
+  const ConfirmCloseCountDialog({super.key});
 
   @override
   Widget build(BuildContext context) {

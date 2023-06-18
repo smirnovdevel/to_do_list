@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:to_do_list/src/config/common/app_color.dart';
-import 'package:to_do_list/src/domain/models/task.dart';
-import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+
+import '../../config/common/app_color.dart';
+import '../../config/routes/navigation.dart';
+import '../../domain/models/task.dart';
 import '../bloc/task_bloc.dart';
 import '../bloc/task_event.dart';
-import '../../config/routes/navigation.dart';
 import '../widgets/build_items_popup_menu.dart';
 import '../widgets/hint_popup_menu_widget.dart';
 import '../widgets/row_delete_item_widget.dart';
@@ -28,10 +29,9 @@ class _EditPageState extends State<EditPage> {
   final TextEditingController _controller = TextEditingController();
 
   DateFormat dateFormat = DateFormat('dd MMMM yyyy');
-  late bool _active;
+  late bool _done;
   late int _priority;
-  late bool _unlimited;
-  late DateTime _deadline;
+  late DateTime? _deadline;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -39,10 +39,10 @@ class _EditPageState extends State<EditPage> {
         context: context,
         cancelText: 'ОТМЕНА',
         confirmText: 'ГОТОВО',
-        initialDate: _deadline,
+        initialDate: _deadline ?? DateTime.now(),
         firstDate: DateTime(2015),
         lastDate: DateTime(2050),
-        builder: (context, child) {
+        builder: (BuildContext context, Widget? child) {
           return Theme(
             data: Theme.of(context).copyWith(
               colorScheme: Theme.of(context).colorScheme.copyWith(
@@ -80,9 +80,8 @@ class _EditPageState extends State<EditPage> {
   @override
   void initState() {
     _controller.text = widget.task.title;
-    _active = widget.task.active;
+    _done = widget.task.done;
     _priority = widget.task.priority;
-    _unlimited = widget.task.unlimited;
     _deadline = widget.task.deadline;
     initializeDateFormatting();
     super.initState();
@@ -100,7 +99,8 @@ class _EditPageState extends State<EditPage> {
 
   @override
   Widget build(BuildContext context) {
-    final popupMenuItems = buildItemsPopupMenu(context);
+    final List<PopupMenuEntry<int>> popupMenuItems =
+        buildItemsPopupMenu(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -122,13 +122,12 @@ class _EditPageState extends State<EditPage> {
           TextButton(
               onPressed: () {
                 widget.task.title = _controller.text;
-                widget.task.active = _active;
+                widget.task.done = _done;
                 widget.task.priority = _priority;
-                widget.task.unlimited = _unlimited;
                 widget.task.deadline = _deadline;
                 widget.task.changed = DateTime.now();
-                if (widget.task.id != null) {
-                  context.read<TaskBloc>().add(UpdateTask(task: widget.task));
+                if (widget.task.uuid != null) {
+                  context.read<TaskBloc>().add(SaveTask(task: widget.task));
                 }
                 _onGoBack(widget.task);
               },
@@ -175,7 +174,7 @@ class _EditPageState extends State<EditPage> {
         children: [
           GestureDetector(
             onTap: () {
-              if (!_unlimited) {
+              if (_deadline != null) {
                 _selectDate(context);
               }
             },
@@ -186,24 +185,28 @@ class _EditPageState extends State<EditPage> {
                   'Сделать до',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                _unlimited
-                    ? Container()
-                    : Text(
-                        DateFormat('dd MMMM yyyy', 'ru')
-                            .format(_deadline)
-                            .toString(),
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .copyWith(color: Theme.of(context).iconTheme.color),
-                      ),
+                if (_deadline == null)
+                  Container()
+                else
+                  Text(
+                    DateFormat('dd MMMM yyyy', 'ru')
+                        .format(_deadline ?? DateTime.now()),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: Theme.of(context).iconTheme.color),
+                  ),
               ],
             ),
           ),
           Switch(
-              value: !_unlimited,
+              value: _deadline != null,
               onChanged: (bool value) {
-                _unlimited = !value;
+                if (value) {
+                  _deadline = DateTime.now();
+                } else {
+                  _deadline = null;
+                }
                 setState(() {});
               }),
         ],
@@ -221,7 +224,7 @@ class _EditPageState extends State<EditPage> {
         initialValue: _priority,
         position: PopupMenuPosition.over,
         color: Theme.of(context).popupMenuTheme.color,
-        onSelected: (value) {
+        onSelected: (int value) {
           setState(() {
             _priority = value;
           });

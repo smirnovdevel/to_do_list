@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_list/src/domain/models/task.dart';
+import '../../domain/models/task.dart';
 
 import 'observer.dart';
 import 'routes.dart';
@@ -7,11 +7,11 @@ import 'routes.dart';
 class NavigationManager {
   NavigationManager._();
 
-  static final instance = NavigationManager._();
+  static final NavigationManager instance = NavigationManager._();
 
-  final key = GlobalKey<NavigatorState>();
+  final GlobalKey<NavigatorState> key = GlobalKey<NavigatorState>();
 
-  final observers = <NavigatorObserver>[
+  final List<NavigatorObserver> observers = <NavigatorObserver>[
     NavigationLogger(),
   ];
 

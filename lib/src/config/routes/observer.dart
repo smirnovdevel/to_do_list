@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 
-final log = Logger('NavigationLogger');
+final Logger log = Logger('NavigationLogger');
 
 class NavigationLogger extends NavigatorObserver {
   @override

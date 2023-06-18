@@ -2,19 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:to_do_list/src/presentation/bloc/task_bloc.dart';
-import 'package:to_do_list/src/domain/models/task.dart';
-import 'package:to_do_list/src/presentation/provider/task_provider.dart';
 import 'package:uuid/uuid.dart';
 
-import '../bloc/task_event.dart';
 import '../../config/common/app_icons.dart';
 import '../../config/routes/navigation.dart';
+import '../../domain/models/task.dart';
+import '../bloc/task_bloc.dart';
+import '../bloc/task_event.dart';
+import '../provider/task_provider.dart';
 import 'button_new_task_widget.dart';
 import 'header_task_widget.dart';
 import 'item_task_widget.dart';
 
-final log = Logger('ListTasksWidget');
+final Logger log = Logger('ListTasksWidget');
 
 class ListTasksWidget extends StatefulWidget {
   const ListTasksWidget({
@@ -29,11 +29,11 @@ class ListTasksWidget extends StatefulWidget {
 }
 
 class _ListTasksWidgetState extends State<ListTasksWidget> {
-  final scrollController = ScrollController();
+  final ScrollController scrollController = ScrollController();
 
   bool visibleCloseTask = false;
   bool haveCloseTask = true;
-  var uuid = const Uuid();
+  Uuid uuid = const Uuid();
 
   @override
   void dispose() {
@@ -43,7 +43,7 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
 
   Future<void> _updateTaskList() async {
     context.read<TaskBloc>().add(TasksInit());
-    await Future.delayed(const Duration(seconds: 0));
+    await Future.delayed(const Duration());
   }
 
   void toTop() {
@@ -74,10 +74,12 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
                   expandedHeight: 120.0,
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   flexibleSpace: Consumer<TaskProvider>(
-                    builder: (context, count, child) {
+                    builder: (BuildContext context, TaskProvider count,
+                        Widget? child) {
                       return HeaderTaskWidget(
                           count: widget.tasks
-                              .where((task) => !task.active && !task.deleted)
+                              .where((TaskModel task) =>
+                                  task.done && !task.deleted)
                               .length);
                     },
                   ),
@@ -99,7 +101,6 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
                             backgroundColor: Colors.yellow,
                             color: Colors.red,
                             strokeWidth: 2,
-                            triggerMode: RefreshIndicatorTriggerMode.onEdge,
                             onRefresh: () async {
                               await _updateTaskList();
                             },
@@ -150,14 +151,14 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
   }
 
   Future<void> _onCreateTask() async {
-    final result = await NavigationManager.instance.openEditPage(
+    final TaskModel? result = await NavigationManager.instance.openEditPage(
       TaskModel(
           id: null,
+          uuid: null,
           title: '',
-          active: true,
+          done: false,
           priority: 0,
-          unlimited: true,
-          deadline: DateTime.now(),
+          deadline: null,
           deleted: false,
           created: DateTime.now(),
           changed: DateTime.now(),
@@ -170,12 +171,12 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
 
     if (result != null) {
       // Is new task
-      result.id = uuid.v1();
+      result.uuid = uuid.v1();
       setState(() {
         widget.tasks.add(result);
       });
 
-      context.read<TaskBloc>().add(UpdateTask(task: result));
+      context.read<TaskBloc>().add(SaveTask(task: result));
     }
   }
 }

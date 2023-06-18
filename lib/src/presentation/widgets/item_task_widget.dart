@@ -4,21 +4,20 @@ import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
-import 'icon_activity_widget.dart';
+import '../../config/common/app_icons.dart';
+import '../../config/routes/dialogs.dart';
+import '../../config/routes/navigation.dart';
+import '../../domain/models/task.dart';
+import '../bloc/task_bloc.dart';
+import '../bloc/task_event.dart';
+import '../provider/task_provider.dart';
+import 'icon_done_widget.dart';
 import 'subtitle_widget.dart';
 import 'swipe_action_left_widget.dart';
 import 'swipe_action_right_widget.dart';
 import 'title_widget.dart';
 
-import '../bloc/task_bloc.dart';
-import '../bloc/task_event.dart';
-import '../../config/common/app_icons.dart';
-import '../../domain/models/task.dart';
-import '../provider/task_provider.dart';
-import '../../config/routes/dialogs.dart';
-import '../../config/routes/navigation.dart';
-
-final log = Logger('ItemTaskWidget');
+final Logger log = Logger('ItemTaskWidget');
 
 class ItemTaskWidget extends StatefulWidget {
   const ItemTaskWidget({
@@ -44,9 +43,9 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
 
   _changeActivityTask() {
     setState(() {
-      widget.task.active = !widget.task.active;
+      widget.task.done = !widget.task.done;
     });
-    context.read<TaskBloc>().add(UpdateTask(task: widget.task));
+    context.read<TaskBloc>().add(SaveTask(task: widget.task));
   }
 
   _deleteCurrentTask() {
@@ -58,19 +57,19 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    TaskProvider provider = Provider.of<TaskProvider>(context);
+    final double width = MediaQuery.of(context).size.width;
+    final TaskProvider provider = Provider.of<TaskProvider>(context);
 
     /// Hide complted task
     ///
-    if (!provider.visible && !widget.task.active) {
+    if (!provider.visible && widget.task.done) {
       return Container();
     }
 
     /// Swipe
     ///
     return Dismissible(
-      key: Key(widget.task.id.toString()),
+      key: Key(widget.task.uuid!),
 
       /// swipe left
       ///
@@ -81,8 +80,8 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
       /// swipe right
       ///
       background: SwipeActionRightWidget(padding: _padding),
-      onUpdate: (details) {
-        final offset = (width - 16) * details.progress;
+      onUpdate: (DismissUpdateDetails details) {
+        final double offset = (width - 16) * details.progress;
         if (offset >= 72) {
           setState(() {
             _padding = offset - 72;
@@ -92,9 +91,9 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
 
       /// confirm and action
       ///
-      confirmDismiss: (direction) async {
+      confirmDismiss: (DismissDirection direction) async {
         if (direction == DismissDirection.endToStart) {
-          final confirmed =
+          final bool confirmed =
               await Dialogs.showConfirmCloseCountDialog(context) ?? false;
           if (confirmed) {
             _deleteCurrentTask();
@@ -126,7 +125,7 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 1.0),
-                  child: IconActivityWidget(task: widget.task),
+                  child: IconDoneWidget(task: widget.task),
                 ),
               ),
               // ),
@@ -170,7 +169,8 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
   }
 
   Future<void> _onOpenEditPage(TaskModel task) async {
-    final result = await NavigationManager.instance.openEditPage(task);
+    final TaskModel? result =
+        await NavigationManager.instance.openEditPage(task);
     if (result != null) {
       if (result.deleted) {
         _deleteCurrentTask();

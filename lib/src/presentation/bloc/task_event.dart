@@ -8,16 +8,14 @@ abstract class TaskEvent {
 
 class TasksInit extends TaskEvent {}
 
-class UpdateTask extends TaskEvent {
+class SaveTask extends TaskEvent {
+  SaveTask({required this.task});
   final TaskModel task;
-
-  UpdateTask({required this.task});
 }
 
 class DeleteTask extends TaskEvent {
-  final TaskModel task;
-
   DeleteTask({required this.task});
+  final TaskModel task;
 }
 
 class TasksUpdating extends TaskEvent {

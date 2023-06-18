@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:to_do_list/src/config/common/app_db.dart';
-import 'package:to_do_list/src/domain/models/task.dart';
+import '../../config/common/app_db.dart';
+import '../../domain/models/task.dart';
 
-final log = Logger('DBProvider');
+final Logger log = Logger('DBProvider');
 
 class DBProvider {
   DBProvider._();
@@ -41,51 +41,51 @@ class DBProvider {
     }
   }
 
-  // GET All Tasks
-  Future<List<TaskModel>> getAllTasksFromDB() async {
+  // GET ALL Tasks
+  Future<List<TaskModel>> getTasks() async {
     log.info('get tasks ...');
-    Database db = await database;
+    final Database db = await database;
     final List<Map<String, dynamic>> tasksMapList =
         await db.query(AppDB.nameTaskTable);
     final List<TaskModel> tasksList = [];
-    for (var taskMap in tasksMapList) {
+    for (final Map<String, dynamic> taskMap in tasksMapList) {
       tasksList.add(TaskModel.fromMap(taskMap));
     }
-    tasksList.sort((a, b) {
+    tasksList.sort((TaskModel a, TaskModel b) {
       return a.created.compareTo(b.created);
     });
     log.info('get ${tasksList.length} tasks');
     return tasksList;
   }
 
-  // INSERT Task
-  Future<TaskModel> insertTask(TaskModel task) async {
-    log.info('insert task id: ${task.id} ...');
-    Database db = await database;
+  // SAVE Task
+  Future<TaskModel> saveTask({required TaskModel task}) async {
+    log.info('insert task id: ${task.uuid} ...');
+    final Database db = await database;
     final List<Map<String, dynamic>> tasksMapList = await db.query(
       AppDB.nameTaskTable,
       where: 'id = ?',
-      whereArgs: [task.id],
+      whereArgs: [task.uuid],
     );
     if (tasksMapList.isEmpty) {
       try {
         await db.insert(AppDB.nameTaskTable, task.toMap());
-        log.info('insert task id: ${task.id}');
+        log.info('insert task id: ${task.uuid}');
       } catch (e) {
-        log.warning('insert task id: ${task.id} ${e.toString()}');
+        log.warning('insert task id: ${task.uuid} $e');
       }
     } else {
-      log.info('task id: ${task.id} found, update ...');
+      log.info('task id: ${task.uuid} found, update ...');
       try {
         await db.update(
           AppDB.nameTaskTable,
           task.toMap(),
           where: 'id = ?',
-          whereArgs: [task.id],
+          whereArgs: [task.uuid],
         );
-        log.info('update task id: ${task.id}');
+        log.info('update task id: ${task.uuid}');
       } catch (e) {
-        log.warning('update task id: ${task.id} ${e.toString()}');
+        log.warning('update task id: ${task.uuid} $e');
       }
     }
     return task;
@@ -93,35 +93,35 @@ class DBProvider {
 
   // UPDATE Task
   Future<void> updateTask({required TaskModel task}) async {
-    log.info('update task id: ${task.id} ...');
-    Database db = await database;
+    log.info('update task id: ${task.uuid} ...');
+    final Database db = await database;
     try {
       await db.update(
         AppDB.nameTaskTable,
         task.toMap(),
         where: 'id = ?',
-        whereArgs: [task.id],
+        whereArgs: [task.uuid],
       );
-      log.info('update task id: ${task.id}');
+      log.info('update task id: ${task.uuid}');
     } catch (e) {
-      log.warning('update task id: ${task.id} ${e.toString()}');
+      log.warning('update task id: ${task.uuid} $e');
     }
   }
 
   // DELETE Task
-  Future<int?> deleteTaskByID({required String id}) async {
-    log.info('delete task id: $id ...');
-    Database db = await database;
+  Future<int?> deleteTask({required TaskModel task}) async {
+    log.info('delete task uuid: ${task.uuid} ...');
+    final Database db = await database;
     try {
-      final resault = await db.delete(
+      final int resault = await db.delete(
         AppDB.nameTaskTable,
         where: 'id = ?',
-        whereArgs: [id],
+        whereArgs: [task.uuid],
       );
-      log.info('delete task id: $id');
+      log.info('delete task uuid: ${task.uuid}');
       return resault;
     } catch (e) {
-      log.warning('delete task id: $id ${e.toString()}');
+      log.warning('delete task uuid: ${task.uuid} $e');
     }
     return null;
   }

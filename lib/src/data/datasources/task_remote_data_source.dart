@@ -4,12 +4,11 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
-import 'package:to_do_list/src/domain/models/task.dart';
-
 import '../../config/common/app_urls.dart';
+import '../../domain/models/task.dart';
 import '../../utils/error/exception.dart';
 
-final log = Logger('TaskRemoteDataSource');
+final Logger log = Logger('TaskRemoteDataSource');
 
 abstract class ITaskRemoteDataSource {
   /// Calls the https://beta.mrdekk.ru/todobackend endpoint.
@@ -21,12 +20,11 @@ abstract class ITaskRemoteDataSource {
 }
 
 class TaskRemoteDataSource implements ITaskRemoteDataSource {
+  TaskRemoteDataSource({required this.client});
   final http.Client client;
   int? revision;
 
-  final token = 'antievolutional';
-
-  TaskRemoteDataSource({required this.client});
+  final String token = 'antievolutional';
 
   /// Get ALL Task from Server
   ///
@@ -39,7 +37,7 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
 
     log.info('Get ALL Tasks from: $url ...');
     try {
-      final response = await client.get(
+      final http.Response response = await client.get(
         Uri.parse(url),
         headers: {
           HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -48,7 +46,7 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
         int i = 1;
-        for (Map<String, dynamic> task in result['list']) {
+        for (final Map<String, dynamic> task in result['list']) {
           log.info('Get $i task: $task');
           tasksList.add(TaskModel.fromJson(task));
           i++;
@@ -57,12 +55,11 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
         log.info(
             'Get ALL Tasks, load ${tasksList.length} tasks revision: $revision');
       } else {
-        log.info(
-            'Get ALL Tasks, response code: ${response.statusCode.toString()}');
+        log.info('Get ALL Tasks, response code: ${response.statusCode}');
         throw ServerException(response.statusCode.toString());
       }
     } catch (e) {
-      log.warning('Get ALL Tasks: ${e.toString()}');
+      log.warning('Get ALL Tasks: $e');
     }
     return tasksList;
   }
@@ -74,12 +71,12 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
     const String url = '${AppUrls.urlTask}/list';
     // TODO
     // final token = getToken();
-    final body = jsonEncode({
+    final String body = jsonEncode({
       'element': task.toJson(),
     });
     log.info('ADD Task, revision: $revision body: $body');
     try {
-      final response = await client.post(
+      final http.Response response = await client.post(
         Uri.parse(url),
         headers: {
           'X-Last-Known-Revision': revision.toString(),
@@ -93,14 +90,14 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
         final result = json.decode(response.body);
         revision = result['revision'];
         task.upload = true;
-        log.info('ADD Task id: ${task.id} revision: $revision');
+        log.info('ADD Task id: ${task.uuid} revision: $revision');
       } else {
         log.info(
-            'ADD Task, response code: ${response.statusCode.toString()} revision: $revision');
+            'ADD Task, response code: ${response.statusCode} revision: $revision');
         throw ServerException(response.statusCode.toString());
       }
     } catch (e) {
-      log.warning('ADD Task: ${e.toString()}');
+      log.warning('ADD Task: $e');
     }
     return task;
   }
@@ -108,15 +105,15 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
   /// UPDATE Task to Server
   ///
   Future<TaskModel> updateTaskToServer({required TaskModel task}) async {
-    final String url = '${AppUrls.urlTask}/list/${task.id}';
+    final String url = '${AppUrls.urlTask}/list/${task.uuid}';
     // TODO
     // final token = getToken();
-    final body = jsonEncode({
+    final String body = jsonEncode({
       'element': task.toJson(),
     });
-    log.info('UPDATE Task id: ${task.id} revision: $revision  body: $body');
+    log.info('UPDATE Task id: ${task.uuid} revision: $revision  body: $body');
     try {
-      final response = await client.put(
+      final http.Response response = await client.put(
         Uri.parse(url),
         headers: {
           'X-Last-Known-Revision': revision.toString(),
@@ -130,14 +127,14 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
         final result = json.decode(response.body);
         revision = result['revision'];
         task.upload = true;
-        log.info('UPDATE Task id: ${task.id} revision: $revision');
+        log.info('UPDATE Task id: ${task.uuid} revision: $revision');
       } else {
         log.info(
-            'UPDATE Task response code: ${response.statusCode.toString()} revision: $revision');
+            'UPDATE Task response code: ${response.statusCode} revision: $revision');
         throw ServerException(response.statusCode.toString());
       }
     } catch (e) {
-      log.warning('UPDATE Task: ${e.toString()}');
+      log.warning('UPDATE Task: $e');
     }
     return task;
   }
@@ -145,15 +142,15 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
   /// DELETE Task From Server
   ///
   Future<TaskModel> deleteTaskFromServer({required TaskModel task}) async {
-    final String url = '${AppUrls.urlTask}/list/${task.id}';
+    final String url = '${AppUrls.urlTask}/list/${task.uuid}';
     // TODO
     // final token = getToken();
-    final body = jsonEncode({
+    final String body = jsonEncode({
       'element': task.toJson(),
     });
-    log.info('DELETE Task id: ${task.id} revision: $revision  body: $body');
+    log.info('DELETE Task id: ${task.uuid} revision: $revision  body: $body');
     try {
-      final response = await client.delete(
+      final http.Response response = await client.delete(
         Uri.parse(url),
         headers: {
           'X-Last-Known-Revision': revision.toString(),
@@ -167,14 +164,14 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
         final result = json.decode(response.body);
         revision = result['revision'];
         task.upload = true;
-        log.info('DELETE Task id: ${task.id} revision: $revision');
+        log.info('DELETE Task id: ${task.uuid} revision: $revision');
       } else {
         log.info(
-            'DELETE Task response code: ${response.statusCode.toString()} revision: $revision');
+            'DELETE Task response code: ${response.statusCode} revision: $revision');
         throw ServerException(response.statusCode.toString());
       }
     } catch (e) {
-      log.warning('DELETE Task: ${e.toString()}');
+      log.warning('DELETE Task: $e');
     }
     return task;
   }
@@ -185,7 +182,7 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
     // TODO
     // final token = getToken();
     log.info('getAllTasksFromServer get from: $url');
-    final response = await client.get(
+    final http.Response response = await client.get(
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -194,12 +191,11 @@ class TaskRemoteDataSource implements ITaskRemoteDataSource {
     );
     if (response.statusCode == 200) {
       final taskJson = json.decode(response.body);
-      final task = TaskModel.fromJson(taskJson);
+      final TaskModel task = TaskModel.fromJson(taskJson);
       log.info('getTaskByIDFromServer load ${task.title} by id: $id');
       return task;
     } else {
-      log.info(
-          'getAllTasksFromServer response code: ${response.statusCode.toString()}');
+      log.info('getAllTasksFromServer response code: ${response.statusCode}');
       throw ServerException(response.statusCode.toString());
     }
   }

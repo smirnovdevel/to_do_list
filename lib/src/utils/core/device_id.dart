@@ -3,42 +3,42 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 
-final log = Logger('getDeviceID');
+final Logger log = Logger('getDeviceID');
 
 Future<String> getDeviceID() async {
   final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
 
   try {
     if (kIsWeb) {
-      var deviceData = await deviceInfoPlugin.webBrowserInfo;
+      final WebBrowserInfo deviceData = await deviceInfoPlugin.webBrowserInfo;
       return deviceData.appCodeName.toString();
     } else {
       switch (defaultTargetPlatform) {
         case TargetPlatform.android:
           {
-            var deviceData = await deviceInfoPlugin.androidInfo;
+            final AndroidDeviceInfo deviceData = await deviceInfoPlugin.androidInfo;
             return deviceData.id;
           }
         case TargetPlatform.iOS:
           {
-            var deviceData = await deviceInfoPlugin.iosInfo;
+            final IosDeviceInfo deviceData = await deviceInfoPlugin.iosInfo;
             return deviceData.identifierForVendor ?? 'Unknown device ID';
           }
 
         case TargetPlatform.linux:
           {
-            var deviceData = await deviceInfoPlugin.linuxInfo;
+            final LinuxDeviceInfo deviceData = await deviceInfoPlugin.linuxInfo;
             return deviceData.machineId ?? 'Unknown device ID';
           }
 
         case TargetPlatform.windows:
           {
-            var deviceData = await deviceInfoPlugin.windowsInfo;
+            final WindowsDeviceInfo deviceData = await deviceInfoPlugin.windowsInfo;
             return deviceData.deviceId;
           }
         case TargetPlatform.macOS:
           {
-            var deviceData = await deviceInfoPlugin.macOsInfo;
+            final MacOsDeviceInfo deviceData = await deviceInfoPlugin.macOsInfo;
             return deviceData.systemGUID ?? 'Unknown device ID';
           }
         default:

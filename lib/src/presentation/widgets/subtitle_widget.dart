@@ -10,14 +10,14 @@ class SubTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (task.unlimited) {
+    if (task.deadline == null) {
       return Container();
     }
     return Text(
-      DateFormat('dd MMMM yyyy', 'ru').format(task.deadline),
-      style: task.active
-          ? const TextStyle(color: Colors.blue)
-          : const TextStyle(color: Colors.grey),
+      DateFormat('dd MMMM yyyy', 'ru').format(task.deadline!),
+      style: task.done
+          ? const TextStyle(color: Colors.grey)
+          : const TextStyle(color: Colors.blue),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
-final log = Logger('TaskProvider');
+final Logger log = Logger('TaskProvider');
 
 class TaskProvider extends ChangeNotifier {
   bool visibleCompltedTask = true;

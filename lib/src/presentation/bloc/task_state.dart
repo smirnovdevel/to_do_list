@@ -20,9 +20,9 @@ class TasksLoading extends TaskState {
 
 // Tasks loaded
 class TasksLoaded extends TaskState {
-  final List<TaskModel> tasksList;
 
   TasksLoaded(this.tasksList);
+  final List<TaskModel> tasksList;
 
   @override
   List<Object?> get props => [];
@@ -30,9 +30,9 @@ class TasksLoaded extends TaskState {
 
 // Tasks deleted
 class TaskDeleted extends TaskState {
-  final TaskModel task;
 
   TaskDeleted(this.task);
+  final TaskModel task;
 
   @override
   List<Object?> get props => [];
@@ -47,9 +47,9 @@ class TasksUpdated extends TaskState {
 }
 
 class TasksError extends TaskState {
-  final String message;
 
   TasksError({required this.message});
+  final String message;
 
   @override
   List<Object?> get props => [message];

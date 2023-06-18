@@ -16,7 +16,7 @@ class TitletWidget extends StatelessWidget {
     ///
     /// Disactivate task icon
     ///
-    if (!task.active) {
+    if (task.done) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

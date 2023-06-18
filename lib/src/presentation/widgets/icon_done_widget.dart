@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import '../../config/common/app_icons.dart';
 import '../../domain/models/task.dart';
 
-class IconActivityWidget extends StatelessWidget {
-  const IconActivityWidget({super.key, required this.task});
+class IconDoneWidget extends StatelessWidget {
+  const IconDoneWidget({super.key, required this.task});
 
   final TaskModel task;
 
   @override
   Widget build(BuildContext context) {
-    if (!task.active) {
+    if (task.done) {
       return Icon(
         AppIcons.checked,
         color: Theme.of(context).colorScheme.tertiaryContainer,

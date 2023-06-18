@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
-import 'package:to_do_list/src/presentation/bloc/task_bloc.dart';
 
+import '../../domain/models/task.dart';
+import '../bloc/task_bloc.dart';
 import '../bloc/task_event.dart';
 import '../bloc/task_state.dart';
-import '../../domain/models/task.dart';
 import '../widgets/list_tasks_widget.dart';
 import '../widgets/loading_indicator.dart';
 
-final log = Logger('HomePage');
+final Logger log = Logger('HomePage');
 List<TaskModel> tasks = [];
 
 class HomePage extends StatelessWidget {
@@ -18,16 +18,16 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => TaskBloc()..add(TasksInit()),
+      create: (BuildContext context) => TaskBloc()..add(TasksInit()),
       child: BlocConsumer<TaskBloc, TaskState>(
-        listener: (context, TaskState state) {
+        listener: (BuildContext context, TaskState state) {
           if (state is TaskDeleted) {
-            log.info('listener delete task id: ${state.task.id}');
-            tasks.removeWhere((task) => task.id == state.task.id);
+            log.info('listener delete task id: ${state.task.uuid}');
+            tasks.removeWhere((TaskModel task) => task.uuid == state.task.uuid);
             context.read<TaskBloc>().add(TasksUpdating());
           }
         },
-        builder: (context, TaskState state) {
+        builder: (BuildContext context, TaskState state) {
           if (state is TasksEmpty) {
             log.info('builder - task state empty');
             return loadingIndicator();

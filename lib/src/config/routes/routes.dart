@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:to_do_list/src/domain/models/task.dart';
 import 'dart:developer' as developer;
 
+import 'package:flutter/material.dart';
+
+import '../../domain/models/task.dart';
 import '../../presentation/screens/edit_page.dart';
 import '../../presentation/screens/home_page.dart';
 import '../../presentation/screens/unknown_page.dart';
@@ -9,18 +10,18 @@ import '../../presentation/screens/unknown_page.dart';
 abstract class RouteNames {
   const RouteNames._();
 
-  static const initialRoute = home;
+  static const String initialRoute = home;
 
-  static const home = '/';
-  static const edit = '/edit';
+  static const String home = '/';
+  static const String edit = '/edit';
 }
 
 abstract class RoutesBuilder {
   const RoutesBuilder._();
 
-  static final routes = <String, Widget Function(BuildContext)>{
+  static final Map<String, Widget Function(BuildContext p1)> routes = <String, Widget Function(BuildContext)>{
     RouteNames.home: (_) => const HomePage(),
-    RouteNames.edit: (context) => EditPage(
+    RouteNames.edit: (BuildContext context) => EditPage(
           task: ModalRoute.of(context)?.settings.arguments as TaskModel,
         ),
   };
@@ -47,7 +48,7 @@ abstract class RoutesBuilder {
 
   static Route<Object?>? onUnknownRoute<T>(RouteSettings settings) {
     return MaterialPageRoute<T>(
-      builder: (context) => UnknownPage(
+      builder: (BuildContext context) => UnknownPage(
         routeName: settings.name,
       ),
       settings: settings,
@@ -55,15 +56,15 @@ abstract class RoutesBuilder {
   }
 
   static List<Route<Object?>> onGenerateInitialRoutes(String initialRoutes) {
-    final routes = <Route>[];
+    final List<Route> routes = <Route>[];
 
     if (initialRoutes.isEmpty || !initialRoutes.startsWith('/')) {
       developer.log(
           '\u001b[1;33m Routes: \u001b[1;34m invalid initialRoutes \u001b[0m ($initialRoutes)');
     } else {
-      final names = initialRoutes.substring(1).split('/');
-      for (final name in names) {
-        final route = onGenerateRoute(
+      final List<String> names = initialRoutes.substring(1).split('/');
+      for (final String name in names) {
+        final Route<Object?>? route = onGenerateRoute(
           RouteSettings(name: '/$name'),
         );
         if (route != null) {

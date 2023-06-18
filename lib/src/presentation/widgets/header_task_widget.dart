@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:to_do_list/src/config/common/app_icons.dart';
-import 'package:to_do_list/src/presentation/provider/task_provider.dart';
+import '../../config/common/app_icons.dart';
+import '../provider/task_provider.dart';
 
 class HeaderTaskWidget extends StatelessWidget {
   const HeaderTaskWidget({super.key, required this.count});
@@ -11,18 +11,18 @@ class HeaderTaskWidget extends StatelessWidget {
   final int count;
   @override
   Widget build(BuildContext context) {
-    TaskProvider provider = Provider.of<TaskProvider>(context);
-    return LayoutBuilder(builder: (context, constraints) {
-      final settings = context
+    final TaskProvider provider = Provider.of<TaskProvider>(context);
+    return LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+      final FlexibleSpaceBarSettings? settings = context
           .dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
       if (settings == null) return const SizedBox();
-      final deltaExtent = settings.maxExtent - settings.minExtent;
-      final translation =
+      final double deltaExtent = settings.maxExtent - settings.minExtent;
+      final double translation =
           (1.0 - (settings.currentExtent - settings.minExtent) / deltaExtent)
               .clamp(0.0, 1.0);
-      final start = max(0.0, 1.0 - 146 / deltaExtent);
-      const end = 1.0;
-      final currentValue = 1.0 - Interval(start, end).transform(translation);
+      final double start = max(0.0, 1.0 - 146 / deltaExtent);
+      const double end = 1.0;
+      final double currentValue = 1.0 - Interval(start, end).transform(translation);
 
       return Padding(
         padding: EdgeInsets.only(
@@ -42,9 +42,7 @@ class HeaderTaskWidget extends StatelessWidget {
                       fontSize: 20 + 12 * currentValue,
                       fontWeight: FontWeight.w500),
                 ),
-                count == 0
-                    ? Container()
-                    : Text(
+                if (count == 0) Container() else Text(
                         'Выполнено - $count',
                         // style: TextStyle(fontSize: 16 * currentValue),
                         style: Theme.of(context)
@@ -54,10 +52,8 @@ class HeaderTaskWidget extends StatelessWidget {
                       ),
               ],
             ),
-            count == 0 ? Container() : const Spacer(),
-            count == 0
-                ? Container()
-                : GestureDetector(
+            if (count == 0) Container() else const Spacer(),
+            if (count == 0) Container() else GestureDetector(
                     onTap: () {
                       provider.changeVisible();
                     },

@@ -1,10 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
 import 'app.dart';
-import 'src/utils/error/http_overrides.dart';
-import 'src/utils/core/logging.dart';
 import 'src/locator.dart' as locator;
+import 'src/utils/core/logging.dart';
+import 'src/utils/error/http_overrides.dart';
 
 Future<void> main() async {
   //инициализация зависимостей

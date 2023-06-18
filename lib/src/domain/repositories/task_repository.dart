@@ -1,34 +1,33 @@
 import 'package:logging/logging.dart';
-import 'package:to_do_list/src/utils/error/exception.dart';
-import 'package:to_do_list/src/data/datasources/task_remote_data_source.dart';
 
-import '../../utils/core/network_info.dart';
-import '../models/task.dart';
 import '../../data/datasources/task_local_data_source.dart';
+import '../../data/datasources/task_remote_data_source.dart';
+import '../../utils/core/network_info.dart';
+import '../../utils/error/exception.dart';
+import '../models/task.dart';
 
 abstract class ITaskRepository {
-  Future<List<TaskModel>> getAllTask();
-  Future<TaskModel> updateTask({required TaskModel task});
+  Future<List<TaskModel>> getTasks();
+  Future<TaskModel> saveTask({required TaskModel task});
   Future<int?> deleteTask({required TaskModel task});
 }
 
-final log = Logger('TaskRepository');
+final Logger log = Logger('TaskRepository');
 
 class TaskRepository implements ITaskRepository {
-  final TaskRemoteDataSource remoteDataSource;
-  final TaskLocalDataSource localDataSource;
-  final NetworkInfo networkInfo;
-
   TaskRepository({
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
   });
+  final TaskRemoteDataSource remoteDataSource;
+  final TaskLocalDataSource localDataSource;
+  final NetworkInfo networkInfo;
 
   /// GET All Task
   ///
   @override
-  Future<List<TaskModel>> getAllTask() async {
+  Future<List<TaskModel>> getTasks() async {
     List<TaskModel> localTasksList = [];
     List<TaskModel> remoteTasksList = [];
     List<TaskModel> tasksList = [];
@@ -45,7 +44,7 @@ class TaskRepository implements ITaskRepository {
     }
     log.info('get tasks from DB...');
     try {
-      localTasksList = await localDataSource.getAllTasksFromDB();
+      localTasksList = await localDataSource.getTasks();
       log.info('get ${localTasksList.length} tasks from DB');
     } on DBException {
       log.warning('get task from DB tasks');
@@ -60,11 +59,11 @@ class TaskRepository implements ITaskRepository {
         /// для разбора
 
         /// Перебираем все задания с сервера
-        for (TaskModel remoteTask in remoteTasksList) {
+        for (final TaskModel remoteTask in remoteTasksList) {
           /// Задача с этим ID есть в базе
           try {
-            TaskModel localTask =
-                localTasksList.firstWhere((item) => item.id == remoteTask.id);
+            TaskModel localTask = localTasksList
+                .firstWhere((TaskModel item) => item.uuid == remoteTask.uuid);
 
             // задача есть на сервере и в локальной базе
             // если время последнего изменения на сервере больше
@@ -73,7 +72,7 @@ class TaskRepository implements ITaskRepository {
             if (localTask.changed.isBefore(remoteTask.changed)) {
               localTask = TaskModel.copyFrom(remoteTask);
               tasksList.add(localTask);
-              updateTask(task: localTask);
+              saveTask(task: localTask);
 
               // задача есть и на сервере и в базе
               // дата последнего обновления совпадает
@@ -83,14 +82,15 @@ class TaskRepository implements ITaskRepository {
             }
           } on StateError catch (_) {
             // задачи нет в локальной базе, добавляем
-            TaskModel localTask = TaskModel.copyFrom(remoteTask);
+            final TaskModel localTask = TaskModel.copyFrom(remoteTask);
             tasksList.add(localTask);
-            updateTask(task: localTask);
+            saveTask(task: localTask);
           }
-          localTasksList.removeWhere((item) => item.id == remoteTask.id);
+          localTasksList
+              .removeWhere((TaskModel item) => item.uuid == remoteTask.uuid);
         }
         // если остались задачи, загруженные из базы, есть 2 варианта
-        for (TaskModel task in localTasksList) {
+        for (final TaskModel task in localTasksList) {
           // 1 - их удалили с другого устройства, удаляем из базы
           //
           if (task.upload) {
@@ -110,27 +110,27 @@ class TaskRepository implements ITaskRepository {
     return tasksList;
   }
 
-  /// UPDATE Task
+  /// SAVE Task
   ///
   @override
-  Future<TaskModel> updateTask({required TaskModel task}) async {
+  Future<TaskModel> saveTask({required TaskModel task}) async {
     if (await networkInfo.isConnected) {
       // если задача уже загружена на сервер обновляем
       // иначе добавляем
       if (task.upload) {
-        log.info('add ${task.id} to Server');
+        log.info('add ${task.uuid} to Server');
         await remoteDataSource.updateTaskToServer(task: task);
       } else {
-        log.info('add ${task.id} to Server');
+        log.info('add ${task.uuid} to Server');
         await remoteDataSource.postTaskToServer(task: task);
       }
     }
-    log.info('update task id: ${task.id} ...');
+    log.info('update task uuid: ${task.uuid} ...');
     try {
-      await localDataSource.insertTaskInDB(task: task);
-      log.info('update task id: ${task.id} upload: ${task.upload}');
+      await localDataSource.saveTask(task: task);
+      log.info('update task uuid: ${task.uuid} upload: ${task.upload}');
     } on DBException {
-      log.warning('update task id: ${task.id}');
+      log.warning('update task uuid: ${task.uuid}');
     }
     return task;
   }
@@ -139,15 +139,15 @@ class TaskRepository implements ITaskRepository {
   ///
   @override
   Future<int?> deleteTask({required TaskModel task}) async {
-    log.info('delete task id: ${task.id} ...');
+    log.info('delete task uuid: ${task.uuid} ...');
     if (task.upload) {
       await remoteDataSource.deleteTaskFromServer(task: task);
     }
     try {
-      await localDataSource.deleteTaskByID(id: task.id!);
-      log.info('delete task id: ${task.id}');
+      await localDataSource.deleteTask(task: task);
+      log.info('delete task uuid: ${task.uuid}');
     } on DBException {
-      log.warning('delete task id: ${task.id}');
+      log.warning('delete task uuid: ${task.uuid}');
     }
     return null;
   }

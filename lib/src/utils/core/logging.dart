@@ -1,6 +1,7 @@
+import 'dart:developer' as console;
+
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
-import 'dart:developer' as console;
 
 // console.log( "\u001b[1;31m Red message" );
 // console.log( "\u001b[1;32m Green message" );
@@ -12,7 +13,7 @@ import 'dart:developer' as console;
 void initLogger() {
   if (kDebugMode) {
     Logger.root.level = Level.ALL;
-    Logger.root.onRecord.listen((record) {
+    Logger.root.onRecord.listen((LogRecord record) {
       switch (record.level) {
         case Level.FINE:
           {

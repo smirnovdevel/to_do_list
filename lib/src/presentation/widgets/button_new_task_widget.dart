@@ -14,10 +14,8 @@ class ButtonNewTaskWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 19.0, bottom: 15.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 15.0),
