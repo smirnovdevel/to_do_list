@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config/routes/dialogs.dart';
-import '../bloc/task_bloc.dart';
-import '../bloc/task_event.dart';
 import '../../config/common/app_icons.dart';
 import '../../domain/models/task.dart';
 import '../../config/routes/navigation.dart';
@@ -25,11 +22,6 @@ class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
     NavigationManager.instance.pop(task);
   }
 
-  _deleteCurrentTask() {
-    widget.task.deleted = true;
-    // context.read<TaskBloc>().add(DeleteTask(task: widget.task));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,7 +32,7 @@ class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
             final confirmed =
                 await Dialogs.showConfirmCloseCountDialog(context) ?? false;
             if (confirmed) {
-              _deleteCurrentTask();
+              widget.task.deleted = true;
               _onGoBack(widget.task);
             }
           }
