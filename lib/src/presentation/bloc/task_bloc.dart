@@ -24,9 +24,9 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     );
     on<SaveTask>(
       (SaveTask event, Emitter<TaskState> emit) async {
-        log.info('update task id: ${event.task.uuid} ...');
+        log.info('save task id: ${event.task.uuid} ...');
         await _taskRepository.saveTask(task: event.task);
-        log.info('update task id: ${event.task.uuid}');
+        log.info('save task id: ${event.task.uuid}');
       },
     );
     on<DeleteTask>(

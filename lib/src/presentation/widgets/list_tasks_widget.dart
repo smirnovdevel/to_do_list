@@ -171,12 +171,9 @@ class _ListTasksWidgetState extends State<ListTasksWidget> {
 
     if (result != null) {
       // Is new task
-      result.uuid = uuid.v1();
       setState(() {
         widget.tasks.add(result);
       });
-
-      context.read<TaskBloc>().add(SaveTask(task: result));
     }
   }
 }

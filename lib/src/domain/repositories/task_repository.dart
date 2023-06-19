@@ -1,7 +1,7 @@
 import 'package:logging/logging.dart';
 
-import '../../data/datasources/task_local_data_source.dart';
-import '../../data/datasources/task_remote_data_source.dart';
+import '../../data/datasources/local_data_source.dart';
+import '../../data/datasources/remote_data_source.dart';
 import '../../utils/core/network_info.dart';
 import '../../utils/error/exception.dart';
 import '../models/task.dart';
@@ -12,6 +12,35 @@ abstract class ITaskRepository {
   Future<int?> deleteTask({required TaskModel task});
 }
 
+/// Логика получения задач
+/// Получаем задачи с сервера, считываем задачи из базы, синхронизируем их по UUID
+///
+/// Возможны следующие случаи:
+///
+/// 1) Задача есть на сервере, но её нет в базе.
+/// Например: Создана на другом устройстве или грохнули базу
+/// -- Добавляем в список, записываем в базу, присваиваем ID, upload = true
+///
+/// 2) Задача есть на сервере, задача есть в базе, но в время последнего изменения больше задачи с сервере, upload = true
+/// Например: На телефоне не было интернета
+/// -- а. Если задача из базы в статусе DELETED - удаляем задачу с сервера, удаляем задачу из базы
+/// -- b. Добавляем задачу в список, обновляем задачу на сервере
+///
+/// 3: Задача есть базе, но её нет на сервере, upload = false
+/// Например: На телефоне не было интернета
+/// -- Добавляем в список, отправляем задачу на сервере, upload = true, обновляем задачу в базе
+///
+/// 4) Задача есть на сервере, задача есть в базе, но в время последнего изменения меньше задачи с сервере, upload = true
+/// Например: Была изменена с другого устройства
+/// -- Добавляем в список, обновляем задачу в базе
+///
+/// 5) Задача есть базе, но её нет на сервере, upload = true
+/// Например: Задача удалена с другого устройства
+/// -- удаляем задачу из базы
+///
+/// 6) Задача есть и там, время последнего измения совпадает
+/// -- Добавляем в список
+///
 final Logger log = Logger('TaskRepository');
 
 class TaskRepository implements ITaskRepository {
@@ -33,79 +62,96 @@ class TaskRepository implements ITaskRepository {
     List<TaskModel> tasksList = [];
 
     /// check internet connection
-    log.info('get tasks from Server...');
+    log.info('Get Tasks from Server...');
     if (await networkInfo.isConnected) {
-      remoteTasksList = await remoteDataSource.getAllTasksFromServer();
+      remoteTasksList = await remoteDataSource.getTasks();
       if (remoteTasksList.isNotEmpty) {
         log.info('get ${remoteTasksList.length} from Server');
       }
     } else {
-      log.warning('no internet connection');
+      log.warning('No Internet connection');
     }
-    log.info('get tasks from DB...');
+    log.info('Get Tasks from DB...');
     try {
       localTasksList = await localDataSource.getTasks();
-      log.info('get ${localTasksList.length} tasks from DB');
+      log.info('Get ${localTasksList.length} tasks from DB');
     } on DBException {
-      log.warning('get task from DB tasks');
+      log.warning('Get Tasks from DB');
     }
 
     /// Проверям даты последнего изменения задачи, по последней истинная
     if (remoteTasksList.isNotEmpty) {
       if (localTasksList.isEmpty) {
-        tasksList.addAll(remoteTasksList);
+        for (TaskModel task in remoteTasksList) {
+          await localDataSource.saveTask(task: task);
+          tasksList.add(task);
+        }
       } else {
-        /// Все задачи загруженные из базы копируем во временный список
-        /// для разбора
-
-        /// Перебираем все задания с сервера
+        // Перебираем все задания с сервера
         for (final TaskModel remoteTask in remoteTasksList) {
-          /// Задача с этим ID есть в базе
+          /// Ищем задачу с этим UUID в списке полученных из базы
           try {
             TaskModel localTask = localTasksList
                 .firstWhere((TaskModel item) => item.uuid == remoteTask.uuid);
-
-            // задача есть на сервере и в локальной базе
-            // если время последнего изменения на сервере больше
-            // чем в локальной, добавляем в список и обновляем в базе
-            //
+            // задача найдена, проверяем время послднегео обновления
             if (localTask.changed.isBefore(remoteTask.changed)) {
-              localTask = TaskModel.copyFrom(remoteTask);
-              tasksList.add(localTask);
-              saveTask(task: localTask);
-
-              // задача есть и на сервере и в базе
-              // дата последнего обновления совпадает
-              // просто добавляем в список
+              /// Вариант 4.
+              tasksList.add(TaskModel.copyFrom(remoteTask));
+              await localDataSource.saveTask(task: tasksList.last);
+            } else if (remoteTask.changed.isBefore(localTask.changed)) {
+              /// Вариант 2.
+              if (localTask.deleted) {
+                /// случай а
+                await remoteDataSource.deleteTask(task: localTask);
+              } else {
+                /// случай b
+                localTask.upload = false;
+                await remoteDataSource.updateTask(task: localTask);
+                if (localTask.upload) {
+                  log.info('Update task id: ${localTask.uuid} ...');
+                  await localDataSource.saveTask(task: localTask);
+                }
+                tasksList.add(TaskModel.copyFrom(localTask));
+              }
             } else {
-              tasksList.add(localTask);
+              /// Вариант 6.
+              tasksList.add(TaskModel.copyFrom(localTask));
             }
+            localTasksList.removeWhere((task) => task.uuid == remoteTask.uuid);
           } on StateError catch (_) {
-            // задачи нет в локальной базе, добавляем
-            final TaskModel localTask = TaskModel.copyFrom(remoteTask);
-            tasksList.add(localTask);
-            saveTask(task: localTask);
+            /// Задачи полученной с сервера нет в списке поз лученных из базы
+            /// Вариант 1.
+            tasksList.add(TaskModel.copyFrom(remoteTask));
+            await localDataSource.saveTask(task: tasksList.last);
           }
           localTasksList
               .removeWhere((TaskModel item) => item.uuid == remoteTask.uuid);
         }
-        // если остались задачи, загруженные из базы, есть 2 варианта
-        for (final TaskModel task in localTasksList) {
-          // 1 - их удалили с другого устройства, удаляем из базы
-          //
-          if (task.upload) {
-            deleteTask(task: task);
-          } else {
-            // 2 - они не загружены на сервере
-            //
-            tasksList.add(task);
-            log.info('get ${localTasksList.length} found not upload task');
-            remoteDataSource.postTaskToServer(task: task);
-          }
-          // все задачи разобраны, очищаем на всякий случай
-          // localTasksList.clear();
+        // В localTasksList остались задачи которых нет на сервере
+        if (localTasksList.isNotEmpty) {
+          log.info('found ${localTasksList.length} not upload tasks');
         }
+        for (final TaskModel task in localTasksList) {
+          if (task.upload) {
+            /// Вариант 5.
+            await localDataSource.deleteTask(task: task);
+          } else {
+            /// Вариант 5.
+            tasksList.add(task);
+            log.info('Upload Task id: ${task.uuid} ...');
+            await remoteDataSource.saveTask(task: task);
+            // при успешной отправке, обновляем в базе с новым статусом
+            if (task.upload) {
+              log.info('Update Task id: ${task.uuid} ...');
+              await localDataSource.saveTask(task: task);
+            }
+          }
+        }
+        // все задачи должны быть разобраны
       }
+    } else {
+      // с сервера задач нет
+      tasksList.addAll(localTasksList);
     }
     return tasksList;
   }
@@ -114,23 +160,21 @@ class TaskRepository implements ITaskRepository {
   ///
   @override
   Future<TaskModel> saveTask({required TaskModel task}) async {
+    log.info('Save Task id: ${task.uuid} ...');
     if (await networkInfo.isConnected) {
-      // если задача уже загружена на сервер обновляем
-      // иначе добавляем
       if (task.upload) {
-        log.info('add ${task.uuid} to Server');
-        await remoteDataSource.updateTaskToServer(task: task);
+        log.info('Update Task id: ${task.uuid} to Server');
+        await remoteDataSource.updateTask(task: task);
       } else {
-        log.info('add ${task.uuid} to Server');
-        await remoteDataSource.postTaskToServer(task: task);
+        log.info('Save Task id: ${task.uuid} to Server');
+        await remoteDataSource.saveTask(task: task);
       }
     }
-    log.info('update task uuid: ${task.uuid} ...');
     try {
       await localDataSource.saveTask(task: task);
-      log.info('update task uuid: ${task.uuid} upload: ${task.upload}');
+      log.info('Save Task uuid: ${task.uuid} to DB upload: ${task.upload}');
     } on DBException {
-      log.warning('update task uuid: ${task.uuid}');
+      log.warning('Save Task uuid: ${task.uuid}');
     }
     return task;
   }
@@ -141,7 +185,7 @@ class TaskRepository implements ITaskRepository {
   Future<int?> deleteTask({required TaskModel task}) async {
     log.info('delete task uuid: ${task.uuid} ...');
     if (task.upload) {
-      await remoteDataSource.deleteTaskFromServer(task: task);
+      await remoteDataSource.deleteTask(task: task);
     }
     try {
       await localDataSource.deleteTask(task: task);

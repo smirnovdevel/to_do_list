@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import 'app.dart';
 import 'src/locator.dart' as locator;
 import 'src/utils/core/logging.dart';
-import 'src/utils/error/http_overrides.dart';
 
 Future<void> main() async {
   //инициализация зависимостей
@@ -14,7 +11,8 @@ Future<void> main() async {
   //инициализируем задержку при запуске приложения
   await initialization(null);
 
-  HttpOverrides.global = MyHttpOverrides();
+  // Костыль для тестирования, если сертификат сервера просрочен
+  // HttpOverrides.global = MyHttpOverrides();
 
   initLogger();
 

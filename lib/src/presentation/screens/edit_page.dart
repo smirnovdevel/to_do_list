@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../config/common/app_color.dart';
 import '../../config/routes/navigation.dart';
@@ -32,6 +33,7 @@ class _EditPageState extends State<EditPage> {
   late bool _done;
   late int _priority;
   late DateTime? _deadline;
+  Uuid uuid = const Uuid();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -126,9 +128,11 @@ class _EditPageState extends State<EditPage> {
                 widget.task.priority = _priority;
                 widget.task.deadline = _deadline;
                 widget.task.changed = DateTime.now();
-                if (widget.task.uuid != null) {
-                  context.read<TaskBloc>().add(SaveTask(task: widget.task));
-                }
+
+                /// Если uuid nul, значит идёт создание задачи
+                widget.task.uuid ??= uuid.v1();
+                widget.task.upload = false;
+                context.read<TaskBloc>().add(SaveTask(task: widget.task));
                 _onGoBack(widget.task);
               },
               child: Text(

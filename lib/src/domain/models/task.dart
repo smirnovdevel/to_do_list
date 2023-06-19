@@ -105,7 +105,7 @@ class TaskModel extends Equatable {
   Map<String, dynamic> toJson() {
     if (deadline == null) {
       return {
-        'uuid': uuid, // уникальный идентификатор элемента
+        'id': uuid, // уникальный идентификатор элемента
         'text': title,
         'importance': priority == 0
             ? 'low'
@@ -119,7 +119,7 @@ class TaskModel extends Equatable {
       };
     } else {
       return {
-        'uuid': uuid, // уникальный идентификатор элемента
+        'id': uuid, // уникальный идентификатор элемента
         'text': title,
         'importance': priority == 0
             ? 'low'

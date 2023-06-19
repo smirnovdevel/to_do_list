@@ -1,8 +1,11 @@
 import 'package:isar/isar.dart';
+import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:to_do_list/src/domain/models/task.dart';
 
 import '../../domain/models/task_isar.dart';
+
+final Logger log = Logger('ISAR DBProvider');
 
 class DBProvider {
   DBProvider._();
@@ -62,15 +65,25 @@ class DBProvider {
       ..upload = task.upload
       ..autor = task.autor;
     isar.writeTxn(() async {
-      isar.taskModelIsars.put(isarTask);
+      task.id = await isar.taskModelIsars.put(isarTask);
     });
   }
 
   /// DELETE
   Future<void> deleteTask({required TaskModel task}) async {
-    final isar = await _isarGetter;
-    isar.writeTxn(() async {
-      isar.taskModelIsars.delete(task.id!);
-    });
+    if (task.id != null) {
+      log.info('delete task uuid: ${task.uuid} ...');
+      try {
+        final isar = await _isarGetter;
+        isar.writeTxn(() async {
+          isar.taskModelIsars.delete(task.id!);
+        });
+        log.info('delete task uuid: ${task.uuid}');
+      } catch (e) {
+        log.warning('delete task uuid: ${task.uuid} $e');
+      }
+    } else {
+      log.info('delete task uuid: ${task.uuid} imposible, id = null');
+    }
   }
 }

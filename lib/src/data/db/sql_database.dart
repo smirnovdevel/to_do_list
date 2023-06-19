@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 import '../../config/common/app_db.dart';
 import '../../domain/models/task.dart';
 
-final Logger log = Logger('DBProvider');
+final Logger log = Logger('SQL DBProvider');
 
 class DBProvider {
   DBProvider._();
