@@ -1,7 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:to_do_list/src/domain/models/task.dart';
+import '../../domain/models/task.dart';
 
 import '../../domain/models/task_isar.dart';
 

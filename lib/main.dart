@@ -5,6 +5,8 @@ import 'src/locator.dart' as locator;
 import 'src/utils/core/logging.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   //инициализация зависимостей
   await locator.initializeDependencies();
 
