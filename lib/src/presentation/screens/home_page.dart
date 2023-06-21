@@ -19,6 +19,6 @@ class HomePage extends ConsumerWidget {
     if (todos == null) {
       ref.read(todosProvider.notifier).init();
     }
-    return todos == null ? loadingIndicator() : ListTodoWidget(todos: todos);
+    return todos == null ? loadingIndicator() : const ListTodoWidget();
   }
 }

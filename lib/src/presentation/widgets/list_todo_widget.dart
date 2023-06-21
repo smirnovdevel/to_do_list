@@ -7,20 +7,18 @@ import 'package:uuid/uuid.dart';
 import '../../config/common/app_icons.dart';
 import '../../config/routes/navigation.dart';
 import '../../domain/models/todo.dart';
+import '../provider/done_provider.dart';
 import '../provider/todos_provider.dart';
 import 'button_new_task_widget.dart';
 import 'header_todo_widget.dart';
 import 'item_todo_widget.dart';
 
-final Logger log = Logger('ListTasksWidget');
+final Logger log = Logger('ListTodoWidget');
 
 class ListTodoWidget extends ConsumerStatefulWidget {
   const ListTodoWidget({
     super.key,
-    required this.todos,
   });
-
-  final List<Todo> todos;
 
   @override
   ConsumerState<ListTodoWidget> createState() => _ListTodoWidgetState();
@@ -29,7 +27,7 @@ class ListTodoWidget extends ConsumerStatefulWidget {
 class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
   final ScrollController scrollController = ScrollController();
 
-  bool visibleCloseTask = false;
+  bool visibleDoneTodo = false;
   bool haveCloseTask = true;
   Uuid uuid = const Uuid();
 
@@ -40,8 +38,8 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
   }
 
   Future<void> _updateTaskList() async {
-    // context.read<TaskBloc>().add(TasksInit());
-    await Future.delayed(const Duration());
+    ref.read(todosProvider.notifier).init();
+    await Future.delayed(const Duration(milliseconds: 300));
   }
 
   void toTop() {
@@ -51,6 +49,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final todos = ref.watch(filteredTodos);
     return Scaffold(
       body: SafeArea(
         top: false,
@@ -65,10 +64,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
                 shadowColor: Theme.of(context).colorScheme.shadow,
                 expandedHeight: 120.0,
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                flexibleSpace: HeaderTodoWidget(
-                    count: widget.todos
-                        .where((Todo todo) => todo.done && !todo.deleted)
-                        .length),
+                flexibleSpace: const HeaderTodoWidget(),
               ),
               CupertinoSliverRefreshControl(
                 onRefresh: () async {
@@ -94,9 +90,9 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
                             padding: EdgeInsets.zero,
                             controller: scrollController,
                             shrinkWrap: true,
-                            itemCount: widget.todos.length,
+                            itemCount: todos.length,
                             itemBuilder: (BuildContext context, int index) {
-                              return ItemTodoWidget(todo: widget.todos[index]);
+                              return ItemTodoWidget(todo: todos[index]);
                             },
                           ),
                         ),

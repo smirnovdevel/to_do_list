@@ -1,14 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../config/common/app_icons.dart';
+import '../provider/done_provider.dart';
 
-class HeaderTodoWidget extends StatelessWidget {
-  const HeaderTodoWidget({super.key, required this.count});
+class HeaderTodoWidget extends ConsumerWidget {
+  const HeaderTodoWidget({super.key});
 
-  final int count;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref.watch(countDone);
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       final FlexibleSpaceBarSettings? settings = context
@@ -46,7 +48,6 @@ class HeaderTodoWidget extends StatelessWidget {
                 else
                   Text(
                     'Выполнено - $count',
-                    // style: TextStyle(fontSize: 16 * currentValue),
                     style: Theme.of(context)
                         .textTheme
                         .labelSmall!
@@ -60,17 +61,21 @@ class HeaderTodoWidget extends StatelessWidget {
             else
               GestureDetector(
                 onTap: () {
-                  // provider.changeVisible();
+                  if (ref.read(todosFilter) == TodosFilter.all) {
+                    ref.read(todosFilter.notifier).state = TodosFilter.active;
+                  } else {
+                    ref.read(todosFilter.notifier).state = TodosFilter.all;
+                  }
                 },
-                child: const Align(
+                child: Align(
                     alignment: Alignment.bottomRight,
                     child: Icon(
-                      // provider.visible
-                      //     ? AppIcons.visibilityOff
-                      // :
-                      AppIcons.visibility,
-                      // weight: provider.visible ? 18 : 22,
-                      weight: 22,
+                      ref.watch(todosFilter) == TodosFilter.active
+                          ? AppIcons.visibilityOff
+                          : AppIcons.visibility,
+                      weight: ref.watch(todosFilter) == TodosFilter.active
+                          ? 18
+                          : 22,
                       size: 20,
                     )),
               ),
