@@ -2,6 +2,7 @@ import 'package:logging/logging.dart';
 
 import '../../data/datasources/local_data_source.dart';
 import '../../data/datasources/remote_data_source.dart';
+import '../../data/repositories/device_id.dart';
 import '../../utils/core/network_info.dart';
 import '../../utils/error/exception.dart';
 import '../models/todo.dart';
@@ -47,95 +48,102 @@ class TodoService {
   final ITodoLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
-  /// GET All Task
+  String? deviceId;
+
+  Future<void> getId() async {
+    deviceId = await getDeviceID();
+    log.info('Device id: $deviceId');
+  }
+
+  /// GET All Todo
   ///
-  Future<List<Todo>> getTasks() async {
-    List<Todo> localTasksList = [];
-    List<Todo> remoteTasksList = [];
-    List<Todo> tasksList = [];
+  Future<List<Todo>> getTodos() async {
+    List<Todo> localTodosList = [];
+    List<Todo> remoteTodosList = [];
+    List<Todo> todosList = [];
 
     /// check internet connection
-    log.info('Get Tasks from Server...');
+    log.info('Get Todos from Server...');
     if (await networkInfo.isConnected) {
-      remoteTasksList = await remoteDataSource.getTasks();
-      if (remoteTasksList.isNotEmpty) {
-        log.info('Get ${remoteTasksList.length} from Server');
+      remoteTodosList = await remoteDataSource.getTodos();
+      if (remoteTodosList.isNotEmpty) {
+        log.info('Get ${remoteTodosList.length} from Server');
       }
     } else {
       log.warning('No Internet connection');
     }
-    log.info('Get Tasks from DB...');
+    log.info('Get Todos from DB...');
     try {
-      localTasksList = await localDataSource.getTasks();
-      log.info('Get ${localTasksList.length} tasks from DB');
+      localTodosList = await localDataSource.getTodos();
+      log.info('Get ${localTodosList.length} todos from DB');
     } on DBException {
-      log.warning('Get Tasks from DB');
+      log.warning('Get Todos from DB');
     }
 
     /// Проверям даты последнего изменения задачи, по последней истинная
-    if (remoteTasksList.isNotEmpty) {
-      if (localTasksList.isEmpty) {
-        for (Todo task in remoteTasksList) {
-          await localDataSource.saveTask(todo: task);
-          tasksList.add(task);
+    if (remoteTodosList.isNotEmpty) {
+      if (localTodosList.isEmpty) {
+        for (Todo todo in remoteTodosList) {
+          await localDataSource.saveTodo(todo: todo);
+          todosList.add(todo);
         }
       } else {
         // Перебираем все задания с сервера
-        for (final Todo remoteTask in remoteTasksList) {
+        for (final Todo remoteTodo in remoteTodosList) {
           /// Ищем задачу с этим UUID в списке полученных из базы
           try {
-            Todo localTask = localTasksList
-                .firstWhere((Todo item) => item.uuid == remoteTask.uuid);
+            Todo localTodo = localTodosList
+                .firstWhere((Todo item) => item.uuid == remoteTodo.uuid);
             // задача найдена, проверяем время послднегео обновления
-            if (localTask.changed.isBefore(remoteTask.changed)) {
+            if (localTodo.changed.isBefore(remoteTodo.changed)) {
               /// Вариант 4.
-              tasksList.add(Todo.copyFrom(remoteTask));
-              await localDataSource.saveTask(todo: tasksList.last);
-            } else if (remoteTask.changed.isBefore(localTask.changed)) {
+              todosList.add(Todo.copyFrom(remoteTodo));
+              await localDataSource.saveTodo(todo: todosList.last);
+            } else if (remoteTodo.changed.isBefore(localTodo.changed)) {
               /// Вариант 2.
-              if (localTask.deleted) {
+              if (localTodo.deleted) {
                 /// случай а
-                await remoteDataSource.deleteTask(todo: localTask);
+                await remoteDataSource.deleteTodo(todo: localTodo);
               } else {
                 /// случай b
-                await remoteDataSource.updateTask(todo: localTask);
-                if (localTask.upload) {
-                  log.info('Update task id: ${localTask.uuid} ...');
-                  await localDataSource.saveTask(todo: localTask);
+                await remoteDataSource.updateTodo(todo: localTodo);
+                if (localTodo.upload) {
+                  log.info('Update todo id: ${localTodo.uuid} ...');
+                  await localDataSource.saveTodo(todo: localTodo);
                 }
-                tasksList.add(Todo.copyFrom(localTask));
+                todosList.add(Todo.copyFrom(localTodo));
               }
             } else {
               /// Вариант 6.
-              tasksList.add(Todo.copyFrom(localTask));
+              todosList.add(Todo.copyFrom(localTodo));
             }
-            localTasksList.removeWhere((task) => task.uuid == remoteTask.uuid);
+            localTodosList.removeWhere((todo) => todo.uuid == remoteTodo.uuid);
           } on StateError catch (_) {
             /// Задачи полученной с сервера нет в списке поз лученных из базы
             /// Вариант 1.
-            tasksList.add(Todo.copyFrom(remoteTask));
-            await localDataSource.saveTask(todo: tasksList.last);
+            todosList.add(Todo.copyFrom(remoteTodo));
+            await localDataSource.saveTodo(todo: todosList.last);
           }
-          localTasksList
-              .removeWhere((Todo item) => item.uuid == remoteTask.uuid);
+          localTodosList
+              .removeWhere((Todo item) => item.uuid == remoteTodo.uuid);
         }
-        // В localTasksList остались задачи которых нет на сервере
-        if (localTasksList.isNotEmpty) {
-          log.info('found ${localTasksList.length} not upload tasks');
+        // В localTodosList остались задачи которых нет на сервере
+        if (localTodosList.isNotEmpty) {
+          log.info('found ${localTodosList.length} not upload todos');
         }
-        for (final Todo task in localTasksList) {
-          if (task.upload) {
+        for (final Todo todo in localTodosList) {
+          if (todo.upload) {
             /// Вариант 5.
-            await localDataSource.deleteTask(todo: task);
+            await localDataSource.deleteTodo(todo: todo);
           } else {
             /// Вариант 5.
-            tasksList.add(task);
-            log.info('Upload Task id: ${task.uuid} ...');
-            await remoteDataSource.saveTask(todo: task);
+            todosList.add(todo);
+            log.info('Upload Todo id: ${todo.uuid} ...');
+            await remoteDataSource.saveTodo(todo: todo);
             // при успешной отправке, обновляем в базе с новым статусом
-            if (task.upload) {
-              log.info('Update Task id: ${task.uuid} ...');
-              await localDataSource.saveTask(todo: task);
+            if (todo.upload) {
+              log.info('Update Todo id: ${todo.uuid} ...');
+              await localDataSource.saveTodo(todo: todo);
             }
           }
         }
@@ -143,47 +151,50 @@ class TodoService {
       }
     } else {
       // с сервера задач нет
-      tasksList.addAll(localTasksList);
+      todosList.addAll(localTodosList);
     }
-    return tasksList;
+    return todosList;
   }
 
-  /// SAVE Task
+  /// SAVE Todo
   ///
-  Future<Todo> saveTask({required Todo todo}) async {
-    log.info('Save Task id: ${todo.uuid} ...');
+  Future<Todo> saveTodo({required Todo todo}) async {
+    log.info('Save Todo id: ${todo.uuid} ...');
+    if (todo.autor == null) {
+      todo = todo.copyWith(autor: deviceId);
+    }
     if (await networkInfo.isConnected) {
       if (todo.upload) {
-        log.info('Update Task id: ${todo.uuid} to Server');
-        await remoteDataSource.updateTask(todo: todo);
-        log.info('Update Task upload: ${todo.upload}');
+        log.info('Update Todo id: ${todo.uuid} to Server');
+        await remoteDataSource.updateTodo(todo: todo);
+        log.info('Update Todo upload: ${todo.upload}');
       } else {
-        log.info('Save Task id: ${todo.uuid} to Server');
-        todo = await remoteDataSource.saveTask(todo: todo);
-        log.info('Save Task upload: ${todo.upload}');
+        log.info('Save Todo id: ${todo.uuid} to Server');
+        todo = await remoteDataSource.saveTodo(todo: todo);
+        log.info('Save Todo upload: ${todo.upload}');
       }
     }
     try {
-      await localDataSource.saveTask(todo: todo);
-      log.info('Save Task uuid: ${todo.uuid} to DB upload: ${todo.upload}');
+      await localDataSource.saveTodo(todo: todo);
+      log.info('Save Todo uuid: ${todo.uuid} to DB upload: ${todo.upload}');
     } on DBException {
-      log.warning('Save Task uuid: ${todo.uuid}');
+      log.warning('Save Todo uuid: ${todo.uuid}');
     }
     return todo;
   }
 
-  /// DELETE Task
+  /// DELETE Todo
   ///
-  Future<int?> deleteTask({required Todo todo}) async {
-    log.info('delete task uuid: ${todo.uuid} ...');
+  Future<int?> deleteTodo({required Todo todo}) async {
+    log.info('delete todo uuid: ${todo.uuid} ...');
     if (todo.upload) {
-      await remoteDataSource.deleteTask(todo: todo);
+      await remoteDataSource.deleteTodo(todo: todo);
     }
     try {
-      await localDataSource.deleteTask(todo: todo);
-      log.info('delete task uuid: ${todo.uuid}');
+      await localDataSource.deleteTodo(todo: todo);
+      log.info('delete todo uuid: ${todo.uuid}');
     } on DBException {
-      log.warning('delete task uuid: ${todo.uuid}');
+      log.warning('delete todo uuid: ${todo.uuid}');
     }
     return null;
   }

@@ -18,16 +18,16 @@ class ITodoRemoteDataSource implements TodoDataSource {
 
   final String token = 'antievolutional';
 
-  /// Get ALL Task from Server
+  /// Get ALL Todo from Server
   ///
   @override
-  Future<List<Todo>> getTasks() async {
-    const String url = '${AppUrls.urlTask}/list';
-    final List<Todo> tasksList = [];
+  Future<List<Todo>> getTodos() async {
+    const String url = '${AppUrls.urlTodo}/list';
+    final List<Todo> todosList = [];
     // TODO
     // final token = getToken();
 
-    log.info('Get Tasks from: $url ...');
+    log.info('Get Todos from: $url ...');
     try {
       final http.Response response = await client.get(
         Uri.parse(url),
@@ -38,32 +38,32 @@ class ITodoRemoteDataSource implements TodoDataSource {
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
         int i = 1;
-        for (final Map<String, dynamic> task in result['list']) {
-          log.info('Get $i task: $task');
-          tasksList.add(Todo.fromJson(task));
+        for (final Map<String, dynamic> todo in result['list']) {
+          log.info('Get $i todo: $todo');
+          todosList.add(Todo.fromJson(todo));
           i++;
         }
         revision = result['revision'];
         log.info(
-            'Get Tasks, load ${tasksList.length} tasks revision: $revision');
+            'Get Todos, load ${todosList.length} todos revision: $revision');
       } else {
-        log.info('Get Tasks, response code: ${response.statusCode}');
+        log.info('Get Todos, response code: ${response.statusCode}');
         throw ServerException(response.statusCode.toString());
       }
     } catch (e) {
-      log.warning('Get Tasks: $e');
+      log.warning('Get Todos: $e');
     }
-    return tasksList;
+    return todosList;
   }
 
-  /// SAVE Task to Server
+  /// SAVE Todo to Server
   ///
   @override
-  Future<Todo> saveTask({required Todo todo}) async {
-    final String url = '${AppUrls.urlTask}/list/${todo.uuid}';
+  Future<Todo> saveTodo({required Todo todo}) async {
+    final String url = '${AppUrls.urlTodo}/list/${todo.uuid}';
     // TODO
     // final token = getToken();
-    log.info('Find Task before Save, revision: $revision ...');
+    log.info('Find Todo before Save, revision: $revision ...');
     try {
       final http.Response response = await client.get(
         Uri.parse(url),
@@ -77,23 +77,23 @@ class ITodoRemoteDataSource implements TodoDataSource {
         final result = json.decode(response.body);
         revision = result['revision'];
         log.info(
-            'Task id: ${todo.uuid} found, need update revision: $revision ...');
-        updateTask(todo: todo);
+            'Todo id: ${todo.uuid} found, need update revision: $revision ...');
+        updateTodo(todo: todo);
       } else {
         log.info(
-            'Save Task id: ${todo.uuid} not found, need insert revision: $revision ...');
-        insertTask(todo: todo);
+            'Save Todo id: ${todo.uuid} not found, need insert revision: $revision ...');
+        insertTodo(todo: todo);
       }
     } catch (e) {
-      log.warning('Save Task: $e');
+      log.warning('Save Todo: $e');
     }
     return todo;
   }
 
-  /// INSERT Task to Server
+  /// INSERT Todo to Server
   ///
-  Future<Todo> insertTask({required Todo todo}) async {
-    const String url = '${AppUrls.urlTask}/list';
+  Future<Todo> insertTodo({required Todo todo}) async {
+    const String url = '${AppUrls.urlTodo}/list';
     // TODO
     // final token = getToken();
     final String body = jsonEncode({
@@ -125,11 +125,11 @@ class ITodoRemoteDataSource implements TodoDataSource {
     return todo;
   }
 
-  /// UPDATE Task to Server
+  /// UPDATE Todo to Server
   ///
   @override
-  Future<Todo> updateTask({required Todo todo}) async {
-    final String url = '${AppUrls.urlTask}/list/${todo.uuid}';
+  Future<Todo> updateTodo({required Todo todo}) async {
+    final String url = '${AppUrls.urlTodo}/list/${todo.uuid}';
     // TODO
     // final token = getToken();
     final String body = jsonEncode({
@@ -152,7 +152,7 @@ class ITodoRemoteDataSource implements TodoDataSource {
         log.info('Update Todo upload: ${todo.upload} revision: $revision');
       } else {
         log.info(
-            'Update Task response code: ${response.statusCode} revision: $revision');
+            'Update Todo response code: ${response.statusCode} revision: $revision');
         throw ServerException(response.statusCode.toString());
       }
     } catch (e) {
@@ -161,17 +161,17 @@ class ITodoRemoteDataSource implements TodoDataSource {
     return todo;
   }
 
-  /// DELETE Task From Server
+  /// DELETE Todo From Server
   ///
   @override
-  Future<Todo> deleteTask({required Todo todo}) async {
-    final String url = '${AppUrls.urlTask}/list/${todo.uuid}';
+  Future<Todo> deleteTodo({required Todo todo}) async {
+    final String url = '${AppUrls.urlTodo}/list/${todo.uuid}';
     // TODO
     // final token = getToken();
     final String body = jsonEncode({
       'element': todo.toJson(),
     });
-    log.info('Delete Task id: ${todo.uuid} revision: $revision  body: $body');
+    log.info('Delete Todo id: ${todo.uuid} revision: $revision  body: $body');
     try {
       final http.Response response = await client.delete(
         Uri.parse(url),
@@ -186,23 +186,23 @@ class ITodoRemoteDataSource implements TodoDataSource {
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
         revision = result['revision'];
-        log.info('Delete Task id: ${todo.uuid} revision: $revision');
+        log.info('Delete Todo id: ${todo.uuid} revision: $revision');
       } else {
         log.info(
-            'Delete Task response code: ${response.statusCode} revision: $revision');
+            'Delete Todo response code: ${response.statusCode} revision: $revision');
         throw ServerException(response.statusCode.toString());
       }
     } catch (e) {
-      log.warning('Delete Task: $e');
+      log.warning('Delete Todo: $e');
     }
     return todo;
   }
 
-  Future<Todo> getTask({required int id}) async {
-    final String url = '${AppUrls.urlTask}/list/$id';
+  Future<Todo> getTodo({required int id}) async {
+    final String url = '${AppUrls.urlTodo}/list/$id';
     // TODO
     // final token = getToken();
-    log.info('getAllTasksFromServer get from: $url');
+    log.info('getAllTodosFromServer get from: $url');
     final http.Response response = await client.get(
       Uri.parse(url),
       headers: {
@@ -211,12 +211,12 @@ class ITodoRemoteDataSource implements TodoDataSource {
       },
     );
     if (response.statusCode == 200) {
-      final taskJson = json.decode(response.body);
-      final Todo task = Todo.fromJson(taskJson);
-      log.info('getTaskByIDFromServer load ${task.title} by id: $id');
-      return task;
+      final todoJson = json.decode(response.body);
+      final Todo todo = Todo.fromJson(todoJson);
+      log.info('getTodoByIDFromServer load ${todo.title} by id: $id');
+      return todo;
     } else {
-      log.info('getAllTasksFromServer response code: ${response.statusCode}');
+      log.info('getAllTodosFromServer response code: ${response.statusCode}');
       throw ServerException(response.statusCode.toString());
     }
   }
