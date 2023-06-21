@@ -30,14 +30,6 @@ class DBProvider {
     db.execute(AppDB.tableTasks);
   }
 
-  void _upgradeDB(Database db, int oldVersion, int newVersion) {
-    // int newVersion = AppDB.newVersion;
-    if (oldVersion < newVersion) {
-      log.info('upgrade DB from $oldVersion to $newVersion version');
-      db.update(AppDB.tableTasks, AppDB.addRow);
-    }
-  }
-
   // GET ALL Tasks
   Future<List<Todo>> getTasks() async {
     log.info('Get todos ...');

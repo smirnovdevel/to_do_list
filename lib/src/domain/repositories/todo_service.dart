@@ -156,9 +156,11 @@ class TodoService {
       if (todo.upload) {
         log.info('Update Task id: ${todo.uuid} to Server');
         await remoteDataSource.updateTask(todo: todo);
+        log.info('Update Task upload: ${todo.upload}');
       } else {
         log.info('Save Task id: ${todo.uuid} to Server');
-        await remoteDataSource.saveTask(todo: todo);
+        todo = await remoteDataSource.saveTask(todo: todo);
+        log.info('Save Task upload: ${todo.upload}');
       }
     }
     try {

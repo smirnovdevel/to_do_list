@@ -82,7 +82,7 @@ class ITodoRemoteDataSource implements TodoDataSource {
       } else {
         log.info(
             'Save Task id: ${todo.uuid} not found, need insert revision: $revision ...');
-        insertTask(task: todo);
+        insertTask(todo: todo);
       }
     } catch (e) {
       log.warning('Save Task: $e');
@@ -92,14 +92,14 @@ class ITodoRemoteDataSource implements TodoDataSource {
 
   /// INSERT Task to Server
   ///
-  Future<Todo> insertTask({required Todo task}) async {
+  Future<Todo> insertTask({required Todo todo}) async {
     const String url = '${AppUrls.urlTask}/list';
     // TODO
     // final token = getToken();
     final String body = jsonEncode({
-      'element': task.toJson(),
+      'element': todo.toJson(),
     });
-    log.info('Save Task, revision: $revision body: $body ...');
+    log.info('Save Todo, revision: $revision body: $body ...');
     try {
       final http.Response response = await client.post(
         Uri.parse(url),
@@ -112,16 +112,17 @@ class ITodoRemoteDataSource implements TodoDataSource {
 
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
+        todo = todo.copyWith(upload: true);
         revision = result['revision'];
-        log.info('Save Task id: ${task.uuid} revision: $revision');
+        log.info('Save Todo id: ${todo.uuid} revision: $revision');
       } else {
-        log.info('Save Task, response code: ${response.statusCode}');
+        log.info('Save Todo, response code: ${response.statusCode}');
         throw ServerException(response.statusCode.toString());
       }
     } catch (e) {
-      log.warning('Save Task: $e');
+      log.warning('Save Todo: $e');
     }
-    return task;
+    return todo;
   }
 
   /// UPDATE Task to Server
@@ -134,7 +135,7 @@ class ITodoRemoteDataSource implements TodoDataSource {
     final String body = jsonEncode({
       'element': todo.toJson(),
     });
-    log.info('Update Task id: ${todo.uuid} revision: $revision  body: $body');
+    log.info('Update Todo id: ${todo.uuid} revision: $revision');
     try {
       final http.Response response = await client.put(
         Uri.parse(url),
@@ -145,18 +146,17 @@ class ITodoRemoteDataSource implements TodoDataSource {
         },
         body: body,
       );
-
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
         revision = result['revision'];
-        log.info('Update Task id: ${todo.uuid} revision: $revision');
+        log.info('Update Todo upload: ${todo.upload} revision: $revision');
       } else {
         log.info(
             'Update Task response code: ${response.statusCode} revision: $revision');
         throw ServerException(response.statusCode.toString());
       }
     } catch (e) {
-      log.warning('Update Task: $e');
+      log.warning('Update Todo: $e');
     }
     return todo;
   }
