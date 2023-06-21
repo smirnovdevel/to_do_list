@@ -1,41 +1,40 @@
 import 'package:logging/logging.dart';
 
-import '../../domain/models/task.dart';
-import '../db/isar_database.dart';
-import 'impl_data_source.dart';
-// import '../db/sql_database.dart';
+import '../../domain/models/todo.dart';
+import 'data_source.dart';
+import '../db/database.dart';
 
 final Logger log = Logger('LocalDataSource');
 
-class TaskLocalDataSource implements ImplTaskDataSource {
+class ITodoLocalDataSource implements TodoDataSource {
   @override
-  Future<List<TaskModel>> getTasks() async {
+  Future<List<Todo>> getTasks() async {
     log.info('Get Tasks ...');
-    final List<TaskModel> tasksList = await DBProvider.db.getTasks();
+    final List<Todo> tasksList = await DBProvider.db.getTasks();
     log.info('Get ${tasksList.length} tasks');
     return Future.value(tasksList);
   }
 
   @override
-  Future<TaskModel> saveTask({required TaskModel task}) async {
-    log.info('Save task uuid: ${task.uuid} ...');
-    await DBProvider.db.saveTask(task: task);
+  Future<Todo> saveTask({required Todo todo}) async {
+    log.info('Save task uuid: ${todo.uuid} ...');
+    await DBProvider.db.saveTask(todo: todo);
     log.info('Save task ok?');
-    return task;
+    return todo;
   }
 
   @override
-  Future<TaskModel> updateTask({required TaskModel task}) async {
-    log.info('Update Task uuid: ${task.uuid} ...');
-    await DBProvider.db.saveTask(task: task);
+  Future<Todo> updateTask({required Todo todo}) async {
+    log.info('Update Task uuid: ${todo.uuid} ...');
+    await DBProvider.db.saveTask(todo: todo);
     log.info('Update Task ok?');
-    return task;
+    return todo;
   }
 
   @override
-  Future<void> deleteTask({required TaskModel task}) async {
-    log.info('Delete Task uuid: ${task.uuid} ...');
-    await DBProvider.db.deleteTask(task: task);
-    log.info('Delete Task ok?');
+  Future<void> deleteTask({required Todo todo}) async {
+    log.info('Delete Todo uuid: ${todo.uuid} ...');
+    await DBProvider.db.deleteTask(todo: todo);
+    log.info('Delete Todo ok?');
   }
 }

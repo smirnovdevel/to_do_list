@@ -2,36 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/common/app_icons.dart';
 import '../../config/routes/dialogs.dart';
 import '../../config/routes/navigation.dart';
-import '../../domain/models/task.dart';
-import '../bloc/task_bloc.dart';
-import '../bloc/task_event.dart';
-import '../provider/task_provider.dart';
+import '../../domain/models/todo.dart';
+import '../provider/todos_provider.dart';
 import 'icon_done_widget.dart';
 import 'subtitle_widget.dart';
 import 'swipe_action_left_widget.dart';
 import 'swipe_action_right_widget.dart';
-import 'title_widget.dart';
+import 'title_todo_widget.dart';
 
 final Logger log = Logger('ItemTaskWidget');
 
-class ItemTaskWidget extends StatefulWidget {
-  const ItemTaskWidget({
+class ItemTodoWidget extends ConsumerStatefulWidget {
+  const ItemTodoWidget({
     super.key,
-    required this.task,
+    required this.todo,
   });
 
-  final TaskModel task;
+  final Todo todo;
 
   @override
-  State<ItemTaskWidget> createState() => _ItemTaskWidgetState();
+  ConsumerState<ItemTodoWidget> createState() => _ItemTaskWidgetState();
 }
 
-class _ItemTaskWidgetState extends State<ItemTaskWidget> {
+class _ItemTaskWidgetState extends ConsumerState<ItemTodoWidget> {
   DateFormat dateFormat = DateFormat('dd MMMM yyyy');
   double _padding = 0;
 
@@ -41,35 +39,24 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
     super.initState();
   }
 
-  _changeActivityTask() {
-    setState(() {
-      widget.task.done = !widget.task.done;
-    });
-    context.read<TaskBloc>().add(SaveTask(task: widget.task));
+  _changeDone() {
+    ref
+        .read(todosProvider.notifier)
+        .edit(todo: widget.todo.copyWith(done: !widget.todo.done));
   }
 
-  _deleteCurrentTask() {
-    // setState(() {
-    widget.task.deleted = true;
-    // });
-    context.read<TaskBloc>().add(DeleteTask(task: widget.task));
+  _deleteTodo() {
+    ref.read(todosProvider.notifier).delete(todo: widget.todo);
   }
 
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
-    final TaskProvider provider = Provider.of<TaskProvider>(context);
-
-    /// Hide complted task
-    ///
-    if (!provider.visible && widget.task.done) {
-      return Container();
-    }
 
     /// Swipe
     ///
     return Dismissible(
-      key: Key(widget.task.uuid!),
+      key: Key(widget.todo.uuid!),
 
       /// swipe left
       ///
@@ -96,12 +83,11 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
           final bool confirmed =
               await Dialogs.showConfirmCloseCountDialog(context) ?? false;
           if (confirmed) {
-            _deleteCurrentTask();
+            _deleteTodo();
           }
           return confirmed;
         } else if (direction == DismissDirection.startToEnd) {
-          _changeActivityTask();
-          provider.changesStatusTask();
+          _changeDone();
         }
         return false;
       },
@@ -120,12 +106,11 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
               ///
               GestureDetector(
                 onTap: () {
-                  _changeActivityTask();
-                  provider.changesStatusTask();
+                  _changeDone();
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 1.0),
-                  child: IconDoneWidget(task: widget.task),
+                  child: IconDoneTodoWidget(todo: widget.todo),
                 ),
               ),
               // ),
@@ -134,7 +119,7 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
               ///
               GestureDetector(
                 onTap: () {
-                  _onOpenEditPage(widget.task);
+                  _onOpenEditPage(widget.todo);
                 },
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width - 120,
@@ -142,15 +127,15 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TitletWidget(task: widget.task),
-                      SubTitleWidget(task: widget.task),
+                      TitletTodoWidget(todo: widget.todo),
+                      SubtitleTodoWidget(todo: widget.todo),
                     ],
                   ),
                 ),
               ),
               GestureDetector(
                 onTap: () {
-                  _onOpenEditPage(widget.task);
+                  _onOpenEditPage(widget.todo);
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 1.0),
@@ -168,14 +153,13 @@ class _ItemTaskWidgetState extends State<ItemTaskWidget> {
     );
   }
 
-  Future<void> _onOpenEditPage(TaskModel task) async {
-    final TaskModel? result =
-        await NavigationManager.instance.openEditPage(task);
+  Future<void> _onOpenEditPage(Todo todo) async {
+    final Todo? result = await NavigationManager.instance.openEditPage(todo);
     if (result != null) {
       if (result.deleted) {
-        _deleteCurrentTask();
+        _deleteTodo();
       } else {
-        setState(() {});
+        ref.read(todosProvider.notifier).edit(todo: Todo.copyFrom(result));
       }
     }
   }

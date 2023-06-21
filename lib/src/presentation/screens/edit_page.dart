@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../config/common/app_color.dart';
 import '../../config/routes/navigation.dart';
-import '../../domain/models/task.dart';
-import '../bloc/task_bloc.dart';
-import '../bloc/task_event.dart';
+import '../../domain/models/todo.dart';
 import '../widgets/build_items_popup_menu.dart';
 import '../widgets/hint_popup_menu_widget.dart';
 import '../widgets/row_delete_item_widget.dart';
@@ -17,10 +14,10 @@ import '../widgets/task_text_field_widget.dart';
 class EditPage extends StatefulWidget {
   const EditPage({
     super.key,
-    required this.task,
+    required this.todo,
   });
 
-  final TaskModel task;
+  final Todo todo;
 
   @override
   State<EditPage> createState() => _EditPageState();
@@ -33,6 +30,7 @@ class _EditPageState extends State<EditPage> {
   late bool _done;
   late int _priority;
   late DateTime? _deadline;
+  late String? _uuid;
   Uuid uuid = const Uuid();
 
   Future<void> _selectDate(BuildContext context) async {
@@ -81,10 +79,11 @@ class _EditPageState extends State<EditPage> {
 
   @override
   void initState() {
-    _controller.text = widget.task.title;
-    _done = widget.task.done;
-    _priority = widget.task.priority;
-    _deadline = widget.task.deadline;
+    _controller.text = widget.todo.title;
+    _done = widget.todo.done;
+    _priority = widget.todo.priority;
+    _deadline = widget.todo.deadline;
+    _uuid = widget.todo.uuid;
     initializeDateFormatting();
     super.initState();
   }
@@ -95,8 +94,8 @@ class _EditPageState extends State<EditPage> {
     super.dispose();
   }
 
-  void _onGoBack(TaskModel? task) {
-    NavigationManager.instance.pop(task);
+  void _onGoBack(Todo? todo) {
+    NavigationManager.instance.pop(todo);
   }
 
   @override
@@ -123,17 +122,15 @@ class _EditPageState extends State<EditPage> {
         actions: [
           TextButton(
               onPressed: () {
-                widget.task.title = _controller.text;
-                widget.task.done = _done;
-                widget.task.priority = _priority;
-                widget.task.deadline = _deadline;
-                widget.task.changed = DateTime.now();
-
-                /// Если uuid nul, значит идёт создание задачи
-                widget.task.uuid ??= uuid.v1();
-                widget.task.upload = false;
-                context.read<TaskBloc>().add(SaveTask(task: widget.task));
-                _onGoBack(widget.task);
+                final todo = widget.todo.copyWith(
+                    uuid: _uuid ??= uuid.v1(),
+                    title: _controller.text,
+                    done: _done,
+                    priority: _priority,
+                    deadline: _deadline,
+                    changed: DateTime.now(),
+                    upload: false);
+                _onGoBack(todo);
               },
               child: Text(
                 'СОХРАНИТЬ',
@@ -159,7 +156,7 @@ class _EditPageState extends State<EditPage> {
               const Divider(
                 height: 0.2,
               ),
-              RowDeleteItemWidget(task: widget.task)
+              RowDeleteItemWidget(task: widget.todo)
             ],
           ),
         ),

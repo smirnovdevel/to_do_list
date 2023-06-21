@@ -4,7 +4,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import 'data/datasources/local_data_source.dart';
 import 'data/datasources/remote_data_source.dart';
-import 'domain/repositories/task_repository.dart';
+import 'domain/repositories/todo_service.dart';
 import 'utils/core/network_info.dart';
 
 // This is our global ServiceLocator
@@ -14,20 +14,20 @@ Future<void> initializeDependencies() async {
   // BLoC / Cubit
 
   /// Repository Tasks
-  locator.registerLazySingleton<TaskRepository>(
-    () => TaskRepository(
+  locator.registerLazySingleton<TodoService>(
+    () => TodoService(
         remoteDataSource: locator(),
         localDataSource: locator(),
         networkInfo: locator()),
   );
 
   /// Source data
-  locator.registerLazySingleton<TaskLocalDataSource>(
-    () => TaskLocalDataSource(),
+  locator.registerLazySingleton<ITodoLocalDataSource>(
+    () => ITodoLocalDataSource(),
   );
 
-  locator.registerLazySingleton<TaskRemoteDataSource>(
-    () => TaskRemoteDataSource(client: locator()),
+  locator.registerLazySingleton<ITodoRemoteDataSource>(
+    () => ITodoRemoteDataSource(client: locator()),
   );
 
 // Core

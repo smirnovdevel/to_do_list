@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../../config/common/app_icons.dart';
-import '../../domain/models/task.dart';
+import '../../domain/models/todo.dart';
 
-class IconDoneWidget extends StatelessWidget {
-  const IconDoneWidget({super.key, required this.task});
+class IconDoneTodoWidget extends StatelessWidget {
+  const IconDoneTodoWidget({super.key, required this.todo});
 
-  final TaskModel task;
+  final Todo todo;
 
   @override
   Widget build(BuildContext context) {
-    if (task.done) {
+    if (todo.done) {
       return Icon(
         AppIcons.checked,
         color: Theme.of(context).colorScheme.tertiaryContainer,
         weight: 18.0,
       );
-    } else if (task.priority == 2) {
+    } else if (todo.priority == 2) {
       return Container(
         color: Theme.of(context).colorScheme.onSecondaryContainer,
         child: Icon(

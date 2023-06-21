@@ -5,14 +5,14 @@ import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
 import '../../config/common/app_urls.dart';
-import '../../domain/models/task.dart';
+import '../../domain/models/todo.dart';
 import '../../utils/error/exception.dart';
-import 'impl_data_source.dart';
+import 'data_source.dart';
 
 final Logger log = Logger('RemoteDataSource');
 
-class TaskRemoteDataSource implements ImplTaskDataSource {
-  TaskRemoteDataSource({required this.client});
+class ITodoRemoteDataSource implements TodoDataSource {
+  ITodoRemoteDataSource({required this.client});
   final http.Client client;
   int? revision;
 
@@ -21,9 +21,9 @@ class TaskRemoteDataSource implements ImplTaskDataSource {
   /// Get ALL Task from Server
   ///
   @override
-  Future<List<TaskModel>> getTasks() async {
+  Future<List<Todo>> getTasks() async {
     const String url = '${AppUrls.urlTask}/list';
-    final List<TaskModel> tasksList = [];
+    final List<Todo> tasksList = [];
     // TODO
     // final token = getToken();
 
@@ -40,7 +40,7 @@ class TaskRemoteDataSource implements ImplTaskDataSource {
         int i = 1;
         for (final Map<String, dynamic> task in result['list']) {
           log.info('Get $i task: $task');
-          tasksList.add(TaskModel.fromJson(task));
+          tasksList.add(Todo.fromJson(task));
           i++;
         }
         revision = result['revision'];
@@ -59,8 +59,8 @@ class TaskRemoteDataSource implements ImplTaskDataSource {
   /// SAVE Task to Server
   ///
   @override
-  Future<TaskModel> saveTask({required TaskModel task}) async {
-    final String url = '${AppUrls.urlTask}/list/${task.uuid}';
+  Future<Todo> saveTask({required Todo todo}) async {
+    final String url = '${AppUrls.urlTask}/list/${todo.uuid}';
     // TODO
     // final token = getToken();
     log.info('Find Task before Save, revision: $revision ...');
@@ -77,22 +77,22 @@ class TaskRemoteDataSource implements ImplTaskDataSource {
         final result = json.decode(response.body);
         revision = result['revision'];
         log.info(
-            'Task id: ${task.uuid} found, need update revision: $revision ...');
-        updateTask(task: task);
+            'Task id: ${todo.uuid} found, need update revision: $revision ...');
+        updateTask(todo: todo);
       } else {
         log.info(
-            'Save Task id: ${task.uuid} not found, need insert revision: $revision ...');
-        insertTask(task: task);
+            'Save Task id: ${todo.uuid} not found, need insert revision: $revision ...');
+        insertTask(task: todo);
       }
     } catch (e) {
       log.warning('Save Task: $e');
     }
-    return task;
+    return todo;
   }
 
   /// INSERT Task to Server
   ///
-  Future<TaskModel> insertTask({required TaskModel task}) async {
+  Future<Todo> insertTask({required Todo task}) async {
     const String url = '${AppUrls.urlTask}/list';
     // TODO
     // final token = getToken();
@@ -113,7 +113,6 @@ class TaskRemoteDataSource implements ImplTaskDataSource {
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
         revision = result['revision'];
-        task.upload = true;
         log.info('Save Task id: ${task.uuid} revision: $revision');
       } else {
         log.info('Save Task, response code: ${response.statusCode}');
@@ -128,14 +127,14 @@ class TaskRemoteDataSource implements ImplTaskDataSource {
   /// UPDATE Task to Server
   ///
   @override
-  Future<TaskModel> updateTask({required TaskModel task}) async {
-    final String url = '${AppUrls.urlTask}/list/${task.uuid}';
+  Future<Todo> updateTask({required Todo todo}) async {
+    final String url = '${AppUrls.urlTask}/list/${todo.uuid}';
     // TODO
     // final token = getToken();
     final String body = jsonEncode({
-      'element': task.toJson(),
+      'element': todo.toJson(),
     });
-    log.info('Update Task id: ${task.uuid} revision: $revision  body: $body');
+    log.info('Update Task id: ${todo.uuid} revision: $revision  body: $body');
     try {
       final http.Response response = await client.put(
         Uri.parse(url),
@@ -150,8 +149,7 @@ class TaskRemoteDataSource implements ImplTaskDataSource {
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
         revision = result['revision'];
-        task.upload = true;
-        log.info('Update Task id: ${task.uuid} revision: $revision');
+        log.info('Update Task id: ${todo.uuid} revision: $revision');
       } else {
         log.info(
             'Update Task response code: ${response.statusCode} revision: $revision');
@@ -160,20 +158,20 @@ class TaskRemoteDataSource implements ImplTaskDataSource {
     } catch (e) {
       log.warning('Update Task: $e');
     }
-    return task;
+    return todo;
   }
 
   /// DELETE Task From Server
   ///
   @override
-  Future<TaskModel> deleteTask({required TaskModel task}) async {
-    final String url = '${AppUrls.urlTask}/list/${task.uuid}';
+  Future<Todo> deleteTask({required Todo todo}) async {
+    final String url = '${AppUrls.urlTask}/list/${todo.uuid}';
     // TODO
     // final token = getToken();
     final String body = jsonEncode({
-      'element': task.toJson(),
+      'element': todo.toJson(),
     });
-    log.info('Delete Task id: ${task.uuid} revision: $revision  body: $body');
+    log.info('Delete Task id: ${todo.uuid} revision: $revision  body: $body');
     try {
       final http.Response response = await client.delete(
         Uri.parse(url),
@@ -188,8 +186,7 @@ class TaskRemoteDataSource implements ImplTaskDataSource {
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
         revision = result['revision'];
-        task.upload = true;
-        log.info('Delete Task id: ${task.uuid} revision: $revision');
+        log.info('Delete Task id: ${todo.uuid} revision: $revision');
       } else {
         log.info(
             'Delete Task response code: ${response.statusCode} revision: $revision');
@@ -198,10 +195,10 @@ class TaskRemoteDataSource implements ImplTaskDataSource {
     } catch (e) {
       log.warning('Delete Task: $e');
     }
-    return task;
+    return todo;
   }
 
-  Future<TaskModel> getTask({required int id}) async {
+  Future<Todo> getTask({required int id}) async {
     final String url = '${AppUrls.urlTask}/list/$id';
     // TODO
     // final token = getToken();
@@ -215,7 +212,7 @@ class TaskRemoteDataSource implements ImplTaskDataSource {
     );
     if (response.statusCode == 200) {
       final taskJson = json.decode(response.body);
-      final TaskModel task = TaskModel.fromJson(taskJson);
+      final Todo task = Todo.fromJson(taskJson);
       log.info('getTaskByIDFromServer load ${task.title} by id: $id');
       return task;
     } else {

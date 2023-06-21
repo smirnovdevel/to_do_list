@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../domain/models/task.dart';
 
+import '../../domain/models/todo.dart';
 import 'observer.dart';
 import 'routes.dart';
 
@@ -17,8 +17,8 @@ class NavigationManager {
 
   NavigatorState get _navigator => key.currentState!;
 
-  Future<TaskModel?> openEditPage(TaskModel task) {
-    return _navigator.pushNamed<TaskModel?>(
+  Future<Todo?> openEditPage(Todo task) {
+    return _navigator.pushNamed<Todo?>(
       RouteNames.edit,
       arguments: task,
     );

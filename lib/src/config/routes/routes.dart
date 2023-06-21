@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 
-import '../../domain/models/task.dart';
+import '../../domain/models/todo.dart';
 import '../../presentation/screens/edit_page.dart';
 import '../../presentation/screens/home_page.dart';
 import '../../presentation/screens/unknown_page.dart';
@@ -19,10 +19,11 @@ abstract class RouteNames {
 abstract class RoutesBuilder {
   const RoutesBuilder._();
 
-  static final Map<String, Widget Function(BuildContext p1)> routes = <String, Widget Function(BuildContext)>{
+  static final Map<String, Widget Function(BuildContext p1)> routes =
+      <String, Widget Function(BuildContext)>{
     RouteNames.home: (_) => const HomePage(),
     RouteNames.edit: (BuildContext context) => EditPage(
-          task: ModalRoute.of(context)?.settings.arguments as TaskModel,
+          todo: ModalRoute.of(context)?.settings.arguments as Todo,
         ),
   };
 
@@ -35,9 +36,9 @@ abstract class RoutesBuilder {
         );
 
       case RouteNames.edit:
-        return MaterialPageRoute<TaskModel?>(
+        return MaterialPageRoute<Todo?>(
           builder: (_) => EditPage(
-            task: settings.arguments as TaskModel,
+            todo: settings.arguments as Todo,
           ),
           settings: settings,
         );

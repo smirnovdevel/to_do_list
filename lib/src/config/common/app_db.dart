@@ -6,9 +6,9 @@ class AppDB {
   static const String nameDB = 'todo.db';
 
   /// Table tasks
-  static const String nameTaskTable = 'tasks';
+  static const String nameTaskTable = 'todos';
   static const String tableTasks =
-      'CREATE TABLE $nameTaskTable(id TEXT PRIMARY KEY, title TEXT, active INTEGER, priority INTEGER,  deadline TEXT, deleted INTEGER, created TEXT, changed TEXT, upload INTEGER, autor TEXT)';
+      'CREATE TABLE $nameTaskTable(uuid TEXT PRIMARY KEY, title TEXT, done INTEGER, priority INTEGER,  deadline TEXT, deleted INTEGER, created TEXT, changed TEXT, upload INTEGER, autor TEXT)';
 
   /// Settings for Upgrade DB
   static const int newVersion = 1;

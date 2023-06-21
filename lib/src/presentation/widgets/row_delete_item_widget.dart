@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../config/common/app_icons.dart';
 import '../../config/routes/dialogs.dart';
 import '../../config/routes/navigation.dart';
-import '../../domain/models/task.dart';
+import '../../domain/models/todo.dart';
 
 class RowDeleteItemWidget extends StatefulWidget {
   const RowDeleteItemWidget({
@@ -11,14 +11,14 @@ class RowDeleteItemWidget extends StatefulWidget {
     required this.task,
   });
 
-  final TaskModel task;
+  final Todo task;
 
   @override
   State<RowDeleteItemWidget> createState() => _RowDeleteItemWidgetState();
 }
 
 class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
-  void _onGoBack(TaskModel? task) {
+  void _onGoBack(Todo? task) {
     NavigationManager.instance.pop(task);
   }
 
@@ -28,13 +28,11 @@ class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
       padding: const EdgeInsets.only(top: 22.0, left: 8.0),
       child: GestureDetector(
         onTap: () async {
-          if (widget.task.uuid != null) {
-            final bool confirmed =
-                await Dialogs.showConfirmCloseCountDialog(context) ?? false;
-            if (confirmed) {
-              widget.task.deleted = true;
-              _onGoBack(widget.task);
-            }
+          final bool confirmed =
+              await Dialogs.showConfirmCloseCountDialog(context) ?? false;
+          if (confirmed) {
+            // widget.task.deleted = true;
+            _onGoBack(widget.task);
           }
         },
         child: Row(

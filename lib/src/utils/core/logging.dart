@@ -1,14 +1,19 @@
 import 'dart:developer' as console;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 
-// console.log( "\u001b[1;31m Red message" );
-// console.log( "\u001b[1;32m Green message" );
-// console.log( "\u001b[1;33m Yellow message" );
-// console.log( "\u001b[1;34m Blue message" );
-// console.log( "\u001b[1;35m Purple message" );
-// console.log( "\u001b[1;36m Cyan message" );
+// "\u001b[1;31m" Red
+// "\u001b[1;32m" Green
+// "\u001b[1;33m Yellow
+// "\u001b[1;34m Blue
+// "\u001b[1;35m Purple
+// "\u001b[1;36m Cyan
+
+Provider loggerProvider = Provider(
+  (ref) => Logger('logger'),
+);
 
 void initLogger() {
   if (kDebugMode) {
@@ -17,7 +22,7 @@ void initLogger() {
       switch (record.level) {
         case Level.FINE:
           {
-            // green
+            // green - green
             console.log(
                 '\u001b[1;32m ${record.loggerName}:\u001b[1;32m ${record.message}');
 
@@ -25,21 +30,21 @@ void initLogger() {
           }
         case Level.INFO:
           {
-            // blue
+            // green - blue
             console.log(
                 '\u001b[1;32m ${record.loggerName}:\u001b[1;34m ${record.message}');
             break;
           }
         case Level.WARNING:
           {
-            // red
+            // green - red
             console.log(
                 '\u001b[1;32m ${record.loggerName}:\u001b[1;31m ${record.message}');
             break;
           }
         default:
           {
-            console.log('\u001b[1;32m ${record.loggerName}: record.message');
+            console.log('${record.loggerName}: record.message');
           }
       }
     });

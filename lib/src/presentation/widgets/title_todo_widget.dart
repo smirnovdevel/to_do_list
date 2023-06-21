@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 
 import '../../config/common/app_icons.dart';
-import '../../domain/models/task.dart';
+import '../../domain/models/todo.dart';
 
 ///
 /// Widget title item task in list
 ///
-class TitletWidget extends StatelessWidget {
-  const TitletWidget({super.key, required this.task});
+class TitletTodoWidget extends StatelessWidget {
+  const TitletTodoWidget({super.key, required this.todo});
 
-  final TaskModel task;
+  final Todo todo;
 
   @override
   Widget build(BuildContext context) {
     ///
     /// Disactivate task icon
     ///
-    if (task.done) {
+    if (todo.done) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Flexible(
             child: Text(
-              task.title,
+              todo.title,
               overflow: TextOverflow.ellipsis,
               softWrap: false,
               maxLines: 3,
@@ -43,7 +43,7 @@ class TitletWidget extends StatelessWidget {
     ///
     /// Task low priority icon
     ///
-    switch (task.priority) {
+    switch (todo.priority) {
       case 1:
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +57,7 @@ class TitletWidget extends StatelessWidget {
               ),
             ),
             Flexible(
-              child: Text(task.title,
+              child: Text(todo.title,
                   overflow: TextOverflow.ellipsis,
                   softWrap: false,
                   maxLines: 3,
@@ -83,7 +83,7 @@ class TitletWidget extends StatelessWidget {
             ),
             Flexible(
               child: Text(
-                task.title,
+                todo.title,
                 overflow: TextOverflow.ellipsis,
                 softWrap: false,
                 maxLines: 3,
@@ -101,7 +101,7 @@ class TitletWidget extends StatelessWidget {
           children: [
             Flexible(
               child: Text(
-                task.title,
+                todo.title,
                 overflow: TextOverflow.ellipsis,
                 softWrap: false,
                 maxLines: 3,

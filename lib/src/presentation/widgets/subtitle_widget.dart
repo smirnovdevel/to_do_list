@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../domain/models/task.dart';
+import '../../domain/models/todo.dart';
 
-class SubTitleWidget extends StatelessWidget {
-  const SubTitleWidget({super.key, required this.task});
+class SubtitleTodoWidget extends StatelessWidget {
+  const SubtitleTodoWidget({super.key, required this.todo});
 
-  final TaskModel task;
+  final Todo todo;
 
   @override
   Widget build(BuildContext context) {
-    if (task.deadline == null) {
+    if (todo.deadline == null) {
       return Container();
     }
     return Text(
-      DateFormat('dd MMMM yyyy', 'ru').format(task.deadline!),
-      style: task.done
+      DateFormat('dd MMMM yyyy', 'ru').format(todo.deadline!),
+      style: todo.done
           ? const TextStyle(color: Colors.grey)
           : const TextStyle(color: Colors.blue),
     );
