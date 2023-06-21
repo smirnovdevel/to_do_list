@@ -1,0 +1,17 @@
+{
+    "cancel": "CANCEL",
+    "yes": "Yes",
+    "no": "No",
+    "my_todo": "My ToDo",
+    "ready": "Ready",
+    "importance":"Importance",
+    "done":"DONE",
+    "low":"Low",
+    "basic":"Basic",
+    "high":"Important",
+    "confirm_delete":"Are you sure you want to delete this todo?",
+    "deadline":"Make before:",
+    "whatneed":"What need to do...",
+    "delete":"Delete",
+    "save":"Save"
+}

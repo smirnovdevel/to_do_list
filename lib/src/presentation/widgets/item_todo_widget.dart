@@ -30,7 +30,6 @@ class ItemTodoWidget extends ConsumerStatefulWidget {
 }
 
 class _ItemTaskWidgetState extends ConsumerState<ItemTodoWidget> {
-  DateFormat dateFormat = DateFormat('dd MMMM yyyy');
   double _padding = 0;
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../config/common/app_icons.dart';
+import '../localization/app_localization.dart';
 
 class HintPopupMenuWidget extends StatelessWidget {
   const HintPopupMenuWidget({super.key, required this.value});
@@ -11,12 +12,12 @@ class HintPopupMenuWidget extends StatelessWidget {
     switch (value) {
       case 0:
         return Text(
-          'Нет',
+          AppLocalization.of(context).get('low'),
           style: Theme.of(context).textTheme.titleSmall,
         );
       case 1:
         return Text(
-          'Низкий',
+          AppLocalization.of(context).get('basic'),
           style: Theme.of(context).textTheme.titleSmall,
         );
       default:
@@ -27,7 +28,7 @@ class HintPopupMenuWidget extends StatelessWidget {
               size: 16.0,
               color: Theme.of(context).colorScheme.secondaryContainer,
             ),
-            Text('Высокий',
+            Text(AppLocalization.of(context).get('high'),
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(
                       color: Theme.of(context).colorScheme.onSecondary,
                     )),

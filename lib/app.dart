@@ -4,6 +4,7 @@ import 'src/config/routes/navigation.dart';
 import 'src/config/routes/routes.dart';
 import 'src/config/themes/dark_theme.dart';
 import 'src/config/themes/light_theme.dart';
+import 'src/presentation/localization/app_localization.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -15,6 +16,8 @@ class App extends StatelessWidget {
       title: 'TODO лист',
       theme: lightTheme,
       darkTheme: darkTheme,
+      localizationsDelegates: AppLocalization.localizationsDelegates,
+      supportedLocales: AppLocalization.supportedLocales,
       // navigator key
       navigatorKey: NavigationManager.instance.key,
       // named routes setup

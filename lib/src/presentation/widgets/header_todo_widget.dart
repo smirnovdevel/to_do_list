@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../config/common/app_icons.dart';
+import '../localization/app_localization.dart';
 import '../provider/done_provider.dart';
 
 class HeaderTodoWidget extends ConsumerWidget {
@@ -38,7 +39,7 @@ class HeaderTodoWidget extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  'Мои дела',
+                  AppLocalization.of(context).get('my_todo'),
                   style: TextStyle(
                       fontSize: 20 + 12 * currentValue,
                       fontWeight: FontWeight.w500),
@@ -47,7 +48,7 @@ class HeaderTodoWidget extends ConsumerWidget {
                   Container()
                 else
                   Text(
-                    'Выполнено - $count',
+                    '${AppLocalization.of(context).get('ready')} - $count',
                     style: Theme.of(context)
                         .textTheme
                         .labelSmall!

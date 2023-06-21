@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 import '../../config/common/app_color.dart';
 import '../../config/routes/navigation.dart';
 import '../../domain/models/todo.dart';
+import '../localization/app_localization.dart';
 import '../widgets/build_items_popup_menu.dart';
 import '../widgets/hint_popup_menu_widget.dart';
 import '../widgets/row_delete_item_widget.dart';
@@ -26,7 +27,6 @@ class EditPage extends StatefulWidget {
 class _EditPageState extends State<EditPage> {
   final TextEditingController _controller = TextEditingController();
 
-  DateFormat dateFormat = DateFormat('dd MMMM yyyy');
   late bool _done;
   late int _priority;
   late DateTime? _deadline;
@@ -35,10 +35,10 @@ class _EditPageState extends State<EditPage> {
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
-        locale: const Locale('ru'),
+        locale: AppLocalization.of(context).locale,
         context: context,
-        cancelText: 'ОТМЕНА',
-        confirmText: 'ГОТОВО',
+        cancelText: AppLocalization.of(context).get('cancel'),
+        confirmText: AppLocalization.of(context).get('done'),
         initialDate: _deadline ?? DateTime.now(),
         firstDate: DateTime(2015),
         lastDate: DateTime(2050),
@@ -133,7 +133,7 @@ class _EditPageState extends State<EditPage> {
                 _onGoBack(todo);
               },
               child: Text(
-                'СОХРАНИТЬ',
+                AppLocalization.of(context).get('save').toUpperCase(),
                 style: Theme.of(context).textTheme.titleMedium,
               ))
         ],
@@ -168,6 +168,7 @@ class _EditPageState extends State<EditPage> {
   /// Строка выбора времени задачи
   ///
   Padding rowDeadLineWithSwith() {
+    final locale = AppLocalization.of(context).locale.languageCode;
     return Padding(
       padding: const EdgeInsets.only(top: 16.0, bottom: 34.0),
       child: Row(
@@ -183,14 +184,14 @@ class _EditPageState extends State<EditPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Сделать до',
+                  AppLocalization.of(context).get('deadline'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 if (_deadline == null)
                   Container()
                 else
                   Text(
-                    DateFormat('dd MMMM yyyy', 'ru')
+                    DateFormat('dd MMMM yyyy', locale)
                         .format(_deadline ?? DateTime.now()),
                     style: Theme.of(context)
                         .textTheme
@@ -234,7 +235,7 @@ class _EditPageState extends State<EditPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Важность',
+              AppLocalization.of(context).get('importance'),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             HintPopupMenuWidget(value: _priority),

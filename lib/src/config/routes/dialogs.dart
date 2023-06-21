@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../presentation/localization/app_localization.dart';
+
 abstract class Dialogs {
   const Dialogs._();
 
@@ -21,14 +23,14 @@ class ConfirmCloseCountDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Вы уверены, что хотите удалить эту задачу?'),
+      title: Text(AppLocalization.of(context).get('confirm_delete')),
       actions: [
         SimpleDialogOption(
           onPressed: () => Navigator.of(context).pop(false),
-          child: const Text(
-            'НЕТ',
-            style: TextStyle(
-              color: Colors.red,
+          child: Text(
+            AppLocalization.of(context).get('no').toUpperCase(),
+            style: const TextStyle(
+              color: Colors.blue,
               fontWeight: FontWeight.bold,
               fontSize: 16.0,
             ),
@@ -36,9 +38,9 @@ class ConfirmCloseCountDialog extends StatelessWidget {
         ),
         SimpleDialogOption(
           onPressed: () => Navigator.of(context).pop(true),
-          child: const Text(
-            'ДА',
-            style: TextStyle(
+          child: Text(
+            AppLocalization.of(context).get('yes').toUpperCase(),
+            style: const TextStyle(
                 color: Colors.green,
                 fontWeight: FontWeight.bold,
                 fontSize: 16.0),

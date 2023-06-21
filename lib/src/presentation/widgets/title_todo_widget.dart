@@ -28,7 +28,7 @@ class TitletTodoWidget extends StatelessWidget {
               maxLines: 3,
               style: const TextStyle(
                 fontWeight: FontWeight.w400,
-                fontSize: 19.0,
+                // fontSize: 19.0,
                 color: Colors.grey,
                 decoration: TextDecoration.lineThrough,
                 decorationColor: Colors.grey,

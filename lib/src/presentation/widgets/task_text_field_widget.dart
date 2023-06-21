@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../localization/app_localization.dart';
+
 class TaskTextFieldWidget extends StatelessWidget {
   const TaskTextFieldWidget({
     super.key,
@@ -21,15 +23,15 @@ class TaskTextFieldWidget extends StatelessWidget {
           showCursor: true,
           cursorColor: Theme.of(context).primaryColor,
           style: Theme.of(context).textTheme.bodyMedium,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
               contentPadding: EdgeInsets.zero,
               border: InputBorder.none,
               focusedBorder: InputBorder.none,
               enabledBorder: InputBorder.none,
               errorBorder: InputBorder.none,
               disabledBorder: InputBorder.none,
-              hintText: 'Что надо сделать...',
-              hintStyle: TextStyle(
+              hintText: AppLocalization.of(context).get('whatneed'),
+              hintStyle: const TextStyle(
                 color: Colors.grey,
                 fontWeight: FontWeight.w400,
                 fontSize: 16.0,

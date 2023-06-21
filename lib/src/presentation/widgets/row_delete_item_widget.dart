@@ -4,6 +4,7 @@ import '../../config/common/app_icons.dart';
 import '../../config/routes/dialogs.dart';
 import '../../config/routes/navigation.dart';
 import '../../domain/models/todo.dart';
+import '../localization/app_localization.dart';
 
 class RowDeleteItemWidget extends StatefulWidget {
   const RowDeleteItemWidget({
@@ -50,7 +51,7 @@ class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0),
                   child: Text(
-                    'Удалить',
+                    AppLocalization.of(context).get('delete'),
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 16.0,
