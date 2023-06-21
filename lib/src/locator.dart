@@ -13,7 +13,7 @@ GetIt locator = GetIt.instance;
 Future<void> initializeDependencies() async {
   // BLoC / Cubit
 
-  /// Repository Tasks
+  /// Repository Todos
   locator.registerLazySingleton<TodoService>(
     () => TodoService(
         remoteDataSource: locator(),

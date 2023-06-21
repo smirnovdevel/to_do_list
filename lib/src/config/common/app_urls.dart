@@ -1,3 +1,3 @@
 class AppUrls {
-  static const String urlTask = 'https://beta.mrdekk.ru/todobackend';
+  static const String urlTodo = 'https://beta.mrdekk.ru/todobackend';
 }

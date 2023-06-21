@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,7 +14,7 @@ import 'swipe_action_left_widget.dart';
 import 'swipe_action_right_widget.dart';
 import 'title_todo_widget.dart';
 
-final Logger log = Logger('ItemTaskWidget');
+final Logger log = Logger('ItemTodoWidget');
 
 class ItemTodoWidget extends ConsumerStatefulWidget {
   const ItemTodoWidget({
@@ -26,10 +25,10 @@ class ItemTodoWidget extends ConsumerStatefulWidget {
   final Todo todo;
 
   @override
-  ConsumerState<ItemTodoWidget> createState() => _ItemTaskWidgetState();
+  ConsumerState<ItemTodoWidget> createState() => _ItemTodoWidgetState();
 }
 
-class _ItemTaskWidgetState extends ConsumerState<ItemTodoWidget> {
+class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
   double _padding = 0;
 
   @override
@@ -91,7 +90,7 @@ class _ItemTaskWidgetState extends ConsumerState<ItemTodoWidget> {
         return false;
       },
 
-      /// item task
+      /// item todo
       ///
       child: Container(
         color: Theme.of(context).colorScheme.primary,

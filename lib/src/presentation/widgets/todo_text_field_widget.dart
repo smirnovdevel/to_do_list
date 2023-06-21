@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../localization/app_localization.dart';
 
-class TaskTextFieldWidget extends StatelessWidget {
-  const TaskTextFieldWidget({
+class TodoTextFieldWidget extends StatelessWidget {
+  const TodoTextFieldWidget({
     super.key,
     required TextEditingController controller,
   }) : _controller = controller;

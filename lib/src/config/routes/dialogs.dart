@@ -9,7 +9,7 @@ abstract class Dialogs {
     return showDialog<bool>(
       context: context,
       routeSettings: const RouteSettings(
-        name: '/alert_confirm_delete_task',
+        name: '/alert_confirm_delete_todo',
       ),
       barrierDismissible: false,
       builder: (BuildContext context) => const ConfirmCloseCountDialog(),
@@ -23,7 +23,12 @@ class ConfirmCloseCountDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(AppLocalization.of(context).get('confirm_delete')),
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      title: Text(
+        AppLocalization.of(context).get('delete_title'),
+        style: TextStyle(color: Theme.of(context).primaryColor),
+      ),
+      content: Text(AppLocalization.of(context).get('delete_subtitle')),
       actions: [
         SimpleDialogOption(
           onPressed: () => Navigator.of(context).pop(false),

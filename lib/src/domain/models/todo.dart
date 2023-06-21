@@ -24,7 +24,7 @@ class Todo {
   final DateTime created;
   final DateTime changed;
   final bool upload;
-  final String autor;
+  final String? autor;
 
   Todo copyWith({
     String? uuid,

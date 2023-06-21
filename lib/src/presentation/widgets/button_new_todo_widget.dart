@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../config/common/app_icons.dart';
+import '../localization/app_localization.dart';
 
-class ButtonNewTaskWidget extends StatelessWidget {
-  const ButtonNewTaskWidget({
+class ButtonNewTodoWidget extends StatelessWidget {
+  const ButtonNewTodoWidget({
     super.key,
   });
 
@@ -24,15 +25,15 @@ class ButtonNewTaskWidget extends StatelessWidget {
                 )
               ],
             ),
-            const Padding(
-              padding: EdgeInsets.only(left: 15.0, top: 14.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0, top: 14.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Новое',
-                    style: TextStyle(
+                    AppLocalization.of(context).get('new'),
+                    style: const TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 18.0,
                       color: Colors.grey,

@@ -10,7 +10,7 @@ import '../localization/app_localization.dart';
 import '../widgets/build_items_popup_menu.dart';
 import '../widgets/hint_popup_menu_widget.dart';
 import '../widgets/row_delete_item_widget.dart';
-import '../widgets/task_text_field_widget.dart';
+import '../widgets/todo_text_field_widget.dart';
 
 class EditPage extends StatefulWidget {
   const EditPage({
@@ -144,7 +144,7 @@ class _EditPageState extends State<EditPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TaskTextFieldWidget(controller: _controller),
+              TodoTextFieldWidget(controller: _controller),
               popupMenuWidget(popupMenuItems),
               const Padding(
                 padding: EdgeInsets.only(top: 18.0),
@@ -156,7 +156,7 @@ class _EditPageState extends State<EditPage> {
               const Divider(
                 height: 0.2,
               ),
-              RowDeleteItemWidget(task: widget.todo)
+              RowDeleteItemWidget(todo: widget.todo)
             ],
           ),
         ),

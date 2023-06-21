@@ -9,18 +9,18 @@ import '../localization/app_localization.dart';
 class RowDeleteItemWidget extends StatefulWidget {
   const RowDeleteItemWidget({
     super.key,
-    required this.task,
+    required this.todo,
   });
 
-  final Todo task;
+  final Todo todo;
 
   @override
   State<RowDeleteItemWidget> createState() => _RowDeleteItemWidgetState();
 }
 
 class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
-  void _onGoBack(Todo? task) {
-    NavigationManager.instance.pop(task);
+  void _onGoBack(Todo? todo) {
+    NavigationManager.instance.pop(todo);
   }
 
   @override
@@ -32,8 +32,8 @@ class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
           final bool confirmed =
               await Dialogs.showConfirmCloseCountDialog(context) ?? false;
           if (confirmed) {
-            // widget.task.deleted = true;
-            _onGoBack(widget.task);
+            // widget.todo.deleted = true;
+            _onGoBack(widget.todo);
           }
         },
         child: Row(
@@ -43,7 +43,7 @@ class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
               children: [
                 Icon(
                   AppIcons.delete,
-                  color: widget.task.uuid == null
+                  color: widget.todo.uuid == null
                       ? Theme.of(context).colorScheme.outlineVariant
                       : Theme.of(context).colorScheme.onSecondary,
                   size: 21.0,
@@ -57,7 +57,7 @@ class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
                         fontSize: 16.0,
                         height: 20 / 16,
                         fontFamily: 'Roboto',
-                        color: widget.task.uuid == null
+                        color: widget.todo.uuid == null
                             ? Theme.of(context).colorScheme.outlineVariant
                             : Theme.of(context).colorScheme.onSecondary),
                   ),
@@ -66,7 +66,7 @@ class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
             ),
             Padding(
               padding: const EdgeInsets.only(right: 16.0),
-              child: widget.task.upload
+              child: widget.todo.upload
                   ? const Icon(
                       Icons.cloud_done_outlined,
                       size: 26.0,

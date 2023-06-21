@@ -8,33 +8,33 @@ final Logger log = Logger('LocalDataSource');
 
 class ITodoLocalDataSource implements TodoDataSource {
   @override
-  Future<List<Todo>> getTasks() async {
-    log.info('Get Tasks ...');
-    final List<Todo> tasksList = await DBProvider.db.getTasks();
-    log.info('Get ${tasksList.length} tasks');
-    return Future.value(tasksList);
+  Future<List<Todo>> getTodos() async {
+    log.info('Get Todos ...');
+    final List<Todo> todosList = await DBProvider.db.getTodos();
+    log.info('Get ${todosList.length} todos');
+    return Future.value(todosList);
   }
 
   @override
-  Future<Todo> saveTask({required Todo todo}) async {
-    log.info('Save task uuid: ${todo.uuid} ...');
-    await DBProvider.db.saveTask(todo: todo);
-    log.info('Save task ok?');
+  Future<Todo> saveTodo({required Todo todo}) async {
+    log.info('Save todo uuid: ${todo.uuid} ...');
+    await DBProvider.db.saveTodo(todo: todo);
+    log.info('Save todo ok?');
     return todo;
   }
 
   @override
-  Future<Todo> updateTask({required Todo todo}) async {
-    log.info('Update Task uuid: ${todo.uuid} ...');
-    await DBProvider.db.saveTask(todo: todo);
-    log.info('Update Task ok?');
+  Future<Todo> updateTodo({required Todo todo}) async {
+    log.info('Update Todo uuid: ${todo.uuid} ...');
+    await DBProvider.db.saveTodo(todo: todo);
+    log.info('Update Todo ok?');
     return todo;
   }
 
   @override
-  Future<void> deleteTask({required Todo todo}) async {
+  Future<void> deleteTodo({required Todo todo}) async {
     log.info('Delete Todo uuid: ${todo.uuid} ...');
-    await DBProvider.db.deleteTask(todo: todo);
+    await DBProvider.db.deleteTodo(todo: todo);
     log.info('Delete Todo ok?');
   }
 }

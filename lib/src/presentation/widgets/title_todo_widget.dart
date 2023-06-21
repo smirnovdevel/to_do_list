@@ -4,7 +4,7 @@ import '../../config/common/app_icons.dart';
 import '../../domain/models/todo.dart';
 
 ///
-/// Widget title item task in list
+/// Widget title item todo in list
 ///
 class TitletTodoWidget extends StatelessWidget {
   const TitletTodoWidget({super.key, required this.todo});
@@ -14,7 +14,7 @@ class TitletTodoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ///
-    /// Disactivate task icon
+    /// Disactivate todo icon
     ///
     if (todo.done) {
       return Row(
@@ -41,7 +41,7 @@ class TitletTodoWidget extends StatelessWidget {
     }
 
     ///
-    /// Task low priority icon
+    /// Todo low priority icon
     ///
     switch (todo.priority) {
       case 1:
@@ -67,7 +67,7 @@ class TitletTodoWidget extends StatelessWidget {
         );
 
       ///
-      /// Task high priority icon
+      /// Todo high priority icon
       ///
       case 2:
         return Row(
@@ -94,7 +94,7 @@ class TitletTodoWidget extends StatelessWidget {
         );
 
       ///
-      /// Task without priority icon
+      /// Todo without priority icon
       ///
       default:
         return Row(

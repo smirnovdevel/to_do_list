@@ -23,42 +23,42 @@ class DBProvider {
     final String pathDB = '${appDirectory.path}/${AppDB.nameDB}';
     log.info('Init DB $pathDB');
     return await openDatabase(pathDB,
-        version: AppDB.newVersion, onCreate: _createDB);
+        version: AppDB.version, onCreate: _createDB);
   }
 
   void _createDB(Database db, int version) {
-    db.execute(AppDB.tableTasks);
+    db.execute(AppDB.tableTodos);
   }
 
-  // GET ALL Tasks
-  Future<List<Todo>> getTasks() async {
+  // GET ALL Todos
+  Future<List<Todo>> getTodos() async {
     log.info('Get todos ...');
     final Database db = await database;
-    final List<Map<String, dynamic>> tasksMapList =
-        await db.query(AppDB.nameTaskTable);
-    final List<Todo> tasksList = [];
-    for (final Map<String, dynamic> taskMap in tasksMapList) {
-      tasksList.add(Todo.fromMap(taskMap));
+    final List<Map<String, dynamic>> todosMapList =
+        await db.query(AppDB.nameTodoTable);
+    final List<Todo> todosList = [];
+    for (final Map<String, dynamic> todoMap in todosMapList) {
+      todosList.add(Todo.fromMap(todoMap));
     }
-    tasksList.sort((Todo a, Todo b) {
+    todosList.sort((Todo a, Todo b) {
       return a.created.compareTo(b.created);
     });
-    log.info('Get ${tasksList.length} tasks');
-    return tasksList;
+    log.info('Get ${todosList.length} todos');
+    return todosList;
   }
 
-  // SAVE Task
-  Future<Todo> saveTask({required Todo todo}) async {
-    log.info('Insert task uuid: ${todo.uuid} ...');
+  // SAVE Todo
+  Future<Todo> saveTodo({required Todo todo}) async {
+    log.info('Insert todo uuid: ${todo.uuid} ...');
     final Database db = await database;
-    final List<Map<String, dynamic>> tasksMapList = await db.query(
-      AppDB.nameTaskTable,
+    final List<Map<String, dynamic>> todosMapList = await db.query(
+      AppDB.nameTodoTable,
       where: 'uuid = ?',
       whereArgs: [todo.uuid],
     );
-    if (tasksMapList.isEmpty) {
+    if (todosMapList.isEmpty) {
       try {
-        await db.insert(AppDB.nameTaskTable, todo.toMap());
+        await db.insert(AppDB.nameTodoTable, todo.toMap());
         log.info('Insert todo uuid: ${todo.uuid}');
       } catch (e) {
         log.warning('Insert todo uuid: ${todo.uuid} $e');
@@ -67,7 +67,7 @@ class DBProvider {
       log.info('Todo uuid: ${todo.uuid} found, update ...');
       try {
         await db.update(
-          AppDB.nameTaskTable,
+          AppDB.nameTodoTable,
           todo.toMap(),
           where: 'uuid = ?',
           whereArgs: [todo.uuid],
@@ -80,30 +80,30 @@ class DBProvider {
     return todo;
   }
 
-  // UPDATE Task
-  Future<void> updateTask({required Todo task}) async {
-    log.info('Update todo uuid: ${task.uuid} ...');
+  // UPDATE Todo
+  Future<void> updateTodo({required Todo todo}) async {
+    log.info('Update todo uuid: ${todo.uuid} ...');
     final Database db = await database;
     try {
       await db.update(
-        AppDB.nameTaskTable,
-        task.toMap(),
+        AppDB.nameTodoTable,
+        todo.toMap(),
         where: 'uuid = ?',
-        whereArgs: [task.uuid],
+        whereArgs: [todo.uuid],
       );
-      log.info('Update todo uuid: ${task.uuid}');
+      log.info('Update todo uuid: ${todo.uuid}');
     } catch (e) {
-      log.warning('Update todo uuid: ${task.uuid} $e');
+      log.warning('Update todo uuid: ${todo.uuid} $e');
     }
   }
 
-  // DELETE Task
-  Future<int?> deleteTask({required Todo todo}) async {
+  // DELETE Todo
+  Future<int?> deleteTodo({required Todo todo}) async {
     log.info('Delete todo uuid: ${todo.uuid} ...');
     final Database db = await database;
     try {
       final int resault = await db.delete(
-        AppDB.nameTaskTable,
+        AppDB.nameTodoTable,
         where: 'uuid = ?',
         whereArgs: [todo.uuid],
       );

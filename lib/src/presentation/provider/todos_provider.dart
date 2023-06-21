@@ -26,7 +26,7 @@ class TodoList extends StateNotifier<List<Todo>?> {
 
   Future<void> add(Todo todo) async {
     log.info('Add todo uuid: ${todo.uuid} ...');
-    await _todoService.saveTask(todo: todo);
+    await _todoService.saveTodo(todo: todo);
     state = [
       ...state ??= [],
       todo,
@@ -36,7 +36,7 @@ class TodoList extends StateNotifier<List<Todo>?> {
 
   Future<void> edit({required Todo todo}) async {
     log.info('Edit todo uuid: ${todo.uuid} ...');
-    todo = await _todoService.saveTask(todo: todo);
+    todo = await _todoService.saveTodo(todo: todo);
     log.info('Todo upload: ${todo.upload}');
     state = [
       for (final item in state ?? [])
@@ -47,13 +47,14 @@ class TodoList extends StateNotifier<List<Todo>?> {
 
   Future<void> delete({required Todo todo}) async {
     log.info('Delete todo uuid: ${todo.uuid} ...');
-    await _todoService.deleteTask(todo: todo);
+    await _todoService.deleteTodo(todo: todo);
     state = state?.where((item) => item.uuid != todo.uuid).toList();
     log.info('Delete todo');
   }
 
   Future<void> init() async {
     log.info('init ...');
-    state = await _todoService.getTasks();
+    await _todoService.getId();
+    state = await _todoService.getTodos();
   }
 }

@@ -16,7 +16,8 @@ Future<String> getDeviceID() async {
       switch (defaultTargetPlatform) {
         case TargetPlatform.android:
           {
-            final AndroidDeviceInfo deviceData = await deviceInfoPlugin.androidInfo;
+            final AndroidDeviceInfo deviceData =
+                await deviceInfoPlugin.androidInfo;
             return deviceData.id;
           }
         case TargetPlatform.iOS:
@@ -33,7 +34,8 @@ Future<String> getDeviceID() async {
 
         case TargetPlatform.windows:
           {
-            final WindowsDeviceInfo deviceData = await deviceInfoPlugin.windowsInfo;
+            final WindowsDeviceInfo deviceData =
+                await deviceInfoPlugin.windowsInfo;
             return deviceData.deviceId;
           }
         case TargetPlatform.macOS:
@@ -42,7 +44,7 @@ Future<String> getDeviceID() async {
             return deviceData.systemGUID ?? 'Unknown device ID';
           }
         default:
-          return '';
+          return 'Unknown device ID';
       }
     }
   } on PlatformException {

@@ -17,10 +17,10 @@ class NavigationManager {
 
   NavigatorState get _navigator => key.currentState!;
 
-  Future<Todo?> openEditPage(Todo task) {
+  Future<Todo?> openEditPage(Todo todo) {
     return _navigator.pushNamed<Todo?>(
       RouteNames.edit,
-      arguments: task,
+      arguments: todo,
     );
   }
 

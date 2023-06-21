@@ -9,7 +9,7 @@ import '../../config/routes/navigation.dart';
 import '../../domain/models/todo.dart';
 import '../provider/done_provider.dart';
 import '../provider/todos_provider.dart';
-import 'button_new_task_widget.dart';
+import 'button_new_todo_widget.dart';
 import 'header_todo_widget.dart';
 import 'item_todo_widget.dart';
 
@@ -27,8 +27,6 @@ class ListTodoWidget extends ConsumerStatefulWidget {
 class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
   final ScrollController scrollController = ScrollController();
 
-  bool visibleDoneTodo = false;
-  bool haveCloseTask = true;
   Uuid uuid = const Uuid();
 
   @override
@@ -37,7 +35,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
     super.dispose();
   }
 
-  Future<void> _updateTaskList() async {
+  Future<void> _updateTodoList() async {
     ref.read(todosProvider.notifier).init();
     await Future.delayed(const Duration(milliseconds: 300));
   }
@@ -68,7 +66,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
               ),
               CupertinoSliverRefreshControl(
                 onRefresh: () async {
-                  await _updateTaskList();
+                  await _updateTodoList();
                 },
               ),
               SliverToBoxAdapter(
@@ -84,7 +82,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
                           color: Colors.red,
                           strokeWidth: 2,
                           onRefresh: () async {
-                            await _updateTaskList();
+                            await _updateTodoList();
                           },
                           child: ListView.builder(
                             padding: EdgeInsets.zero,
@@ -99,9 +97,9 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
                         // кнопка Новое внизу списка
                         GestureDetector(
                           onTap: () {
-                            _onCreateTask();
+                            _onCreateTodo();
                           },
-                          child: const ButtonNewTaskWidget(),
+                          child: const ButtonNewTodoWidget(),
                         ),
                       ],
                     ),
@@ -116,9 +114,9 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
         padding: const EdgeInsets.only(bottom: 40.0, right: 16.0),
         child: FloatingActionButton(
           onPressed: () {
-            _onCreateTask();
+            _onCreateTodo();
           },
-          tooltip: 'Add task',
+          tooltip: 'Add todo',
           backgroundColor: Theme.of(context).iconTheme.color,
           child: const Icon(
             AppIcons.add,
@@ -130,7 +128,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
     );
   }
 
-  Future<void> _onCreateTask() async {
+  Future<void> _onCreateTodo() async {
     final Todo? result = await NavigationManager.instance.openEditPage(
       Todo(
           uuid: uuid.v1(),
@@ -142,14 +140,13 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
           created: DateTime.now(),
           changed: DateTime.now(),
           upload: false,
-          // TODO
-          autor: 'global'),
+          autor: null),
     );
 
     if (!mounted) return;
 
     if (result != null) {
-      // Is new task
+      // Is new todo
       ref.read(todosProvider.notifier).add(result);
     }
   }
