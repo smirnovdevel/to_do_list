@@ -17,9 +17,10 @@ class TodoRemoteDataSource {
     return todosList;
   }
 
-  Future<void> saveTodo({required Todo todo}) async {
+  Future<Todo> saveTodo({required Todo todo}) async {
     log.info('Save todo uuid: ${todo.uuid} ...');
-    await web.saveTodo(todo: todo);
+    final task = await web.saveTodo(todo: todo);
+    return task;
   }
 
   Future<void> deleteTodo({required Todo todo}) async {

@@ -158,28 +158,25 @@ class TodoService {
 
   /// SAVE Todo
   ///
-  void saveTodo({required Todo todo}) async {
+  Future<Todo> saveTodo({required Todo todo}) async {
     log.info('Save Todo id: ${todo.uuid} ...');
+    Todo? task;
     if (todo.autor == null) {
       todo = todo.copyWith(autor: deviceId);
     }
     if (await networkInfo.isConnected) {
-      if (todo.upload) {
-        log.info('Update Todo id: ${todo.uuid} to Server');
-        remoteDataSource.saveTodo(todo: todo);
-        log.info('Update Todo upload: ${todo.upload}');
-      } else {
-        log.info('Save Todo id: ${todo.uuid} to Server');
-        remoteDataSource.saveTodo(todo: todo);
-        log.info('Save Todo upload: ${todo.upload}');
-      }
+      log.info('Save Todo id: ${todo.uuid} to Server');
+      task = await remoteDataSource.saveTodo(todo: todo);
+      log.info('Save Todo upload: ${task.upload}');
     }
+    task ??= Todo.copyFrom(todo);
     try {
-      localDataSource.saveTodo(todo: todo);
-      log.info('Save Todo uuid: ${todo.uuid} to DB upload: ${todo.upload}');
+      await localDataSource.saveTodo(todo: task);
+      log.info('Save Todo uuid: ${task.uuid} to DB upload: ${task.upload}');
     } on DBException {
-      log.warning('Save Todo uuid: ${todo.uuid}');
+      log.warning('Save Todo uuid: ${task.uuid}');
     }
+    return task;
   }
 
   /// DELETE Todo
@@ -193,7 +190,11 @@ class TodoService {
     }
     try {
       log.info('Delete local todo uuid: ${todo.uuid} ...');
-      localDataSource.deleteTodo(todo: todo);
+      if (todo.upload) {
+        localDataSource.deleteTodo(todo: todo);
+      } else {
+        localDataSource.saveTodo(todo: todo);
+      }
       log.info('Delete local todo');
     } on DBException {
       log.warning('Delete local todo uuid: ${todo.uuid}');

@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 import '../../config/common/app_urls.dart';
 import '../../domain/models/todo.dart';
 import '../../utils/error/exception.dart';
+import '../../../env/apikey.env';
 import 'web_service.dart';
 
 final Logger log = Logger('HttpService');
@@ -14,23 +15,19 @@ final Logger log = Logger('HttpService');
 class HttpService implements IWebService {
   int? revision;
 
-  final String token = 'antievolutional';
-
   /// Get ALL Todo from Server
   ///
   @override
   Future<List<Todo>> getTodos() async {
     const String url = '${AppUrls.urlTodo}/list';
     final List<Todo> todosList = [];
-    // TODO
-    // final token = getToken();
 
     log.info('Get Todos from: $url ...');
     try {
       final http.Response response = await http.get(
         Uri.parse(url),
         headers: {
-          HttpHeaders.authorizationHeader: 'Bearer $token',
+          HttpHeaders.authorizationHeader: 'Bearer $tokenApiKey',
         },
       );
       if (response.statusCode == 200) {
@@ -59,15 +56,13 @@ class HttpService implements IWebService {
   @override
   Future<Todo> saveTodo({required Todo todo}) async {
     final String url = '${AppUrls.urlTodo}/list/${todo.uuid}';
-    // TODO
-    // final token = getToken();
     log.info('Find Todo before Save, revision: $revision ...');
     try {
       final http.Response response = await http.get(
         Uri.parse(url),
         headers: {
           'X-Last-Known-Revision': revision.toString(),
-          HttpHeaders.authorizationHeader: 'Bearer $token',
+          HttpHeaders.authorizationHeader: 'Bearer $tokenApiKey',
         },
       );
 
@@ -92,8 +87,6 @@ class HttpService implements IWebService {
   ///
   Future<Todo> insertTodo({required Todo todo}) async {
     const String url = '${AppUrls.urlTodo}/list';
-    // TODO
-    // final token = getToken();
     final String body = jsonEncode({
       'element': todo.toJson(),
     });
@@ -103,7 +96,7 @@ class HttpService implements IWebService {
         Uri.parse(url),
         headers: {
           'X-Last-Known-Revision': revision.toString(),
-          HttpHeaders.authorizationHeader: 'Bearer $token',
+          HttpHeaders.authorizationHeader: 'Bearer $tokenApiKey',
         },
         body: body,
       );
@@ -113,7 +106,7 @@ class HttpService implements IWebService {
         todo = todo.copyWith(upload: true);
         revision = result['revision'];
         log.info('Add Todo');
-        todo.copyWith(upload: true);
+        return todo.copyWith(upload: true);
       } else {
         log.info('Save Todo, response code: ${response.statusCode}');
         throw ServerException(response.statusCode.toString());
@@ -128,8 +121,6 @@ class HttpService implements IWebService {
   ///
   Future<Todo> updateTodo({required Todo todo}) async {
     final String url = '${AppUrls.urlTodo}/list/${todo.uuid}';
-    // TODO
-    // final token = getToken();
     final String body = jsonEncode({
       'element': todo.toJson(),
     });
@@ -140,7 +131,7 @@ class HttpService implements IWebService {
         headers: {
           'X-Last-Known-Revision': revision.toString(),
           // 'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: 'Bearer $token',
+          HttpHeaders.authorizationHeader: 'Bearer $tokenApiKey',
         },
         body: body,
       );
@@ -165,8 +156,6 @@ class HttpService implements IWebService {
   @override
   Future<Todo> deleteTodo({required Todo todo}) async {
     final String url = '${AppUrls.urlTodo}/list/${todo.uuid}';
-    // TODO
-    // final token = getToken();
     final String body = jsonEncode({
       'element': todo.toJson(),
     });
@@ -177,7 +166,7 @@ class HttpService implements IWebService {
         headers: {
           'X-Last-Known-Revision': revision.toString(),
           // 'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: 'Bearer $token',
+          HttpHeaders.authorizationHeader: 'Bearer $tokenApiKey',
         },
         body: body,
       );
@@ -199,14 +188,12 @@ class HttpService implements IWebService {
 
   Future<Todo> getTodo({required int id}) async {
     final String url = '${AppUrls.urlTodo}/list/$id';
-    // TODO
-    // final token = getToken();
     log.info('getAllTodosFromServer get from: $url');
     final http.Response response = await http.get(
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $tokenApiKey',
       },
     );
     if (response.statusCode == 200) {

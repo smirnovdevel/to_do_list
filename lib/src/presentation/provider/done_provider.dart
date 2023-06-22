@@ -18,8 +18,6 @@ enum TodosFilter {
 /// the value since it's just enum.
 final todosFilter = StateProvider((_) => TodosFilter.all);
 
-final todosUpdated = StateProvider((_) => false);
-
 /// The list of todos after applying of [todoListFilter].
 ///
 /// This too uses [Provider], to avoid recomputing the filtered list unless either

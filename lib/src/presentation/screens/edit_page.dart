@@ -129,8 +129,7 @@ class _EditPageState extends State<EditPage> {
                     priority: _priority,
                     deadline: _deadline,
                     changed: DateTime.now(),
-                    // TODO
-                    upload: true);
+                    upload: false);
                 _onGoBack(todo);
               },
               child: Text(

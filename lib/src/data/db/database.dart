@@ -53,6 +53,7 @@ class DBProvider {
       whereArgs: [todo.uuid],
     );
     if (todosMapList.isEmpty) {
+      // запись не найдена, добавляем
       try {
         await db.insert(AppDB.nameTodoTable, todo.toMap());
         log.info('Insert todo uuid: ${todo.uuid}');
@@ -60,6 +61,7 @@ class DBProvider {
         log.warning('Insert todo uuid: ${todo.uuid} $e');
       }
     } else {
+      // запись найдена, обновляем
       log.info('Todo uuid: ${todo.uuid} found, update ...');
       try {
         await db.update(

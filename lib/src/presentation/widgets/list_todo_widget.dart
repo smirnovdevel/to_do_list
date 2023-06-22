@@ -49,73 +49,67 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
   @override
   Widget build(BuildContext context) {
     final todos = ref.watch(filteredTodos);
-    final todosUpadated = ref.watch(todosUpdated);
     return Scaffold(
       body: SafeArea(
         top: false,
         bottom: false,
-        child: todosUpadated
-            ? loadingIndicator()
-            : Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomScrollView(
-                  controller: scrollController,
-                  slivers: [
-                    SliverAppBar(
-                      pinned: true,
-                      shadowColor: Theme.of(context).colorScheme.shadow,
-                      expandedHeight: 120.0,
-                      backgroundColor:
-                          Theme.of(context).scaffoldBackgroundColor,
-                      flexibleSpace: const HeaderTodoWidget(),
-                    ),
-                    CupertinoSliverRefreshControl(
-                      onRefresh: () async {
-                        await _updateTodoList();
-                      },
-                    ),
-                    SliverToBoxAdapter(
-                      child: Card(
-                        margin: const EdgeInsets.all(0),
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-                          child: Column(
-                            children: [
-                              RefreshIndicator(
-                                // displacement: 250,
-                                backgroundColor: Colors.yellow,
-                                color: Colors.red,
-                                strokeWidth: 2,
-                                onRefresh: () async {
-                                  await _updateTodoList();
-                                },
-                                child: ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  controller: scrollController,
-                                  shrinkWrap: true,
-                                  itemCount: todos.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return ItemTodoWidget(todo: todos[index]);
-                                  },
-                                ),
-                              ),
-                              // кнопка Новое внизу списка
-                              GestureDetector(
-                                onTap: () {
-                                  _onCreateTodo();
-                                },
-                                child: const ButtonNewTodoWidget(),
-                              ),
-                            ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: [
+              SliverAppBar(
+                pinned: true,
+                shadowColor: Theme.of(context).colorScheme.shadow,
+                expandedHeight: 120.0,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                flexibleSpace: const HeaderTodoWidget(),
+              ),
+              CupertinoSliverRefreshControl(
+                onRefresh: () async {
+                  await _updateTodoList();
+                },
+              ),
+              SliverToBoxAdapter(
+                child: Card(
+                  margin: const EdgeInsets.all(0),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+                    child: Column(
+                      children: [
+                        RefreshIndicator(
+                          // displacement: 250,
+                          backgroundColor: Colors.yellow,
+                          color: Colors.red,
+                          strokeWidth: 2,
+                          onRefresh: () async {
+                            await _updateTodoList();
+                          },
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            controller: scrollController,
+                            shrinkWrap: true,
+                            itemCount: todos.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return ItemTodoWidget(todo: todos[index]);
+                            },
                           ),
                         ),
-                      ),
+                        // кнопка Новое внизу списка
+                        GestureDetector(
+                          onTap: () {
+                            _onCreateTodo();
+                          },
+                          child: const ButtonNewTodoWidget(),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
+            ],
+          ),
+        ),
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 40.0, right: 16.0),
@@ -146,8 +140,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
           deleted: false,
           created: DateTime.now(),
           changed: DateTime.now(),
-          // TODO
-          upload: true,
+          upload: false,
           autor: null),
     );
 

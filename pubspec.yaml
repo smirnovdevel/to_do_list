@@ -30,6 +30,7 @@ dependencies:
   dart_code_metrics: ^4.19.2
   flutter_riverpod: ^2.3.6
   freezed_annotation: ^2.2.0
+  envied: ^0.3.0+3
 
 provider:
   intl: ^0.18.0

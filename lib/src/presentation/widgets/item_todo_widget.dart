@@ -40,11 +40,11 @@ class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
   _changeDone(Todo todo) {
     ref
         .read(todosProvider.notifier)
-        .edit(todo: widget.todo.copyWith(done: !todo.done));
+        .save(todo: widget.todo.copyWith(done: !todo.done, upload: false));
   }
 
   _saveTodo(Todo todo) {
-    ref.read(todosProvider.notifier).add(todo: todo);
+    ref.read(todosProvider.notifier).save(todo: todo);
   }
 
   _deleteTodo(Todo todo) {

@@ -36,7 +36,6 @@ class _RowDeleteItemWidgetState extends ConsumerState<RowDeleteItemWidget> {
           final bool confirmed =
               await Dialogs.showConfirmCloseCountDialog(context) ?? false;
           if (confirmed) {
-            ref.read(todosUpdated.notifier).state = false;
             ref.read(todosProvider.notifier).delete(todo: widget.todo);
             _onGoBack(null);
           }
@@ -69,17 +68,22 @@ class _RowDeleteItemWidgetState extends ConsumerState<RowDeleteItemWidget> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: widget.todo.upload
-                  ? const Icon(
-                      Icons.cloud_done_outlined,
-                      size: 26.0,
-                    )
-                  : const Icon(
-                      Icons.cloud_off_outlined,
-                      size: 26.0,
-                    ),
+            Consumer(
+              builder: ((context, ref, child) {
+                ref.watch(todosFilter);
+                return Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: widget.todo.upload
+                      ? const Icon(
+                          Icons.cloud_done_outlined,
+                          size: 26.0,
+                        )
+                      : const Icon(
+                          Icons.cloud_off_outlined,
+                          size: 26.0,
+                        ),
+                );
+              }),
             )
           ],
         ),

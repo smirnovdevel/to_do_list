@@ -17,16 +17,11 @@ class TodoLocalDataSource {
     return Future.value(todosList);
   }
 
-  void saveTodo({required Todo todo}) {
+  Future<Todo> saveTodo({required Todo todo}) async {
     log.info('Save todo uuid: ${todo.uuid} ...');
-    sqflite.saveTodo(todo: todo);
+    await sqflite.saveTodo(todo: todo);
     log.info('Save todo ok?');
-  }
-
-  void updateTodo({required Todo todo}) {
-    log.info('Update Todo uuid: ${todo.uuid} ...');
-    sqflite.saveTodo(todo: todo);
-    log.info('Update Todo ok?');
+    return todo;
   }
 
   void deleteTodo({required Todo todo}) {
