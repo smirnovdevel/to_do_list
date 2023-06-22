@@ -9,21 +9,17 @@ import '../../domain/models/todo.dart';
 final Logger log = Logger('DBProvider');
 
 class DBProvider {
-  DBProvider._();
-  static final DBProvider db = DBProvider._();
-  static late Database _database;
+  Database? _database;
 
-  Future<Database> get database async {
-    _database = await _initDB();
-    return _database;
-  }
-
-  Future<Database> _initDB() async {
-    final Directory appDirectory = await getApplicationDocumentsDirectory();
-    final String pathDB = '${appDirectory.path}/${AppDB.nameDB}';
-    log.info('Init DB $pathDB');
-    return await openDatabase(pathDB,
-        version: AppDB.version, onCreate: _createDB);
+  Future<Database> get _databaseGetter async {
+    if (_database == null) {
+      final Directory appDirectory = await getApplicationDocumentsDirectory();
+      final String pathDB = '${appDirectory.path}/${AppDB.nameDB}';
+      log.info('Init DB $pathDB');
+      _database = await openDatabase(pathDB,
+          version: AppDB.version, onCreate: _createDB);
+    }
+    return _database!;
   }
 
   void _createDB(Database db, int version) {
@@ -33,7 +29,7 @@ class DBProvider {
   // GET ALL Todos
   Future<List<Todo>> getTodos() async {
     log.info('Get todos ...');
-    final Database db = await database;
+    final db = await _databaseGetter;
     final List<Map<String, dynamic>> todosMapList =
         await db.query(AppDB.nameTodoTable);
     final List<Todo> todosList = [];
@@ -50,7 +46,7 @@ class DBProvider {
   // SAVE Todo
   Future<Todo> saveTodo({required Todo todo}) async {
     log.info('Insert todo uuid: ${todo.uuid} ...');
-    final Database db = await database;
+    final db = await _databaseGetter;
     final List<Map<String, dynamic>> todosMapList = await db.query(
       AppDB.nameTodoTable,
       where: 'uuid = ?',
@@ -83,7 +79,7 @@ class DBProvider {
   // UPDATE Todo
   Future<void> updateTodo({required Todo todo}) async {
     log.info('Update todo uuid: ${todo.uuid} ...');
-    final Database db = await database;
+    final db = await _databaseGetter;
     try {
       await db.update(
         AppDB.nameTodoTable,
@@ -100,7 +96,7 @@ class DBProvider {
   // DELETE Todo
   Future<int?> deleteTodo({required Todo todo}) async {
     log.info('Delete todo uuid: ${todo.uuid} ...');
-    final Database db = await database;
+    final db = await _databaseGetter;
     try {
       final int resault = await db.delete(
         AppDB.nameTodoTable,

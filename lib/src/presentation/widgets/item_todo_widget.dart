@@ -37,14 +37,18 @@ class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
     super.initState();
   }
 
-  _changeDone() {
+  _changeDone(Todo todo) {
     ref
         .read(todosProvider.notifier)
-        .edit(todo: widget.todo.copyWith(done: !widget.todo.done));
+        .edit(todo: widget.todo.copyWith(done: !todo.done));
   }
 
-  _deleteTodo() {
-    ref.read(todosProvider.notifier).delete(todo: widget.todo);
+  _saveTodo(Todo todo) {
+    ref.read(todosProvider.notifier).add(todo: todo);
+  }
+
+  _deleteTodo(Todo todo) {
+    ref.read(todosProvider.notifier).delete(todo: todo);
   }
 
   @override
@@ -81,11 +85,11 @@ class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
           final bool confirmed =
               await Dialogs.showConfirmCloseCountDialog(context) ?? false;
           if (confirmed) {
-            _deleteTodo();
+            _deleteTodo(widget.todo);
           }
           return confirmed;
         } else if (direction == DismissDirection.startToEnd) {
-          _changeDone();
+          _changeDone(widget.todo);
         }
         return false;
       },
@@ -104,7 +108,7 @@ class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
               ///
               GestureDetector(
                 onTap: () {
-                  _changeDone();
+                  _changeDone(widget.todo);
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 1.0),
@@ -155,9 +159,9 @@ class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
     final Todo? result = await NavigationManager.instance.openEditPage(todo);
     if (result != null) {
       if (result.deleted) {
-        _deleteTodo();
+        _deleteTodo(result);
       } else {
-        ref.read(todosProvider.notifier).edit(todo: Todo.copyFrom(result));
+        _saveTodo(result);
       }
     }
   }

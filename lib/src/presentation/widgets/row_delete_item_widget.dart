@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/common/app_icons.dart';
 import '../../config/routes/dialogs.dart';
 import '../../config/routes/navigation.dart';
 import '../../domain/models/todo.dart';
 import '../localization/app_localization.dart';
+import '../provider/done_provider.dart';
+import '../provider/todos_provider.dart';
 
-class RowDeleteItemWidget extends StatefulWidget {
+class RowDeleteItemWidget extends ConsumerStatefulWidget {
   const RowDeleteItemWidget({
     super.key,
     required this.todo,
@@ -15,10 +18,11 @@ class RowDeleteItemWidget extends StatefulWidget {
   final Todo todo;
 
   @override
-  State<RowDeleteItemWidget> createState() => _RowDeleteItemWidgetState();
+  ConsumerState<RowDeleteItemWidget> createState() =>
+      _RowDeleteItemWidgetState();
 }
 
-class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
+class _RowDeleteItemWidgetState extends ConsumerState<RowDeleteItemWidget> {
   void _onGoBack(Todo? todo) {
     NavigationManager.instance.pop(todo);
   }
@@ -32,8 +36,9 @@ class _RowDeleteItemWidgetState extends State<RowDeleteItemWidget> {
           final bool confirmed =
               await Dialogs.showConfirmCloseCountDialog(context) ?? false;
           if (confirmed) {
-            // widget.todo.deleted = true;
-            _onGoBack(widget.todo);
+            ref.read(todosUpdated.notifier).state = false;
+            ref.read(todosProvider.notifier).delete(todo: widget.todo);
+            _onGoBack(null);
           }
         },
         child: Row(

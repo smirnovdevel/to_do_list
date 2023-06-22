@@ -79,13 +79,13 @@ class _EditPageState extends State<EditPage> {
 
   @override
   void initState() {
+    super.initState();
     _controller.text = widget.todo.title;
     _done = widget.todo.done;
     _priority = widget.todo.priority;
     _deadline = widget.todo.deadline;
     _uuid = widget.todo.uuid;
     initializeDateFormatting();
-    super.initState();
   }
 
   @override
@@ -129,7 +129,8 @@ class _EditPageState extends State<EditPage> {
                     priority: _priority,
                     deadline: _deadline,
                     changed: DateTime.now(),
-                    upload: false);
+                    // TODO
+                    upload: true);
                 _onGoBack(todo);
               },
               child: Text(

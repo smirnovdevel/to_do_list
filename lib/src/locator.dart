@@ -22,12 +22,12 @@ Future<void> initializeDependencies() async {
   );
 
   /// Source data
-  locator.registerLazySingleton<ITodoLocalDataSource>(
-    () => ITodoLocalDataSource(),
+  locator.registerLazySingleton<TodoLocalDataSource>(
+    () => TodoLocalDataSource(),
   );
 
-  locator.registerLazySingleton<ITodoRemoteDataSource>(
-    () => ITodoRemoteDataSource(client: locator()),
+  locator.registerLazySingleton<TodoRemoteDataSource>(
+    () => TodoRemoteDataSource(),
   );
 
 // Core
