@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logging/logging.dart';
 
 import '../../domain/models/todo.dart';
+import '../../utils/core/logging.dart';
 import 'todos_provider.dart';
 
-final Logger log = Logger('DoneProvider');
+final Logging log = Logging('DoneProvider');
 
 /// The different ways to filter the list of todos
 enum TodosFilter {

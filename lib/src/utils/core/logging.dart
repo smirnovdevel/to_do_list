@@ -1,8 +1,6 @@
 import 'dart:developer' as console;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logging/logging.dart';
 
 // "\u001b[1;31m" Red
 // "\u001b[1;32m" Green
@@ -11,42 +9,31 @@ import 'package:logging/logging.dart';
 // "\u001b[1;35m Purple
 // "\u001b[1;36m Cyan
 
-Provider loggerProvider = Provider(
-  (ref) => Logger('logger'),
-);
+class Logging {
+  Logging(this.name);
+  final String name;
 
-void initLogger() {
-  if (kDebugMode) {
-    Logger.root.level = Level.ALL;
-    Logger.root.onRecord.listen((LogRecord record) {
-      switch (record.level) {
-        case Level.FINE:
-          {
-            // green - green
-            console.log(
-                '\u001b[1;32m ${record.loggerName}:\u001b[1;32m ${record.message}');
+  // 0 - all, 1 - info, 2 - warning
+  final int level = 0;
 
-            break;
-          }
-        case Level.INFO:
-          {
-            // green - blue
-            console.log(
-                '\u001b[1;32m ${record.loggerName}:\u001b[1;34m ${record.message}');
-            break;
-          }
-        case Level.WARNING:
-          {
-            // green - red
-            console.log(
-                '\u001b[1;32m ${record.loggerName}:\u001b[1;31m ${record.message}');
-            break;
-          }
-        default:
-          {
-            console.log('${record.loggerName}: record.message');
-          }
-      }
-    });
+  // green - blue
+  void fine(String event) {
+    if (kDebugMode) {
+      console.log('\u001b[1;32m $name:\u001b[1;32m $event');
+    }
+  }
+
+  // green - blue
+  void info(String event) {
+    if (kDebugMode) {
+      console.log('\u001b[1;32m $name:\u001b[1;34m $event');
+    }
+  }
+
+  // green - red
+  void warning(String event) {
+    if (kDebugMode) {
+      console.log('\u001b[1;32m $name:\u001b[1;31m $event');
+    }
   }
 }

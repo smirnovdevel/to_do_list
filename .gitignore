@@ -45,3 +45,4 @@ app.*.map.json
 
 # Envied
 *.env
+env.g.dart

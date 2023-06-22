@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logging/logging.dart';
 
+import '../../utils/core/logging.dart';
 import '../provider/todos_provider.dart';
 import '../widgets/list_todo_widget.dart';
 import '../widgets/loading_indicator.dart';
 
-final Logger log = Logger('HomePage');
+final Logging log = Logging('HomePage');
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});

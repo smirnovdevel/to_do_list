@@ -1,20 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../config/common/app_icons.dart';
 import '../../config/routes/navigation.dart';
 import '../../domain/models/todo.dart';
+import '../../utils/core/logging.dart';
 import '../provider/done_provider.dart';
 import '../provider/todos_provider.dart';
 import 'button_new_todo_widget.dart';
 import 'header_todo_widget.dart';
 import 'item_todo_widget.dart';
-import 'loading_indicator.dart';
 
-final Logger log = Logger('ListTodoWidget');
+final Logging log = Logging('ListTodoWidget');
 
 class ListTodoWidget extends ConsumerStatefulWidget {
   const ListTodoWidget({

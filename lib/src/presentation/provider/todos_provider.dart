@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logging/logging.dart';
 
 import '../../locator.dart';
 import '../../domain/models/todo.dart';
 import '../../domain/repositories/todo_service.dart';
+import '../../utils/core/logging.dart';
 
-final Logger log = Logger('TodosProvider');
+final Logging log = Logging('TodosProvider');
 
 final todosUpdated = StateProvider((_) => false);
 

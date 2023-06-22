@@ -1,9 +1,8 @@
-import 'package:logging/logging.dart';
-
 import '../../domain/models/todo.dart';
+import '../../utils/core/logging.dart';
 import '../web/http_service.dart';
 
-final Logger log = Logger('RemoteDataSource');
+final Logging log = Logging('RemoteDataSource');
 
 class TodoRemoteDataSource {
   /// This service maybe change to Dio or any web sevice

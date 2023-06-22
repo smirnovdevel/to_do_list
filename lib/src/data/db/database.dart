@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import '../../config/common/app_db.dart';
 import '../../domain/models/todo.dart';
+import '../../utils/core/logging.dart';
 
-final Logger log = Logger('DBProvider');
+final Logging log = Logging('DBProvider');
 
 class DBProvider {
   Database? _database;

@@ -1,9 +1,10 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:logging/logging.dart';
 
-final Logger log = Logger('getDeviceID');
+import '../../utils/core/logging.dart';
+
+final Logging log = Logging('getDeviceID');
 
 Future<String> getDeviceID() async {
   final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();

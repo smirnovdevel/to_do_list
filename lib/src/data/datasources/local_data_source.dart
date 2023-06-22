@@ -1,9 +1,8 @@
-import 'package:logging/logging.dart';
-
 import '../../domain/models/todo.dart';
+import '../../utils/core/logging.dart';
 import '../db/database.dart';
 
-final Logger log = Logger('LocalDataSource');
+final Logging log = Logging('LocalDataSource');
 
 class TodoLocalDataSource {
   /// This service maybe change to Hive or any db sevice

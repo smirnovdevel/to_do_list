@@ -2,15 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:logging/logging.dart';
 
+import '../../../env/env.dart';
 import '../../config/common/app_urls.dart';
 import '../../domain/models/todo.dart';
+import '../../utils/core/logging.dart';
 import '../../utils/error/exception.dart';
-import '../../../env/apikey.env';
 import 'web_service.dart';
 
-final Logger log = Logger('DioService');
+final Logging log = Logging('DioService');
 
 class DioService implements IWebService {
   int? revision;
@@ -27,7 +27,7 @@ class DioService implements IWebService {
       final http.Response response = await http.get(
         Uri.parse(url),
         headers: {
-          HttpHeaders.authorizationHeader: 'Bearer $tokenApiKey',
+          HttpHeaders.authorizationHeader: 'Bearer ${Env.token}',
         },
       );
       if (response.statusCode == 200) {
@@ -62,7 +62,7 @@ class DioService implements IWebService {
         Uri.parse(url),
         headers: {
           'X-Last-Known-Revision': revision.toString(),
-          HttpHeaders.authorizationHeader: 'Bearer $tokenApiKey',
+          HttpHeaders.authorizationHeader: 'Bearer ${Env.token}',
         },
       );
 
@@ -96,7 +96,7 @@ class DioService implements IWebService {
         Uri.parse(url),
         headers: {
           'X-Last-Known-Revision': revision.toString(),
-          HttpHeaders.authorizationHeader: 'Bearer $tokenApiKey',
+          HttpHeaders.authorizationHeader: 'Bearer ${Env.token}',
         },
         body: body,
       );
@@ -131,7 +131,7 @@ class DioService implements IWebService {
         headers: {
           'X-Last-Known-Revision': revision.toString(),
           // 'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: 'Bearer $tokenApiKey',
+          HttpHeaders.authorizationHeader: 'Bearer ${Env.token}',
         },
         body: body,
       );
@@ -166,7 +166,7 @@ class DioService implements IWebService {
         headers: {
           'X-Last-Known-Revision': revision.toString(),
           // 'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: 'Bearer $tokenApiKey',
+          HttpHeaders.authorizationHeader: 'Bearer ${Env.token}',
         },
         body: body,
       );
@@ -193,7 +193,7 @@ class DioService implements IWebService {
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': 'Bearer $tokenApiKey',
+        'Authorization': 'Bearer ${Env.token}',
       },
     );
     if (response.statusCode == 200) {

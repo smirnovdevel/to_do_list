@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app.dart';
 import 'src/locator.dart' as locator;
-import 'src/utils/core/logging.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,8 +15,6 @@ Future<void> main() async {
 
   // Костыль для тестирования, если сертификат сервера просрочен
   // HttpOverrides.global = MyHttpOverrides();
-
-  initLogger();
 
   runApp(
     const ProviderScope(

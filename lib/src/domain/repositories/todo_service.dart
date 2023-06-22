@@ -1,8 +1,7 @@
-import 'package:logging/logging.dart';
-
 import '../../data/datasources/local_data_source.dart';
 import '../../data/datasources/remote_data_source.dart';
 import '../../data/utils/device_id.dart';
+import '../../utils/core/logging.dart';
 import '../../utils/core/network_info.dart';
 import '../../utils/error/exception.dart';
 import '../models/todo.dart';
@@ -36,7 +35,7 @@ import '../models/todo.dart';
 /// 6) Задача есть и там, время последнего измения совпадает
 /// -- Добавляем в список
 ///
-final Logger log = Logger('TodoService');
+final Logging log = Logging('TodoService');
 
 class TodoService {
   TodoService({
