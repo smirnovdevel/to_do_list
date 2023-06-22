@@ -28,17 +28,21 @@ class TodoList extends StateNotifier<List<Todo>?> {
 
   Future<void> add({required Todo todo}) async {
     log.info('Add todo uuid: ${todo.uuid} ...');
+    // state = [
+    //   ...state ??= [],
+    //   todo,
+    // ];
+    final task = await _todoService.saveTodo(todo: todo);
+    // if (task.upload) {
+    // state = [
+    //   for (final item in state ?? [])
+    //     if (item.uuid == task.uuid) Todo.copyFrom(task) else item,
+    // ];
+    // }
     state = [
       ...state ??= [],
-      todo,
+      task,
     ];
-    final task = await _todoService.saveTodo(todo: todo);
-    if (task.upload) {
-      state = [
-        for (final item in state ?? [])
-          if (item.uuid == task.uuid) Todo.copyFrom(task) else item,
-      ];
-    }
     log.info('Todo upload: ${task.upload}');
     log.info('Add todo');
   }
