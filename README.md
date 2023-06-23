@@ -2,36 +2,30 @@
 
 Приложение написано в рамках обучения в Школе Мобильной Разработки Яндекса 2023.
 
-[Ссылка на скачивание APK](https://github.com/smirnovdevel/to_do_list/releases/download/v.1.0.0-todo/app-release.apk)
+[Скачать](https://github.com/smirnovdevel/to_do_list/releases/download/v.1.0.0-todo/app-release.apk)
 
-### Первый этап
+![Скриншот](https://github.com/smirnovdevel/to_do_list/assets/122177529/4dd42411-f173-4a12-9207-1cecf4db4577)
 
-Сверстаны 2 экрана. Главный и редактирование / создание задачи
+### Текущее состояние
 
-
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/61bd247c-0f5c-48ce-86f9-8a38d759784a" alt="drawing" width="200"/>
-
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/8662fde7-ece9-4dad-a622-57ed752dffe4" alt="drawing" width="200"/>
-
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/62784267-b37f-498b-bdb5-73ce0948a67b" alt="drawing" width="200"/>
+Сверстаны 2 экрана. Главный, со списком задач и экран редактирования задачи.
 
 <br><br>
-Добавлена тёмная тема. Выбор согласно настроек телефона. В верхней части экрана, при наличии выполненных задач, появляется иконка по тапу на которую, можно убрать их из списка. Механизм реализован с помощью пакета Provider
+Приложение поддерживает светлую и тёмную тему, согласно настроек телефона. А также два языка, русский и английский. В верхней части экрана, при наличии выполненных задач, появляется иконка по тапу на которую, можно убрать их из списка. 
 <br><br>
-Локально данные сохраняются в базе с помощью пакета sqlite
-<br><br>
+![button-eye](https://github.com/smirnovdevel/to_do_list/assets/122177529/ddd16adb-c1a4-47a6-b4b0-01507c2a357a)
 
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/340151d4-ab8a-4d2a-8010-7aec45456749" alt="drawing" width="200"/>
-
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/20612648-d912-4bfc-8f5e-9ea6fbd7dd31" alt="drawing" width="200"/>
-
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/bee36690-d681-4629-a22d-8b8fc63b589c" alt="drawing" width="200"/>
+Механизм реализован с помощью пакета `Riverpod`, как и всё управление состояниями в приложении.
 
 <br><br>
-При свайпе вправо, задача отмечается выполненной, при свайпе влево удаляется из базы. Если задача не выполнена, требуется подтверждение удаления
+Локально данные сохраняются в базе с помощью пакета `sqlite`, сетевой трафик на выбор, `Dio` или `http`. Для обоих реализованы методы в слое `data`
+<br><br>
+При свайпе вправо, задача отмечается выполненной, при свайпе влево удаляется из базы. Для удаление задачи требуется подтверждение
+<br><br>
+![swipe](https://github.com/smirnovdevel/to_do_list/assets/122177529/6cd9e65e-fb51-4c1c-81b1-86c19b793343)
+
+<br>
+Архитектура приложения построена на принципе Clean Architecture
 <br><br>
 
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/22894f6a-1c20-4bbf-8aac-abf13cfabe90" alt="drawing" width="200"/>
-
-
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/1a4ad1fa-70d1-4ef3-a32c-de2e78a74d72" alt="drawing" width="200"/>
+<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/c847de1d-1dc9-4e29-ba82-67e763603701" alt="drawing" width="400"/>
