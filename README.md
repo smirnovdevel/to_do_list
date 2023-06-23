@@ -2,7 +2,7 @@
 
 Приложение написано в рамках обучения в Школе Мобильной Разработки Яндекса 2023.
 
-[Ссылка на скачивание APK](https://disk.yandex.ru/d/bUvyijaOTZQBXg)
+[Ссылка на скачивание APK](https://github.com/smirnovdevel/to_do_list/releases/download/v.1.0.0-todo/app-release.apk)
 
 ### Первый этап
 
