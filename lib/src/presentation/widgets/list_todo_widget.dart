@@ -137,8 +137,10 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
           priority: 0,
           deadline: null,
           deleted: false,
-          created: DateTime.now(),
-          changed: DateTime.now(),
+          created: DateTime.fromMillisecondsSinceEpoch(
+              DateTime.now().millisecondsSinceEpoch),
+          changed: DateTime.fromMillisecondsSinceEpoch(
+              DateTime.now().millisecondsSinceEpoch),
           upload: false,
           autor: null),
     );

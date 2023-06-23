@@ -39,7 +39,11 @@ class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
 
   _changeDone(Todo todo) {
     ref.read(todosProvider.notifier).save(
-        todo: widget.todo.copyWith(done: !todo.done, changed: DateTime.now()));
+            todo: widget.todo.copyWith(
+          done: !todo.done,
+          changed: DateTime.fromMillisecondsSinceEpoch(
+              DateTime.now().millisecondsSinceEpoch),
+        ));
   }
 
   _saveTodo(Todo todo) {

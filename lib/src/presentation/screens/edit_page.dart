@@ -124,7 +124,8 @@ class _EditPageState extends State<EditPage> {
                     done: widget.todo.done,
                     priority: _priority,
                     deadline: _deadline,
-                    changed: DateTime.now(),
+                    changed: DateTime.fromMillisecondsSinceEpoch(
+                        DateTime.now().millisecondsSinceEpoch),
                     upload: widget.todo.upload);
                 _onGoBack(todo);
               },
@@ -201,7 +202,8 @@ class _EditPageState extends State<EditPage> {
               value: _deadline != null,
               onChanged: (bool value) {
                 if (value) {
-                  _deadline = DateTime.now();
+                  _deadline = DateTime.fromMillisecondsSinceEpoch(
+                      DateTime.now().millisecondsSinceEpoch);
                 } else {
                   _deadline = null;
                 }

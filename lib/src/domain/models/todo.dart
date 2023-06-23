@@ -145,10 +145,12 @@ class Todo {
       deleted: false,
       created: parsedJson['created_at'] != null
           ? DateTime.fromMillisecondsSinceEpoch(parsedJson['created_at'])
-          : DateTime.now(),
+          : DateTime.fromMillisecondsSinceEpoch(
+              DateTime.now().millisecondsSinceEpoch),
       changed: parsedJson['changed_at'] != null
           ? DateTime.fromMillisecondsSinceEpoch(parsedJson['changed_at'])
-          : DateTime.now(),
+          : DateTime.fromMillisecondsSinceEpoch(
+              DateTime.now().millisecondsSinceEpoch),
       upload: true,
       autor: parsedJson['last_updated_by'],
     );
