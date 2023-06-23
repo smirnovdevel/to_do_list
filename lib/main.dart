@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'app.dart';
-import 'di.dart' as di;
+import 'src/locator.dart' as locator;
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   //инициализация зависимостей
-  await di.initializeDependencies();
+  await locator.initializeDependencies();
 
   //инициализируем задержку при запуске приложения
   await initialization(null);
 
-  runApp(const App());
+  // Костыль для тестирования, если сертификат сервера просрочен
+  // HttpOverrides.global = MyHttpOverrides();
+
+  runApp(
+    const ProviderScope(
+      child: App(),
+    ),
+  );
 }
 
 // задержка при запуске приложения в секундах
