@@ -47,7 +47,7 @@ class TodoService {
 
       /// Получаем чистый список задач с сервера
       ///
-      List<Todo> remoteTodosList = await remoteDataSource.getTodos();
+      remoteTodosList = await remoteDataSource.getTodos();
       log.info('Get ${remoteTodosList.length} from Server');
     } else {
       log.warning('No Internet connection');
