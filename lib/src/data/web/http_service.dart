@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
@@ -27,7 +26,7 @@ class HttpService implements IWebService {
       final http.Response response = await http.get(
         Uri.parse(url),
         headers: {
-          HttpHeaders.authorizationHeader: 'Bearer ${Env.token}',
+          'Authorization': 'Bearer ${Env.token}',
         },
       );
       if (response.statusCode == 200) {
@@ -62,7 +61,7 @@ class HttpService implements IWebService {
         Uri.parse(url),
         headers: {
           'X-Last-Known-Revision': revision.toString(),
-          HttpHeaders.authorizationHeader: 'Bearer ${Env.token}',
+          'Authorization': 'Bearer ${Env.token}',
         },
       );
 
@@ -96,7 +95,7 @@ class HttpService implements IWebService {
         Uri.parse(url),
         headers: {
           'X-Last-Known-Revision': revision.toString(),
-          HttpHeaders.authorizationHeader: 'Bearer ${Env.token}',
+          'Authorization': 'Bearer ${Env.token}',
         },
         body: body,
       );
@@ -131,7 +130,7 @@ class HttpService implements IWebService {
         headers: {
           'X-Last-Known-Revision': revision.toString(),
           // 'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: 'Bearer ${Env.token}',
+          'Authorization': 'Bearer ${Env.token}',
         },
         body: body,
       );
@@ -154,7 +153,7 @@ class HttpService implements IWebService {
   /// DELETE Todo From Server
   ///
   @override
-  Future<Todo> deleteTodo({required Todo todo}) async {
+  Future<bool> deleteTodo({required Todo todo}) async {
     final String url = '${AppUrls.urlTodo}/list/${todo.uuid}';
     final String body = jsonEncode({
       'element': todo.toJson(),
@@ -166,7 +165,7 @@ class HttpService implements IWebService {
         headers: {
           'X-Last-Known-Revision': revision.toString(),
           // 'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: 'Bearer ${Env.token}',
+          'Authorization': 'Bearer ${Env.token}',
         },
         body: body,
       );
@@ -183,7 +182,7 @@ class HttpService implements IWebService {
     } catch (e) {
       log.warning('Delete Todo: $e');
     }
-    return todo;
+    return false;
   }
 
   Future<Todo> getTodo({required int id}) async {

@@ -27,10 +27,8 @@ class EditPage extends StatefulWidget {
 class _EditPageState extends State<EditPage> {
   final TextEditingController _controller = TextEditingController();
 
-  late bool _done;
   late int _priority;
   late DateTime? _deadline;
-  late String? _uuid;
   Uuid uuid = const Uuid();
 
   Future<void> _selectDate(BuildContext context) async {
@@ -81,10 +79,8 @@ class _EditPageState extends State<EditPage> {
   void initState() {
     super.initState();
     _controller.text = widget.todo.title;
-    _done = widget.todo.done;
     _priority = widget.todo.priority;
     _deadline = widget.todo.deadline;
-    _uuid = widget.todo.uuid;
     initializeDateFormatting();
   }
 
@@ -123,13 +119,13 @@ class _EditPageState extends State<EditPage> {
           TextButton(
               onPressed: () {
                 final todo = widget.todo.copyWith(
-                    uuid: _uuid ??= uuid.v1(),
+                    uuid: widget.todo.uuid ?? uuid.v1(),
                     title: _controller.text,
-                    done: _done,
+                    done: widget.todo.done,
                     priority: _priority,
                     deadline: _deadline,
                     changed: DateTime.now(),
-                    upload: false);
+                    upload: widget.todo.upload);
                 _onGoBack(todo);
               },
               child: Text(

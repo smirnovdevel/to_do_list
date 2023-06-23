@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 
@@ -15,25 +14,23 @@ final Logging log = Logging('DioService');
 class DioService implements IWebService {
   int? revision;
 
-  Dio dio = Dio(
-    BaseOptions(
-      baseUrl: AppUrls.urlTodo,
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': 'Bearer ${Env.token}',
-      },
-    ),
-  );
+  Dio dio = Dio();
 
   /// Get ALL Todo from Server
   ///
   @override
   Future<List<Todo>> getTodos() async {
     final List<Todo> todosList = [];
-
     log.info('Get Todos ...');
     try {
-      Response response = await dio.get('/list');
+      Response response = await dio.get(
+        '${AppUrls.urlTodo}/list',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer ${Env.token}',
+          },
+        ),
+      );
       if (response.statusCode == 200) {
         int i = 1;
         for (final Map<String, dynamic> todo in response.data['list']) {
@@ -58,39 +55,19 @@ class DioService implements IWebService {
   ///
   @override
   Future<Todo> saveTodo({required Todo todo}) async {
-    log.info('Find Todo before Save, revision: $revision ...');
-    try {
-      Response response = await dio.get('/list/${todo.uuid}');
-      if (response.statusCode == 200) {
-        revision = response.data['revision'];
-        log.info(
-            'Todo id: ${todo.uuid} found, need update revision: $revision ...');
-        return updateTodo(todo: todo);
-      } else {
-        log.info(
-            'Save Todo id: ${todo.uuid} not found, need insert revision: $revision ...');
-        return insertTodo(todo: todo);
-      }
-    } catch (e) {
-      log.warning('Save Todo: $e');
-    }
-    return todo;
-  }
-
-  /// INSERT Todo to Server
-  ///
-  Future<Todo> insertTodo({required Todo todo}) async {
     final String body = jsonEncode({
       'element': todo.toJson(),
     });
-    log.info('Add Todo, revision: $revision body: $body ...');
-
+    Todo? task;
+    log.info('Save Todo, revision: $revision body: $body ...');
+    const String url = '${AppUrls.urlTodo}/list';
     try {
       Response response = await dio.post(
-        '/list/${todo.uuid}',
+        url,
         options: Options(
           headers: {
             'X-Last-Known-Revision': revision.toString(),
+            'Authorization': 'Bearer ${Env.token}',
           },
         ),
         data: body,
@@ -99,8 +76,8 @@ class DioService implements IWebService {
       if (response.statusCode == 200) {
         todo = todo.copyWith(upload: true);
         revision = response.data['revision'];
-        log.info('Add Todo');
-        todo.copyWith(upload: true);
+        log.info('Save Todo');
+        task = todo.copyWith(upload: true);
       } else {
         log.info('Save Todo, response code: ${response.statusCode}');
         throw ServerException(response.statusCode.toString());
@@ -108,7 +85,45 @@ class DioService implements IWebService {
     } catch (e) {
       log.warning('Save Todo: $e');
     }
-    return todo;
+    return task ?? todo;
+  }
+
+  /// UPDATE LIST Todo to Server
+  ///
+  Future<bool> updateTodos({required List<Todo> todos}) async {
+    bool status = false;
+    List<Map<String, dynamic>> listJson =
+        List.generate(todos.length, (index) => todos[index].toJson());
+    final String body = jsonEncode({
+      'list': listJson,
+    });
+    log.info('Update ${todos.length} Todos revision: $revision');
+    const String url = '${AppUrls.urlTodo}/list';
+    try {
+      Response response = await dio.patch(
+        url,
+        options: Options(
+          headers: {
+            'X-Last-Known-Revision': revision.toString(),
+            'Authorization': 'Bearer ${Env.token}',
+          },
+        ),
+        data: body,
+      );
+
+      if (response.statusCode == 200) {
+        revision = response.data['revision'];
+        status = response.data['status'] == 'ok';
+        log.info('Update Todos revision: $revision');
+      } else {
+        log.info(
+            'Update Todos response code: ${response.statusCode} revision: $revision');
+        throw ServerException(response.statusCode.toString());
+      }
+    } catch (e) {
+      log.warning('Update Todo: $e');
+    }
+    return status;
   }
 
   /// UPDATE Todo to Server
@@ -118,12 +133,14 @@ class DioService implements IWebService {
       'element': todo.toJson(),
     });
     log.info('Update Todo id: ${todo.uuid} revision: $revision');
+    final String url = '${AppUrls.urlTodo}/list/${todo.uuid}';
     try {
       Response response = await dio.put(
-        '/list/${todo.uuid}',
+        url,
         options: Options(
           headers: {
             'X-Last-Known-Revision': revision.toString(),
+            'Authorization': 'Bearer ${Env.token}',
           },
         ),
         data: body,
@@ -147,32 +164,41 @@ class DioService implements IWebService {
   /// DELETE Todo From Server
   ///
   @override
-  Future<Todo> deleteTodo({required Todo todo}) async {
+  Future<bool> deleteTodo({required Todo todo}) async {
+    bool result = false;
     final String body = jsonEncode({
       'element': todo.toJson(),
     });
     log.info('Delete Todo id: ${todo.uuid} revision: $revision  body: $body');
+    final String url = '${AppUrls.urlTodo}/list/${todo.uuid}';
     try {
       Response response = await dio.delete(
-        '/list/${todo.uuid}',
+        url,
         options: Options(
           headers: {
             'X-Last-Known-Revision': revision.toString(),
+            'Authorization': 'Bearer ${Env.token}',
+          },
+          validateStatus: (status) {
+            if (status == null) return false;
+            if (status >= 200 && status < 300) {
+              return true;
+            }
+            if (status == 404) {
+              result = true;
+            }
+            return false;
           },
         ),
       );
 
-      if (response.statusCode == 200) {
-        revision = response.data['revision'];
-        log.info('Delete Todo id: ${todo.uuid} revision: $revision');
-      } else {
-        log.info(
-            'Delete Todo response code: ${response.statusCode} revision: $revision');
-        throw ServerException(response.statusCode.toString());
-      }
+      revision = response.data['revision'];
+      log.info(
+          'Delete Todo response code: ${response.statusCode} revision: $revision');
+      return true;
     } catch (e) {
       log.warning('Delete Todo: $e');
+      return result;
     }
-    return todo;
   }
 }

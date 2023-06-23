@@ -17,15 +17,29 @@ class TodoRemoteDataSource {
     return todosList;
   }
 
+  Future<bool> updateTodos({required List<Todo> todos}) async {
+    log.info('Update ${todos.length} todos ...');
+    bool status = await web.updateTodos(todos: todos);
+    log.info('Update todos');
+    return status;
+  }
+
   Future<Todo> saveTodo({required Todo todo}) async {
     log.info('Save todo uuid: ${todo.uuid} ...');
     final task = await web.saveTodo(todo: todo);
     return task;
   }
 
-  Future<void> deleteTodo({required Todo todo}) async {
+  Future<Todo> updateTodo({required Todo todo}) async {
+    log.info('Save todo uuid: ${todo.uuid} ...');
+    final task = await web.updateTodo(todo: todo);
+    return task;
+  }
+
+  Future<bool> deleteTodo({required Todo todo}) async {
     log.info('Delete todo uuid: ${todo.uuid} ...');
-    await web.deleteTodo(todo: todo);
+    final deleted = await web.deleteTodo(todo: todo);
     log.info('Delete todo');
+    return deleted;
   }
 }
