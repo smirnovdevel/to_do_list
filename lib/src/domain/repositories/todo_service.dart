@@ -71,13 +71,11 @@ class TodoService {
 
         /// Перебираем все задания с сервера и сравниваем с теми, что загружены из базы
         ///
-        List<Todo> localUpdate = [];
-        List<Todo> remoteUpdate = [];
         List<Todo> localDelete = [];
-        List<Todo> remoteDelete = [];
         List<String> uuidProcessed = [];
         for (String uuid in remoteTodosMap.keys) {
-          /// Сопоставление задач по uuid
+          /// Сопоставление тудушек полученных с сервера
+          /// с тудушками в базе по uuid
           ///
           if (localeTodosMap.containsKey(uuid)) {
             /// такая задача в базе есть
@@ -87,23 +85,17 @@ class TodoService {
             if (localeTodosMap[uuid]!.isBefore(remoteTodosMap[uuid]!)) {
               /// на сервере версия свежее, проверяем не удалена ли
               if (localTodo.deleted) {
-                remoteDelete.add(localTodo);
                 localDelete.add(localTodo);
               } else {
                 todosList.add(
-                    remoteTodosList.firstWhere((todo) => todo.uuid == uuid));
-                localUpdate.add(
                     remoteTodosList.firstWhere((todo) => todo.uuid == uuid));
               }
             } else if (remoteTodosMap[uuid]!.isBefore(localeTodosMap[uuid]!)) {
               /// в базе версия свежее, проверяем не удалена ли
               if (localTodo.deleted) {
-                remoteDelete.add(localTodo);
                 localDelete.add(localTodo);
               } else {
                 todosList.add(
-                    localTodosList.firstWhere((todo) => todo.uuid == uuid));
-                remoteUpdate.add(
                     localTodosList.firstWhere((todo) => todo.uuid == uuid));
               }
             } else {
@@ -120,8 +112,6 @@ class TodoService {
             /// и список для обновления в базе
             todosList
                 .addAll(remoteTodosList.where((todo) => todo.uuid == uuid));
-            localUpdate
-                .addAll(remoteTodosList.where((todo) => todo.uuid == uuid));
           }
         }
 
@@ -134,8 +124,6 @@ class TodoService {
         /// Если в базе есть задачи, которых нет на сервере, возможны варианты
         /// 1. Задачу удалили с другого устройства, upload = true, удаляем из базы
         for (String uuid in localeTodosMap.keys) {
-          todosList.addAll(
-              localTodosList.where((todo) => todo.uuid == uuid && todo.upload));
           localDelete.addAll(
               localTodosList.where((todo) => todo.uuid == uuid && todo.upload));
         }
@@ -144,8 +132,6 @@ class TodoService {
         /// добавляем в общий список и список обновления на сервере
         for (String uuid in localeTodosMap.keys) {
           todosList.addAll(localTodosList.where(
-              (todo) => todo.uuid == uuid && !todo.upload && !todo.deleted));
-          remoteUpdate.addAll(localTodosList.where(
               (todo) => todo.uuid == uuid && !todo.upload && !todo.deleted));
         }
 
@@ -165,28 +151,15 @@ class TodoService {
           localDelete.clear();
         }
 
-        /// Удаляем лишние таски с сервера
+        /// Обновляем списки
         ///
-        if (remoteDelete.isNotEmpty) {
-          for (Todo todo in localDelete) {
-            await remoteDataSource.deleteTodo(todo: todo);
-          }
-          remoteDelete.clear();
-        }
+        if (todosList.isNotEmpty) {
+          /// на сервере
+          await remoteDataSource.updateTodos(todos: todosList);
 
-        /// Обновляем локальный список
-        ///
-        if (localUpdate.isNotEmpty) {
-          await localDataSource.updateTodos(todos: localUpdate);
-        }
-
-        /// Обновляем список на сервере
-        ///
-        if (remoteUpdate.isNotEmpty) {
-          bool status = await remoteDataSource.updateTodos(todos: remoteUpdate);
-          if (status) {
-            await localDataSource.updateTodos(todos: remoteUpdate);
-          }
+          /// в локальной базе
+          ///
+          await localDataSource.updateTodos(todos: todosList);
         }
 
         /// В итоге получили актуальный список задач везде

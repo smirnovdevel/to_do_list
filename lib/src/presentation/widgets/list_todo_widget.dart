@@ -149,7 +149,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
 
     if (result != null) {
       // Is new todo
-      ref.read(todosProvider.notifier).add(todo: result);
+      ref.read(todosProvider.notifier).addTodo(todo: result);
     }
   }
 }

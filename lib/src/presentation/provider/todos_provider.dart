@@ -26,7 +26,7 @@ class TodoList extends StateNotifier<List<Todo>?> {
 
   final TodoService _todoService = locator();
 
-  Future<void> add({required Todo todo}) async {
+  Future<void> addTodo({required Todo todo}) async {
     log.info('Add todo uuid: ${todo.uuid} ...');
     state = [
       ...state ??= [],
@@ -43,7 +43,7 @@ class TodoList extends StateNotifier<List<Todo>?> {
     log.info('Add todo');
   }
 
-  Future<void> save({required Todo todo}) async {
+  Future<void> saveTodo({required Todo todo}) async {
     log.info('Edit todo uuid: ${todo.uuid} ...');
     state = [
       for (final item in state ?? [])
@@ -58,7 +58,7 @@ class TodoList extends StateNotifier<List<Todo>?> {
     log.info('Edit todo');
   }
 
-  Future<void> delete({required Todo todo}) async {
+  Future<void> deleteTodo({required Todo todo}) async {
     log.info('Delete todo uuid: ${todo.uuid} ...');
     state = state?.where((item) => item.uuid != todo.uuid).toList();
     await _todoService.deleteTodo(todo: todo);

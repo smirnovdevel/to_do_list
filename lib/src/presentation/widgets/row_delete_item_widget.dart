@@ -36,7 +36,7 @@ class _RowDeleteItemWidgetState extends ConsumerState<RowDeleteItemWidget> {
           final bool confirmed =
               await Dialogs.showConfirmCloseCountDialog(context) ?? false;
           if (confirmed) {
-            ref.read(todosProvider.notifier).delete(todo: widget.todo);
+            ref.read(todosProvider.notifier).deleteTodo(todo: widget.todo);
             _onGoBack(null);
           }
         },
