@@ -31,8 +31,5 @@
 Архитектура приложения построена на принципе Clean Architecture
 <br><br>
 
-<<<<<<< HEAD
 <img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/c847de1d-1dc9-4e29-ba82-67e763603701" alt="drawing" width="400"/>
-=======
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/c847de1d-1dc9-4e29-ba82-67e763603701" alt="drawing" width="400"/>
->>>>>>> f16a9b5 (Update README.md)
+
