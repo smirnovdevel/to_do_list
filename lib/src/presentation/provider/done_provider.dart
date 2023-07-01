@@ -24,7 +24,7 @@ final todosFilter = StateProvider((_) => TodosFilter.all);
 /// the filter of or the todo-list updates.
 final filteredTodos = Provider<List<Todo>>((ref) {
   final filter = ref.watch(todosFilter);
-  final todos = ref.watch(todosProvider) ?? [];
+  final todos = ref.watch(todosStateProvider) ?? [];
 
   log.info('Change filtered to: $filter');
 
@@ -37,6 +37,6 @@ final filteredTodos = Provider<List<Todo>>((ref) {
 });
 
 final countDone = StateProvider<int>((ref) {
-  final todos = ref.watch(todosProvider) ?? [];
+  final todos = ref.watch(todosStateProvider) ?? [];
   return todos.where((Todo todo) => todo.done && !todo.deleted).length;
 });

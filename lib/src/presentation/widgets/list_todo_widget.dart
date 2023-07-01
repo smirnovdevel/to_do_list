@@ -8,7 +8,7 @@ import '../../config/routes/navigation.dart';
 import '../../domain/models/todo.dart';
 import '../../utils/core/logging.dart';
 import '../provider/done_provider.dart';
-import '../provider/todos_provider.dart';
+import '../provider/todos_manager.dart';
 import 'button_new_todo_widget.dart';
 import 'header_todo_widget.dart';
 import 'item_todo_widget.dart';
@@ -36,7 +36,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
   }
 
   Future<void> _updateTodoList() async {
-    ref.read(todosProvider.notifier).init();
+    ref.watch(todosManagerProvider).init();
     await Future.delayed(const Duration(milliseconds: 300));
   }
 
@@ -131,7 +131,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
   Future<void> _onCreateTodo() async {
     final Todo? result = await NavigationManager.instance.openEditPage(
       Todo(
-          uuid: uuid.v1(),
+          uuid: null,
           title: '',
           done: false,
           priority: 0,
@@ -149,7 +149,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
 
     if (result != null) {
       // Is new todo
-      ref.read(todosProvider.notifier).addTodo(todo: result);
+      ref.watch(todosManagerProvider).addTodo(todo: result);
     }
   }
 }
