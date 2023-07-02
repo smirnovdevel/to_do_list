@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import '../../config/common/app_db.dart';
 import '../../domain/models/todo.dart';
@@ -9,16 +6,12 @@ import '../../utils/core/logging.dart';
 final Logging log = Logging('DBProvider');
 
 class DBProvider {
+  DBProvider(this._database);
   Database? _database;
 
-  Future<Database> get _databaseGetter async {
-    if (_database == null) {
-      final Directory appDirectory = await getApplicationDocumentsDirectory();
-      final String pathDB = '${appDirectory.path}/${AppDB.nameDB}';
-      log.info('Init DB $pathDB');
-      _database = await openDatabase(pathDB,
-          version: AppDB.version, onCreate: _createDB);
-    }
+  Future<Database> database() async {
+    if (_database != null) return _database!;
+    _database = await _initDB();
     return _database!;
   }
 
@@ -26,11 +19,20 @@ class DBProvider {
     db.execute(AppDB.tableTodos);
   }
 
+  /// initialize the database
+  Future<Database> _initDB() async {
+    final dbPath = await getDatabasesPath();
+    final String pathDB = '$dbPath/${AppDB.nameDB}';
+    const int version = AppDB.version;
+    log.info('Init DB $pathDB');
+    return await openDatabase(pathDB, version: version, onCreate: _createDB);
+  }
+
   /// GET ALL TODOS
   ///
   Future<List<Todo>> getTodos() async {
     log.info('Get todos ...');
-    final db = await _databaseGetter;
+    final db = await database();
     final List<Map<String, dynamic>> todosMapList = await db.query(
       AppDB.nameTodoTable,
       where: 'deleted = ?',
@@ -47,11 +49,31 @@ class DBProvider {
     return todosList;
   }
 
+  /// GET Todo
+  ///
+  Future<Todo?> getTodo({required String uuid}) async {
+    log.info('Get todo uuid $uuid ...');
+    final db = await database();
+    Todo? task;
+    final List<Map<String, dynamic>> todosMapList = await db.query(
+      AppDB.nameTodoTable,
+      where: 'uuid = ?',
+      whereArgs: [uuid],
+    );
+    if (todosMapList.isNotEmpty) {
+      task = Todo.fromMap(todosMapList.first);
+      log.info('Get todo ok');
+    } else {
+      log.info('Get todo not found');
+    }
+    return task;
+  }
+
   /// GET DELETED TODOS
   ///
   Future<List<Todo>> getDeletedTodos() async {
     log.info('Get Deleted Todos ...');
-    final db = await _databaseGetter;
+    final db = await database();
     final List<Map<String, dynamic>> todosMapList = await db.query(
       AppDB.nameTodoTable,
       where: 'deleted = ?',
@@ -71,9 +93,10 @@ class DBProvider {
 
   /// SAVE
   ///
-  Future<Todo> saveTodo({required Todo todo}) async {
+  Future<Todo?> saveTodo({required Todo todo}) async {
     log.info('Insert todo uuid: ${todo.uuid} ...');
-    final db = await _databaseGetter;
+    Todo? task;
+    final db = await database();
     final List<Map<String, dynamic>> todosMapList = await db.query(
       AppDB.nameTodoTable,
       where: 'uuid = ?',
@@ -83,6 +106,7 @@ class DBProvider {
       // запись не найдена, добавляем
       try {
         await db.insert(AppDB.nameTodoTable, todo.toMap());
+        task ??= todo;
         log.info('Insert todo uuid: ${todo.uuid}');
       } catch (e) {
         log.warning('Insert todo uuid: ${todo.uuid} $e');
@@ -97,19 +121,20 @@ class DBProvider {
           where: 'uuid = ?',
           whereArgs: [todo.uuid],
         );
+        task ??= todo;
         log.info('Update todo uuid: ${todo.uuid}');
       } catch (e) {
         log.warning('Update todo uuid: ${todo.uuid} $e');
       }
     }
-    return todo;
+    return task;
   }
 
   /// UPDATE TODOS
   ///
   Future<void> updateTodos({required List<Todo> todos}) async {
     log.info('Update ${todos.length} todos ...');
-    final db = await _databaseGetter;
+    final db = await database();
     for (Todo task in todos) {
       /// test
       Todo todo = task.copyWith(upload: true);
@@ -134,9 +159,10 @@ class DBProvider {
 
   /// UPDATE Todo
   ///
-  Future<void> updateTodo({required Todo todo}) async {
+  Future<Todo?> updateTodo({required Todo todo}) async {
     log.info('Update todo uuid: ${todo.uuid} ...');
-    final db = await _databaseGetter;
+    final db = await database();
+    Todo? task;
     try {
       await db.update(
         AppDB.nameTodoTable,
@@ -144,28 +170,30 @@ class DBProvider {
         where: 'uuid = ?',
         whereArgs: [todo.uuid],
       );
+      task ??= todo;
       log.info('Update todo uuid: ${todo.uuid}');
     } catch (e) {
       log.warning('Update todo uuid: ${todo.uuid} $e');
     }
+    return task;
   }
 
   /// DELETE Todo
   ///
-  Future<int?> deleteTodo({required Todo todo}) async {
+  Future<bool> deleteTodo({required Todo todo}) async {
     log.info('Delete todo uuid: ${todo.uuid} ...');
-    final db = await _databaseGetter;
+    final db = await database();
     try {
-      final int resault = await db.delete(
+      await db.delete(
         AppDB.nameTodoTable,
         where: 'uuid = ?',
         whereArgs: [todo.uuid],
       );
       log.info('Delete todo uuid: ${todo.uuid}');
-      return resault;
+      return true;
     } catch (e) {
       log.warning('Delete todo uuid: ${todo.uuid} $e');
     }
-    return null;
+    return false;
   }
 }

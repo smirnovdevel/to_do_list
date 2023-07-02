@@ -189,6 +189,38 @@ class DioService implements IWebService {
     return task ?? todo;
   }
 
+  /// GET Todo from Server
+  ///
+  Future<Todo?> getTodo({required String uuid}) async {
+    revision = await updateRevision();
+    Todo? todo;
+    log.info('Get Todo, revision: $revision uuid: $uuid ...');
+    final String url = '${AppUrls.urlTodo}/list/$uuid';
+    try {
+      Response response = await dio.get(
+        url,
+        options: Options(
+          headers: {
+            'X-Last-Known-Revision': revision.toString(),
+            'Authorization': 'Bearer ${Env.token}',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        revision = response.data['revision'];
+        todo = Todo.fromJson(response.data['element']);
+        log.info('Get Todo');
+      } else {
+        log.info('Get Todo, response code: ${response.statusCode}');
+        throw ServerException(response.statusCode.toString());
+      }
+    } catch (e) {
+      log.warning('Get Todo: $e');
+    }
+    return todo;
+  }
+
   /// DELETE Todo From Server
   ///
   @override

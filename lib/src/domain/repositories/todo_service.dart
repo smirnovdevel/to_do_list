@@ -14,8 +14,8 @@ class TodoService {
     required this.localDataSource,
     required this.networkInfo,
   });
-  final TodoRemoteDataSource remoteDataSource;
-  final TodoLocalDataSource localDataSource;
+  final RemoteDataSource remoteDataSource;
+  final LocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
   String? deviceId;
@@ -184,15 +184,13 @@ class TodoService {
       todo = todo.copyWith(autor: deviceId);
     }
     if (await networkInfo.isConnected) {
+      log.info('Save Todo id: ${todo.uuid} to Server ...');
       if (todo.upload) {
-        log.info('Save Todo id: ${todo.uuid} to Server');
         task = await remoteDataSource.updateTodo(todo: todo);
-        log.info('Save Todo upload: ${task.upload}');
       } else {
-        log.info('Save Todo id: ${todo.uuid} to Server');
         task = await remoteDataSource.saveTodo(todo: todo);
-        log.info('Save Todo upload: ${task.upload}');
       }
+      log.info('Save Todo upload: ${task.upload}');
     }
     task ??= Todo.copyFrom(todo);
     try {

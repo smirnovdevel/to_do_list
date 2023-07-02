@@ -1,12 +1,11 @@
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-abstract class NetworkInfo {
+abstract class INetworkInfo {
   Future<bool> get isConnected;
 }
 
-class NetworkInfoImp implements NetworkInfo {
-
-  NetworkInfoImp(this.connectionChecker);
+class NetworkInfo implements INetworkInfo {
+  NetworkInfo(this.connectionChecker);
   final InternetConnectionChecker connectionChecker;
 
   @override

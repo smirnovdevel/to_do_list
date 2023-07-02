@@ -18,10 +18,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   sqflite: ^2.2.8+4
-  path_provider: ^2.0.15
   get_it: ^7.6.0
   http: ^1.0.0
-  shared_preferences: ^2.1.2
   internet_connection_checker: ^1.0.0+1
   dio: ^5.2.1+1
   device_info_plus: ^9.0.2
@@ -29,9 +27,15 @@ dependencies:
   flutter_riverpod: ^2.3.6
   freezed_annotation: ^2.2.0
   envied: ^0.3.0+3
+  equatable: ^2.0.5
+  path_provider: ^2.0.15
+  sqflite_common_ffi: ^2.2.5
 
 provider:
   intl: ^0.18.0
+
+dependency_overrides:
+  # path_provider_android: 2.0.11 
 
 dev_dependencies:
   flutter_test:

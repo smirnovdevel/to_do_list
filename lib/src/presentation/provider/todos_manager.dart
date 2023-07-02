@@ -22,14 +22,27 @@ class TodosManager {
   Future<void> init() async {
     log.info('init ...');
     await _todoService.getId();
-    final todos = await _todoService.getTodos();
+    List<Todo>? todos;
+    try {
+      todos = await _todoService.getTodos();
+    } catch (e) {
+      log.warning(e.toString());
+    }
+    todos ??= [];
     _state.init(todos: todos);
   }
 
   Future<void> addTodo({required Todo todo}) async {
     log.info('Save todo uuid: ${todo.uuid} ...');
+    // добавляем в список на экране
     _state.addTodo(todo: todo);
-    final task = await _todoService.saveTodo(todo: todo);
+    Todo? task;
+    try {
+      task = await _todoService.saveTodo(todo: todo);
+    } catch (e) {
+      log.warning(e.toString());
+    }
+    task ??= todo;
     if (!todo.upload && task.upload) {
       _state.updateTodo(todo: task);
     }
@@ -38,8 +51,15 @@ class TodosManager {
 
   Future<void> updateTodo({required Todo todo}) async {
     log.info('Update todo uuid: ${todo.uuid} ...');
+    // обновляем в списке на экране
     _state.updateTodo(todo: todo);
-    final task = await _todoService.saveTodo(todo: todo);
+    Todo? task;
+    try {
+      task = await _todoService.saveTodo(todo: todo);
+    } catch (e) {
+      log.warning(e.toString());
+    }
+    task ??= todo;
     if (!todo.upload && task.upload) {
       _state.updateTodo(todo: task);
     }
@@ -48,8 +68,13 @@ class TodosManager {
 
   Future<void> deleteTodo({required Todo todo}) async {
     log.info('Delete todo uuid: ${todo.uuid} ...');
+    // удаляем из списка на экране
     _state.deleteTodo(todo: todo);
-    await _todoService.deleteTodo(todo: todo);
+    try {
+      await _todoService.deleteTodo(todo: todo);
+    } catch (e) {
+      log.warning(e.toString());
+    }
     log.info('Delete todo');
   }
 }

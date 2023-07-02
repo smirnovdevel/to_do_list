@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 @immutable
-class Todo {
+class Todo extends Equatable {
   const Todo({
     required this.uuid,
     required this.title,
@@ -25,6 +26,19 @@ class Todo {
   final DateTime changed;
   final bool upload;
   final String? autor;
+
+  @override
+  List<Object> get props => [
+        uuid!,
+        title,
+        done,
+        priority,
+        deadline!,
+        created,
+        changed,
+        upload,
+        autor!
+      ];
 
   Todo copyWith({
     String? uuid,
