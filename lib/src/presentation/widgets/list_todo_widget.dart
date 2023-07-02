@@ -47,7 +47,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final todos = ref.watch(filteredTodos);
+    final todos = ref.watch(filteredTodosProvider);
     return Scaffold(
       body: SafeArea(
         top: false,

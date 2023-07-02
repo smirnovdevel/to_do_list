@@ -21,7 +21,7 @@ class TodoService {
   String? deviceId;
 
   Future<void> getId() async {
-    deviceId = await getDeviceID();
+    deviceId ??= await getDeviceID();
     log.info('Device id: $deviceId');
   }
 

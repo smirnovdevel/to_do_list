@@ -6,23 +6,16 @@ import 'todos_provider.dart';
 
 final Logging log = Logging('DoneProvider');
 
-/// The different ways to filter the list of todos
+/// Варианты отбора в списке задач
 enum TodosFilter {
   all,
   active,
 }
 
 /// The currently active filter.
-///
-/// We use [StateProvider] here as there is no fancy logic behind manipulating
-/// the value since it's just enum.
 final todosFilter = StateProvider((_) => TodosFilter.all);
 
-/// The list of todos after applying of [todoListFilter].
-///
-/// This too uses [Provider], to avoid recomputing the filtered list unless either
-/// the filter of or the todo-list updates.
-final filteredTodos = Provider<List<Todo>>((ref) {
+final filteredTodosProvider = Provider<List<Todo>>((ref) {
   final filter = ref.watch(todosFilter);
   final todos = ref.watch(todosStateProvider) ?? [];
 
