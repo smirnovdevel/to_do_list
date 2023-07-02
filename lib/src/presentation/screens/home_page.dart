@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../utils/core/logging.dart';
+import '../provider/todos_manager.dart';
 import '../provider/todos_provider.dart';
 import '../widgets/list_todo_widget.dart';
 import '../widgets/loading_indicator.dart';
@@ -13,9 +14,9 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final todos = ref.watch(todosProvider);
+    final todos = ref.watch(todosStateProvider);
     if (todos == null) {
-      ref.read(todosProvider.notifier).init();
+      ref.watch(todosManagerProvider).init();
     }
     return todos == null ? loadingIndicator() : const ListTodoWidget();
   }

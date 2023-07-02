@@ -21,7 +21,7 @@ class TodoService {
   String? deviceId;
 
   Future<void> getId() async {
-    deviceId = await getDeviceID();
+    deviceId ??= await getDeviceID();
     log.info('Device id: $deviceId');
   }
 
@@ -35,19 +35,9 @@ class TodoService {
     /// check internet connection
     log.info('Get Todos from Server...');
     if (await networkInfo.isConnected) {
-      /// Удаляем с сервеа все таски, помеченные в базе на удаление
+      /// Получаем список задач с сервера
       ///
-      List<Todo> todosDeletedList = await localDataSource.getDeletedTodos();
-      for (Todo todo in todosDeletedList) {
-        bool deleted = await remoteDataSource.deleteTodo(todo: todo);
-        if (deleted) {
-          await localDataSource.deleteTodo(todo: todo);
-        }
-      }
-
-      /// Получаем чистый список задач с сервера
-      ///
-      List<Todo> remoteTodosList = await remoteDataSource.getTodos();
+      remoteTodosList = await remoteDataSource.getTodos();
       log.info('Get ${remoteTodosList.length} from Server');
     } else {
       log.warning('No Internet connection');
@@ -59,13 +49,18 @@ class TodoService {
     /// Проверям даты последнего изменения задачи, по последней истинная
     ///
     if (remoteTodosList.isNotEmpty) {
+      /// C сервера получены какие-то задачи
+      ///
       if (localTodosList.isEmpty) {
+        /// База пустая
+        ///
+        await localDataSource.updateTodos(todos: remoteTodosList);
         for (Todo todo in remoteTodosList) {
-          localDataSource.saveTodo(todo: todo);
-          todosList.add(todo);
+          todosList.add(todo.copyWith(upload: true));
         }
       } else {
-        /// Для быстрого поиска составим две мапы
+        /// Есть список с сервера и есть список из базы,
+        /// для быстрого поиска составим две мапы
         ///
         Map<String, DateTime> remoteTodosMap = {
           for (var todo in remoteTodosList) todo.uuid!: todo.changed
@@ -76,44 +71,102 @@ class TodoService {
 
         /// Перебираем все задания с сервера и сравниваем с теми, что загружены из базы
         ///
+        List<Todo> localDelete = [];
+        List<String> uuidProcessed = [];
         for (String uuid in remoteTodosMap.keys) {
+          /// Сопоставление тудушек полученных с сервера
+          /// с тудушками в базе по uuid
+          ///
           if (localeTodosMap.containsKey(uuid)) {
             /// такая задача в базе есть
             ///
+            Todo localTodo =
+                localTodosList.firstWhere((todo) => todo.uuid == uuid);
             if (localeTodosMap[uuid]!.isBefore(remoteTodosMap[uuid]!)) {
-              // на сервере версия свежее
+              /// на сервере версия свежее, проверяем не удалена ли
+              if (localTodo.deleted) {
+                localDelete.add(localTodo);
+              } else {
+                todosList.add(
+                    remoteTodosList.firstWhere((todo) => todo.uuid == uuid));
+              }
+            } else if (remoteTodosMap[uuid]!.isBefore(localeTodosMap[uuid]!)) {
+              /// в базе версия свежее, проверяем не удалена ли
+              if (localTodo.deleted) {
+                localDelete.add(localTodo);
+              } else {
+                todosList.add(
+                    localTodosList.firstWhere((todo) => todo.uuid == uuid));
+              }
+            } else {
+              /// записи совпадают, просто добавляем в список, берём версию с сервера
+              /// там уже upload = true
               todosList
                   .addAll(remoteTodosList.where((todo) => todo.uuid == uuid));
-            } else {
-              // в базе версия свежее
-              todosList
-                  .addAll(localTodosList.where((todo) => todo.uuid == uuid));
             }
-            localeTodosMap.remove(uuid);
-            remoteTodosMap.remove(uuid);
+
+            /// сохраняем совпадения
+            uuidProcessed.add(uuid);
           } else {
-            /// такой задачи в базе нет
-            ///
+            /// если такой задачи в базе нет, добавляем в общий список
+            /// и список для обновления в базе
             todosList
                 .addAll(remoteTodosList.where((todo) => todo.uuid == uuid));
           }
         }
 
-        /// Возможно, в базе есть задачи, которых нет на сервере, добавляем в список
-        ///
+        /// Удаляем совпавшие uuid из списка локальных таск, эти таски есть на сервере
+        /// остануться только те, которых нет на сервере
+        localeTodosMap.removeWhere((key, value) => uuidProcessed.contains(key));
+        uuidProcessed.clear();
+        remoteTodosMap.clear();
+
+        /// Если в базе есть задачи, которых нет на сервере, возможны варианты
+        /// 1. Задачу удалили с другого устройства, upload = true, удаляем из базы
         for (String uuid in localeTodosMap.keys) {
-          todosList.addAll(localTodosList.where((todo) => todo.uuid == uuid));
+          localDelete.addAll(
+              localTodosList.where((todo) => todo.uuid == uuid && todo.upload));
         }
 
-        /// В итоге получили актуальный список задач, обновим его в базе и на сервере
+        /// 2. Они не были выгружены на сервер и не удалены, upload = false, delete = false
+        /// добавляем в общий список и список обновления на сервере
+        for (String uuid in localeTodosMap.keys) {
+          todosList.addAll(localTodosList.where(
+              (todo) => todo.uuid == uuid && !todo.upload && !todo.deleted));
+        }
+
+        /// 3. Они не были выгружены на сервер и удалены, upload = false, delete = true
+        /// удаляем из базы
+        for (String uuid in localeTodosMap.keys) {
+          localDelete.addAll(localTodosList.where(
+              (todo) => todo.uuid == uuid && !todo.upload && todo.deleted));
+        }
+
+        /// Удаляем лишние таски из базы
         ///
-        bool status = await remoteDataSource.updateTodos(todos: todosList);
-        if (status) {
+        if (localDelete.isNotEmpty) {
+          for (Todo todo in localDelete) {
+            await localDataSource.deleteTodo(todo: todo);
+          }
+          localDelete.clear();
+        }
+
+        /// Обновляем списки
+        ///
+        if (todosList.isNotEmpty) {
+          /// на сервере
+          await remoteDataSource.updateTodos(todos: todosList);
+
+          /// в локальной базе
+          ///
           await localDataSource.updateTodos(todos: todosList);
         }
+
+        /// В итоге получили актуальный список задач везде
       }
     } else {
-      // с сервера задач нет
+      /// С сервера задач нет
+      ///
       todosList.addAll(localTodosList);
       if (localTodosList.isNotEmpty) {
         await remoteDataSource.updateTodos(todos: todosList);

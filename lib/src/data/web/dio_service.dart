@@ -16,6 +16,32 @@ class DioService implements IWebService {
 
   Dio dio = Dio();
 
+  /// UPDATE Revision Todos
+  ///
+  Future<int?> updateRevision() async {
+    log.info('Update revision from: ${revision ?? 'null'} ...');
+    try {
+      Response response = await dio.get(
+        '${AppUrls.urlTodo}/list',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer ${Env.token}',
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        revision = response.data['revision'];
+        log.info('Update revision to: $revision');
+      } else {
+        log.info('Update revision, response code: ${response.statusCode}');
+        throw ServerException(response.statusCode.toString());
+      }
+    } catch (e) {
+      log.warning('Get Todos: $e');
+    }
+    return revision;
+  }
+
   /// Get ALL Todo from Server
   ///
   @override
@@ -55,6 +81,7 @@ class DioService implements IWebService {
   ///
   @override
   Future<Todo> saveTodo({required Todo todo}) async {
+    revision = await updateRevision();
     final String body = jsonEncode({
       'element': todo.toJson(),
     });
@@ -74,7 +101,6 @@ class DioService implements IWebService {
       );
 
       if (response.statusCode == 200) {
-        todo = todo.copyWith(upload: true);
         revision = response.data['revision'];
         log.info('Save Todo');
         task = todo.copyWith(upload: true);
@@ -129,9 +155,11 @@ class DioService implements IWebService {
   /// UPDATE Todo to Server
   ///
   Future<Todo> updateTodo({required Todo todo}) async {
+    revision = await updateRevision();
     final String body = jsonEncode({
       'element': todo.toJson(),
     });
+    Todo? task;
     log.info('Update Todo id: ${todo.uuid} revision: $revision');
     final String url = '${AppUrls.urlTodo}/list/${todo.uuid}';
     try {
@@ -149,7 +177,7 @@ class DioService implements IWebService {
       if (response.statusCode == 200) {
         revision = response.data['revision'];
         log.info('Update Todo revision: $revision');
-        return todo.copyWith(upload: true);
+        task = todo.copyWith(upload: true);
       } else {
         log.info(
             'Update Todo response code: ${response.statusCode} revision: $revision');
@@ -158,13 +186,14 @@ class DioService implements IWebService {
     } catch (e) {
       log.warning('Update Todo: $e');
     }
-    return todo;
+    return task ?? todo;
   }
 
   /// DELETE Todo From Server
   ///
   @override
   Future<bool> deleteTodo({required Todo todo}) async {
+    revision = await updateRevision();
     bool result = false;
     final String body = jsonEncode({
       'element': todo.toJson(),

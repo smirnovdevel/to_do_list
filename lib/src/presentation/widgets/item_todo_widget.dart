@@ -7,7 +7,7 @@ import '../../config/routes/dialogs.dart';
 import '../../config/routes/navigation.dart';
 import '../../domain/models/todo.dart';
 import '../../utils/core/logging.dart';
-import '../provider/todos_provider.dart';
+import '../provider/todos_manager.dart';
 import 'icon_done_widget.dart';
 import 'subtitle_widget.dart';
 import 'swipe_action_left_widget.dart';
@@ -38,16 +38,20 @@ class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
   }
 
   _changeDone(Todo todo) {
-    ref.read(todosProvider.notifier).save(
-        todo: widget.todo.copyWith(done: !todo.done, changed: DateTime.now()));
+    ref.watch(todosManagerProvider).updateTodo(
+            todo: widget.todo.copyWith(
+          done: !todo.done,
+          changed: DateTime.fromMillisecondsSinceEpoch(
+              DateTime.now().millisecondsSinceEpoch),
+        ));
   }
 
-  _saveTodo(Todo todo) {
-    ref.read(todosProvider.notifier).save(todo: todo);
+  _updateTodo(Todo todo) {
+    ref.watch(todosManagerProvider).updateTodo(todo: todo);
   }
 
   _deleteTodo(Todo todo) {
-    ref.read(todosProvider.notifier).delete(todo: todo);
+    ref.watch(todosManagerProvider).deleteTodo(todo: todo);
   }
 
   @override
@@ -160,7 +164,7 @@ class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
       if (result.deleted) {
         _deleteTodo(result);
       } else {
-        _saveTodo(result);
+        _updateTodo(result);
       }
     }
   }

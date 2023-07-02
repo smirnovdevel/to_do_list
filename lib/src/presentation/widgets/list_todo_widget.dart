@@ -8,7 +8,7 @@ import '../../config/routes/navigation.dart';
 import '../../domain/models/todo.dart';
 import '../../utils/core/logging.dart';
 import '../provider/done_provider.dart';
-import '../provider/todos_provider.dart';
+import '../provider/todos_manager.dart';
 import 'button_new_todo_widget.dart';
 import 'header_todo_widget.dart';
 import 'item_todo_widget.dart';
@@ -36,7 +36,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
   }
 
   Future<void> _updateTodoList() async {
-    ref.read(todosProvider.notifier).init();
+    ref.watch(todosManagerProvider).init();
     await Future.delayed(const Duration(milliseconds: 300));
   }
 
@@ -47,7 +47,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final todos = ref.watch(filteredTodos);
+    final todos = ref.watch(filteredTodosProvider);
     return Scaffold(
       body: SafeArea(
         top: false,
@@ -131,14 +131,16 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
   Future<void> _onCreateTodo() async {
     final Todo? result = await NavigationManager.instance.openEditPage(
       Todo(
-          uuid: uuid.v1(),
+          uuid: null,
           title: '',
           done: false,
           priority: 0,
           deadline: null,
           deleted: false,
-          created: DateTime.now(),
-          changed: DateTime.now(),
+          created: DateTime.fromMillisecondsSinceEpoch(
+              DateTime.now().millisecondsSinceEpoch),
+          changed: DateTime.fromMillisecondsSinceEpoch(
+              DateTime.now().millisecondsSinceEpoch),
           upload: false,
           autor: null),
     );
@@ -147,7 +149,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
 
     if (result != null) {
       // Is new todo
-      ref.read(todosProvider.notifier).add(todo: result);
+      ref.watch(todosManagerProvider).addTodo(todo: result);
     }
   }
 }
