@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'src/config/themes/dark_theme.dart';
 import 'src/config/themes/light_theme.dart';
 import 'src/presentation/localization/app_localization.dart';
+import 'src/presentation/navigation/router.dart';
+import 'src/presentation/provider/navigation_provider.dart';
 
-class App extends StatelessWidget {
-  App({Key? key}) : super(key: key);
+class App extends ConsumerWidget {
+  App({super.key});
+
+  final _routerInformationParser = TodoRouteInformationParser();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'TODO лист',
@@ -17,9 +22,8 @@ class App extends StatelessWidget {
       localizationsDelegates: AppLocalization.localizationsDelegates,
       supportedLocales: AppLocalization.supportedLocales,
       // Navigator 2.0
-      routerDelegate: TodosRouterDelegate(),
-      routeInformationParser: TodosRouteInformationParser(),
-      routeInformationProvider: DebugRouteInformationProvider(),
+      routerDelegate: ref.watch(navigationProvider),
+      routeInformationParser: _routerInformationParser,
     );
   }
 }

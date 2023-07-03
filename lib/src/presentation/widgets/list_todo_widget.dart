@@ -4,10 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../config/common/app_icons.dart';
-import '../../config/routes/navigation.dart';
-import '../../domain/models/todo.dart';
 import '../../utils/core/logging.dart';
 import '../provider/done_provider.dart';
+import '../provider/navigation_provider.dart';
 import '../provider/todos_manager.dart';
 import 'button_new_todo_widget.dart';
 import 'header_todo_widget.dart';
@@ -97,7 +96,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
                         // кнопка Новое внизу списка
                         GestureDetector(
                           onTap: () {
-                            _onCreateTodo();
+                            ref.read(navigationProvider).push(uuid.v1());
                           },
                           child: const ButtonNewTodoWidget(),
                         ),
@@ -114,7 +113,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
         padding: const EdgeInsets.only(bottom: 40.0, right: 16.0),
         child: FloatingActionButton(
           onPressed: () {
-            _onCreateTodo();
+            ref.read(navigationProvider).push(uuid.v1());
           },
           tooltip: 'Add todo',
           backgroundColor: Theme.of(context).iconTheme.color,
@@ -126,30 +125,5 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
         ),
       ),
     );
-  }
-
-  Future<void> _onCreateTodo() async {
-    final Todo? result = await NavigationManager.instance.openEditPage(
-      Todo(
-          uuid: null,
-          title: '',
-          done: false,
-          priority: 0,
-          deadline: null,
-          deleted: false,
-          created: DateTime.fromMillisecondsSinceEpoch(
-              DateTime.now().millisecondsSinceEpoch),
-          changed: DateTime.fromMillisecondsSinceEpoch(
-              DateTime.now().millisecondsSinceEpoch),
-          upload: false,
-          autor: null),
-    );
-
-    if (!mounted) return;
-
-    if (result != null) {
-      // Is new todo
-      ref.watch(todosManagerProvider).addTodo(todo: result);
-    }
   }
 }

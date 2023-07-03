@@ -43,7 +43,7 @@ main() async {
       ///
       /// Assert
       ///
-      final Todo? task = await remoteDataSource.getTodo(uuid: todo.uuid!);
+      final Todo? task = await remoteDataSource.getTodo(uuid: todo.uuid);
       expect(false, task == null);
     });
     test('Update todo', () async {
@@ -56,7 +56,7 @@ main() async {
       ///
       /// Assert
       ///
-      final task = await remoteDataSource.getTodo(uuid: todo.uuid!);
+      final task = await remoteDataSource.getTodo(uuid: todo.uuid);
       expect('Update title', task?.title);
     });
     test('Delete todo', () async {
@@ -68,7 +68,7 @@ main() async {
       ///
       /// Assert
       ///
-      final Todo? task = await remoteDataSource.getTodo(uuid: todo.uuid!);
+      final Todo? task = await remoteDataSource.getTodo(uuid: todo.uuid);
       expect(null, task);
     });
   });

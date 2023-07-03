@@ -5,8 +5,6 @@ import '../../utils/core/logging.dart';
 
 final Logging log = Logging('TodosProvider');
 
-final todosUpdated = StateProvider((_) => false);
-
 final todosStateProvider = StateNotifierProvider<TodosStateHolder, List<Todo>?>(
   (ref) => TodosStateHolder(),
 );

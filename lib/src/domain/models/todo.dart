@@ -16,29 +16,20 @@ class Todo extends Equatable {
     required this.autor,
   });
 
-  final String? uuid;
+  final String uuid;
   final String title;
   final bool done;
   final int priority;
   final DateTime? deadline;
   final bool deleted;
   final DateTime created;
-  final DateTime changed;
+  final DateTime? changed;
   final bool upload;
   final String? autor;
 
   @override
-  List<Object> get props => [
-        uuid!,
-        title,
-        done,
-        priority,
-        deadline!,
-        created,
-        changed,
-        upload,
-        autor!
-      ];
+  List<Object> get props =>
+      [uuid, title, done, priority, created, upload, autor!];
 
   Todo copyWith({
     String? uuid,
@@ -122,7 +113,7 @@ class Todo extends Equatable {
                 : 'important',
         'done': done,
         'created_at': created.millisecondsSinceEpoch,
-        'changed_at': changed.millisecondsSinceEpoch,
+        'changed_at': changed!.millisecondsSinceEpoch,
         'last_updated_by': autor
       };
     } else {
@@ -137,7 +128,7 @@ class Todo extends Equatable {
         'deadline': deadline!.millisecondsSinceEpoch,
         'done': done,
         'created_at': created.millisecondsSinceEpoch,
-        'changed_at': changed.millisecondsSinceEpoch,
+        'changed_at': changed!.millisecondsSinceEpoch,
         'last_updated_by': autor
       };
     }

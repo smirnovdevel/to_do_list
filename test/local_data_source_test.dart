@@ -52,7 +52,7 @@ main() async {
       ///
       /// Assert
       ///
-      final task = await localDataSource.getTodo(uuid: todo.uuid!);
+      final task = await localDataSource.getTodo(uuid: todo.uuid);
       expect(todo, task);
     });
 
@@ -66,7 +66,7 @@ main() async {
       ///
       /// Assert
       ///
-      final task = await localDataSource.getTodo(uuid: todo.uuid!);
+      final task = await localDataSource.getTodo(uuid: todo.uuid);
       expect('Update title', task?.title);
     });
     test('Delete todo', () async {
@@ -78,7 +78,7 @@ main() async {
       ///
       /// Assert
       ///
-      final Todo? task = await localDataSource.getTodo(uuid: todo.uuid!);
+      final Todo? task = await localDataSource.getTodo(uuid: todo.uuid);
       expect(null, task);
     });
   });

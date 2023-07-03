@@ -1,42 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../config/common/app_color.dart';
-import '../../config/routes/navigation.dart';
 import '../../domain/models/todo.dart';
 import '../localization/app_localization.dart';
+import '../provider/navigation_provider.dart';
+import '../provider/todo_provider.dart';
+import '../provider/todos_manager.dart';
 import '../widgets/build_items_popup_menu.dart';
 import '../widgets/hint_popup_menu_widget.dart';
 import '../widgets/row_delete_item_widget.dart';
 import '../widgets/todo_text_field_widget.dart';
 
-class DetailsPage extends StatefulWidget {
-  const DetailsPage({
+class TodoScreen extends ConsumerStatefulWidget {
+  const TodoScreen({
     super.key,
-    required this.todo,
+    required this.uuid,
   });
 
-  final Todo todo;
+  final String uuid;
 
   @override
-  State<DetailsPage> createState() => _EditPageState();
+  ConsumerState<TodoScreen> createState() => _EditPageState();
 }
 
-class _EditPageState extends State<DetailsPage> {
+class _EditPageState extends ConsumerState<TodoScreen> {
   final TextEditingController _controller = TextEditingController();
 
-  late int _priority;
-  late DateTime? _deadline;
-  Uuid uuid = const Uuid();
+  int _priority = 0;
+  DateTime? _deadline;
+  DateTime? _created;
+  DateTime? _changed;
+  bool _upload = false;
+  bool _done = false;
 
   @override
   void initState() {
     super.initState();
-    _controller.text = widget.todo.title;
-    _priority = widget.todo.priority;
-    _deadline = widget.todo.deadline;
+    final todo = ref.read(todoProvider(widget.uuid));
+    _controller.text = todo.title;
+    _priority = todo.priority;
+    _deadline = todo.deadline;
+    _upload = todo.upload;
+    _done = todo.done;
+    _created = todo.created;
+    _changed = todo.changed;
     initializeDateFormatting();
   }
 
@@ -90,9 +100,9 @@ class _EditPageState extends State<DetailsPage> {
     }
   }
 
-  void _onGoBack(Todo? todo) {
-    NavigationManager.instance.pop(todo);
-  }
+  // void _onGoBack(Todo? todo) {
+  //   NavigationManager.instance.pop(todo);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +119,7 @@ class _EditPageState extends State<DetailsPage> {
             color: Theme.of(context).primaryColor,
           ),
           onPressed: () {
-            _onGoBack(null);
+            ref.read(navigationProvider).pop();
           },
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -118,16 +128,26 @@ class _EditPageState extends State<DetailsPage> {
         actions: [
           TextButton(
               onPressed: () {
-                final todo = widget.todo.copyWith(
-                    uuid: widget.todo.uuid ?? uuid.v1(),
+                final todo = Todo(
+                    uuid: widget.uuid,
                     title: _controller.text,
-                    done: widget.todo.done,
                     priority: _priority,
                     deadline: _deadline,
+                    created: _created ??
+                        DateTime.fromMillisecondsSinceEpoch(
+                            DateTime.now().millisecondsSinceEpoch),
                     changed: DateTime.fromMillisecondsSinceEpoch(
                         DateTime.now().millisecondsSinceEpoch),
-                    upload: widget.todo.upload);
-                _onGoBack(todo);
+                    upload: _upload,
+                    done: _done,
+                    autor: null,
+                    deleted: false);
+                if (_changed == null) {
+                  ref.watch(todosManagerProvider).addTodo(todo: todo);
+                } else {
+                  ref.watch(todosManagerProvider).updateTodo(todo: todo);
+                }
+                ref.read(navigationProvider).pop();
               },
               child: Text(
                 AppLocalization.of(context).get('save').toUpperCase(),
@@ -153,7 +173,7 @@ class _EditPageState extends State<DetailsPage> {
               const Divider(
                 height: 0.2,
               ),
-              RowDeleteItemWidget(todo: widget.todo)
+              RowDeleteItemWidget(uuid: widget.uuid)
             ],
           ),
         ),

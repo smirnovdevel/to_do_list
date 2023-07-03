@@ -63,10 +63,10 @@ class TodoService {
         /// для быстрого поиска составим две мапы
         ///
         Map<String, DateTime> remoteTodosMap = {
-          for (var todo in remoteTodosList) todo.uuid!: todo.changed
+          for (var todo in remoteTodosList) todo.uuid: todo.changed!
         };
         Map<String, DateTime> localeTodosMap = {
-          for (var todo in localTodosList) todo.uuid!: todo.changed
+          for (var todo in localTodosList) todo.uuid: todo.changed!
         };
 
         /// Перебираем все задания с сервера и сравниваем с теми, что загружены из базы
