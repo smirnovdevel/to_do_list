@@ -12,8 +12,8 @@ import '../widgets/hint_popup_menu_widget.dart';
 import '../widgets/row_delete_item_widget.dart';
 import '../widgets/todo_text_field_widget.dart';
 
-class EditPage extends StatefulWidget {
-  const EditPage({
+class DetailsPage extends StatefulWidget {
+  const DetailsPage({
     super.key,
     required this.todo,
   });
@@ -21,15 +21,30 @@ class EditPage extends StatefulWidget {
   final Todo todo;
 
   @override
-  State<EditPage> createState() => _EditPageState();
+  State<DetailsPage> createState() => _EditPageState();
 }
 
-class _EditPageState extends State<EditPage> {
+class _EditPageState extends State<DetailsPage> {
   final TextEditingController _controller = TextEditingController();
 
   late int _priority;
   late DateTime? _deadline;
   Uuid uuid = const Uuid();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.text = widget.todo.title;
+    _priority = widget.todo.priority;
+    _deadline = widget.todo.deadline;
+    initializeDateFormatting();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -73,21 +88,6 @@ class _EditPageState extends State<EditPage> {
         _deadline = pickedDate;
       });
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _controller.text = widget.todo.title;
-    _priority = widget.todo.priority;
-    _deadline = widget.todo.deadline;
-    initializeDateFormatting();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   void _onGoBack(Todo? todo) {

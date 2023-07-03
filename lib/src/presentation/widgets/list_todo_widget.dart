@@ -11,7 +11,7 @@ import '../provider/done_provider.dart';
 import '../provider/todos_manager.dart';
 import 'button_new_todo_widget.dart';
 import 'header_todo_widget.dart';
-import 'item_todo_widget.dart';
+import 'card_todo_widget.dart';
 
 final Logging log = Logging('ListTodoWidget');
 
@@ -90,7 +90,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
                             shrinkWrap: true,
                             itemCount: todos.length,
                             itemBuilder: (BuildContext context, int index) {
-                              return ItemTodoWidget(todo: todos[index]);
+                              return CardTodoWidget(todo: todos[index]);
                             },
                           ),
                         ),

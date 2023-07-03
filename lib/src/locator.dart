@@ -1,5 +1,4 @@
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import 'data/datasources/local_data_source.dart';
@@ -35,7 +34,6 @@ Future<void> initializeDependencies() async {
   );
 
   // External
-  locator.registerLazySingleton(() => http.Client());
   locator.registerLazySingleton(() => DBProvider(null));
   locator.registerLazySingleton(() => InternetConnectionChecker());
 }

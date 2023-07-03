@@ -3,8 +3,8 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 
 import '../../domain/models/todo.dart';
-import '../../presentation/screens/edit_page.dart';
-import '../../presentation/screens/home_page.dart';
+import '../../presentation/screens/details_page.dart';
+import '../../presentation/screens/todos_page.dart';
 import '../../presentation/screens/unknown_page.dart';
 
 abstract class RouteNames {
@@ -21,8 +21,8 @@ abstract class RoutesBuilder {
 
   static final Map<String, Widget Function(BuildContext p1)> routes =
       <String, Widget Function(BuildContext)>{
-    RouteNames.home: (_) => const HomePage(),
-    RouteNames.edit: (BuildContext context) => EditPage(
+    RouteNames.home: (_) => const TodosPage(),
+    RouteNames.edit: (BuildContext context) => DetailsPage(
           todo: ModalRoute.of(context)?.settings.arguments as Todo,
         ),
   };
@@ -31,13 +31,13 @@ abstract class RoutesBuilder {
     switch (settings.name) {
       case RouteNames.home:
         return MaterialPageRoute(
-          builder: (_) => const HomePage(),
+          builder: (_) => const TodosPage(),
           settings: settings,
         );
 
       case RouteNames.edit:
         return MaterialPageRoute<Todo?>(
-          builder: (_) => EditPage(
+          builder: (_) => DetailsPage(
             todo: settings.arguments as Todo,
           ),
           settings: settings,

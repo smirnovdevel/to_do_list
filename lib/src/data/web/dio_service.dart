@@ -18,7 +18,7 @@ class DioService implements IWebService {
 
   /// UPDATE Revision Todos
   ///
-  Future<int?> updateRevision() async {
+  Future<int?> _updateRevision() async {
     log.info('Update revision from: ${revision ?? 'null'} ...');
     try {
       Response response = await dio.get(
@@ -81,7 +81,7 @@ class DioService implements IWebService {
   ///
   @override
   Future<Todo> saveTodo({required Todo todo}) async {
-    revision = await updateRevision();
+    revision = await _updateRevision();
     final String body = jsonEncode({
       'element': todo.toJson(),
     });
@@ -116,6 +116,7 @@ class DioService implements IWebService {
 
   /// UPDATE LIST Todo to Server
   ///
+  @override
   Future<bool> updateTodos({required List<Todo> todos}) async {
     bool status = false;
     List<Map<String, dynamic>> listJson =
@@ -154,8 +155,9 @@ class DioService implements IWebService {
 
   /// UPDATE Todo to Server
   ///
+  @override
   Future<Todo> updateTodo({required Todo todo}) async {
-    revision = await updateRevision();
+    revision = await _updateRevision();
     final String body = jsonEncode({
       'element': todo.toJson(),
     });
@@ -191,8 +193,9 @@ class DioService implements IWebService {
 
   /// GET Todo from Server
   ///
+  @override
   Future<Todo?> getTodo({required String uuid}) async {
-    revision = await updateRevision();
+    revision = await _updateRevision();
     Todo? todo;
     log.info('Get Todo, revision: $revision uuid: $uuid ...');
     final String url = '${AppUrls.urlTodo}/list/$uuid';
@@ -225,7 +228,7 @@ class DioService implements IWebService {
   ///
   @override
   Future<bool> deleteTodo({required Todo todo}) async {
-    revision = await updateRevision();
+    revision = await _updateRevision();
     bool result = false;
     final String body = jsonEncode({
       'element': todo.toJson(),

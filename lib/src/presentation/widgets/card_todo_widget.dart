@@ -16,8 +16,8 @@ import 'title_todo_widget.dart';
 
 final Logging log = Logging('ItemTodoWidget');
 
-class ItemTodoWidget extends ConsumerStatefulWidget {
-  const ItemTodoWidget({
+class CardTodoWidget extends ConsumerStatefulWidget {
+  const CardTodoWidget({
     super.key,
     required this.todo,
   });
@@ -25,10 +25,10 @@ class ItemTodoWidget extends ConsumerStatefulWidget {
   final Todo todo;
 
   @override
-  ConsumerState<ItemTodoWidget> createState() => _ItemTodoWidgetState();
+  ConsumerState<CardTodoWidget> createState() => _ItemTodoWidgetState();
 }
 
-class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
+class _ItemTodoWidgetState extends ConsumerState<CardTodoWidget> {
   double _padding = 0;
 
   @override

@@ -9,8 +9,8 @@ import '../widgets/loading_indicator.dart';
 
 final Logging log = Logging('HomePage');
 
-class HomePage extends ConsumerWidget {
-  const HomePage({super.key});
+class TodosPage extends ConsumerWidget {
+  const TodosPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
