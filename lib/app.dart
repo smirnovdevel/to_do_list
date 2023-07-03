@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'src/config/themes/dark_theme.dart';
 import 'src/config/themes/light_theme.dart';
 import 'src/presentation/localization/app_localization.dart';
-import 'src/presentation/navigation/delegate.dart';
-import 'src/presentation/navigation/parser.dart';
-import 'src/presentation/navigation/provider.dart';
 
 class App extends StatelessWidget {
   App({Key? key}) : super(key: key);
