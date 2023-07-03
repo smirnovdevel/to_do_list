@@ -71,8 +71,12 @@ class DioService implements IWebService {
         log.info('Get Todos, response code: ${response.statusCode}');
         throw ServerException(response.statusCode.toString());
       }
-    } catch (e) {
-      log.warning('Get Todos: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        log.warning('Get Todos: Dio error! STATUS: ${e.response?.statusCode}');
+      } else {
+        log.warning(e.message ?? '');
+      }
     }
     return todosList;
   }

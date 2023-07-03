@@ -5,30 +5,29 @@ import '../../utils/core/logging.dart';
 import '../provider/todo_provider.dart';
 import '../screens/main_screen.dart';
 import '../screens/todo_screen.dart';
-import 'navigation_state.dart';
+import 'route_config.dart';
 
 final Logging log = Logging('TodosRouterDelegate');
 
 /// NavigatorState – модель, которая определяет состояние навигации, мы ее создаем сами
 /// ChangeNotifier – помогает оповещать об изменениях подписчиков, заодно реализует необходимые методы для RouterDelegate: addListener, removerListener
 /// PopNavigatorRouterDelegateMixin – помогает управлять возвращением назад, в том числе системным, заодно реализуеи необходимые методы
-class TodosRouterDelegate extends RouterDelegate<NavigationState>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<NavigationState> {
+class TodosRouterDelegate extends RouterDelegate<TodosRouteConfig>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<TodosRouteConfig> {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
-  final Ref ref;
 
   TodosRouterDelegate(this.ref) : navigatorKey = GlobalKey<NavigatorState>();
 
   String? _uuid;
+  final Ref ref;
 
   @override
-  NavigationState get currentConfiguration {
+  TodosRouteConfig get currentConfiguration {
     if (_uuid != null) {
-      return NavigationState.todo(_uuid);
+      return TodosRouteConfig.todo(_uuid);
     }
-
-    return NavigationState.root();
+    return TodosRouteConfig.root();
   }
 
   @override
@@ -52,6 +51,13 @@ class TodosRouterDelegate extends RouterDelegate<NavigationState>
         if (!route.didPop(result)) {
           return false;
         }
+
+        if (_uuid != null) {
+          _uuid = null;
+          notifyListeners();
+          return true;
+        }
+
         _uuid = null;
         notifyListeners();
         return true;
@@ -60,7 +66,7 @@ class TodosRouterDelegate extends RouterDelegate<NavigationState>
   }
 
   @override
-  Future<void> setNewRoutePath(NavigationState configuration) async {
+  Future<void> setNewRoutePath(TodosRouteConfig configuration) async {
     if (configuration.isTodoScreen) {
       _uuid = configuration.uuid;
       ref.read(todoProvider(_uuid!));

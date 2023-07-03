@@ -4,13 +4,13 @@ import '../../config/common/app_color.dart';
 import '../localization/app_localization.dart';
 
 mixin SelectDate on StatefulWidget {
-  Future<DateTime?> selectDate(BuildContext context, DateTime _deadline) async {
+  Future<DateTime?> selectDate(BuildContext context, DateTime deadline) async {
     final DateTime? pickedDate = await showDatePicker(
         locale: AppLocalization.of(context).locale,
         context: context,
         cancelText: AppLocalization.of(context).get('cancel'),
         confirmText: AppLocalization.of(context).get('done'),
-        initialDate: _deadline,
+        initialDate: deadline,
         firstDate: DateTime(2015),
         lastDate: DateTime(2050),
         builder: (BuildContext context, Widget? child) {
@@ -41,8 +41,9 @@ mixin SelectDate on StatefulWidget {
             child: child!,
           );
         });
-    if (pickedDate != null && pickedDate != _deadline) {
+    if (pickedDate != null && pickedDate != deadline) {
       return pickedDate;
     }
+    return null;
   }
 }

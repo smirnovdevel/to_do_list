@@ -1,8 +1,9 @@
+import 'package:universal_internet_checker/universal_internet_checker.dart';
+
 import '../../data/datasources/local_data_source.dart';
 import '../../data/datasources/remote_data_source.dart';
 import '../../data/utils/device_id.dart';
 import '../../utils/core/logging.dart';
-import '../../utils/core/network_info.dart';
 import '../../utils/error/exception.dart';
 import '../models/todo.dart';
 
@@ -12,11 +13,9 @@ class TodoService {
   TodoService({
     required this.remoteDataSource,
     required this.localDataSource,
-    required this.networkInfo,
   });
   final RemoteDataSource remoteDataSource;
   final LocalDataSource localDataSource;
-  final NetworkInfo networkInfo;
 
   String? deviceId;
 
@@ -34,7 +33,8 @@ class TodoService {
 
     /// check internet connection
     log.info('Get Todos from Server...');
-    if (await networkInfo.isConnected) {
+    ConnectionStatus status = await UniversalInternetChecker.checkInternet();
+    if (status == ConnectionStatus.online) {
       /// Получаем список задач с сервера
       ///
       remoteTodosList = await remoteDataSource.getTodos();
@@ -183,7 +183,8 @@ class TodoService {
     if (todo.autor == null) {
       todo = todo.copyWith(autor: deviceId);
     }
-    if (await networkInfo.isConnected) {
+    ConnectionStatus status = await UniversalInternetChecker.checkInternet();
+    if (status == ConnectionStatus.online) {
       log.info('Save Todo id: ${todo.uuid} to Server ...');
       if (todo.upload) {
         task = await remoteDataSource.updateTodo(todo: todo);

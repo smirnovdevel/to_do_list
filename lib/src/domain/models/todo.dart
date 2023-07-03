@@ -28,8 +28,7 @@ class Todo extends Equatable {
   final String? autor;
 
   @override
-  List<Object> get props =>
-      [uuid, title, done, priority, created, upload, autor!];
+  List<Object> get props => [uuid, title, done, priority, created, upload];
 
   Todo copyWith({
     String? uuid,
@@ -76,7 +75,7 @@ class Todo extends Equatable {
       'title': title,
       'done': done ? 1 : 0,
       'priority': priority,
-      'deadline': deadline.toString(),
+      'deadline': deadline == null ? '' : deadline.toString(),
       'deleted': deleted ? 1 : 0,
       'created': created.toString(),
       'changed': changed.toString(),
@@ -92,7 +91,7 @@ class Todo extends Equatable {
       done: (map['done'] == 1) ? true : false,
       priority: map['priority'] ?? 0,
       deadline:
-          map['deadline'] != null ? DateTime.tryParse(map['deadline']) : null,
+          map['deadline'] == '' ? DateTime.tryParse(map['deadline']) : null,
       deleted: (map['deleted'] == 1) ? true : false,
       created: DateTime.tryParse(map['created']) ?? DateTime.now(),
       changed: DateTime.tryParse(map['changed']) ?? DateTime.now(),

@@ -100,10 +100,6 @@ class _EditPageState extends ConsumerState<TodoScreen> {
     }
   }
 
-  // void _onGoBack(Todo? todo) {
-  //   NavigationManager.instance.pop(todo);
-  // }
-
   @override
   Widget build(BuildContext context) {
     final List<PopupMenuEntry<int>> popupMenuItems =
