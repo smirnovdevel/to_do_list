@@ -120,7 +120,7 @@ class _ItemTodoWidgetState extends ConsumerState<CardTodoWidget> {
               ///
               GestureDetector(
                 onTap: () {
-                  ref.read(navigationProvider).push(widget.todo.uuid);
+                  ref.read(navigationProvider).showTodo(widget.todo.uuid);
                 },
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width - 120,
@@ -140,7 +140,7 @@ class _ItemTodoWidgetState extends ConsumerState<CardTodoWidget> {
               ///
               GestureDetector(
                 onTap: () {
-                  ref.read(navigationProvider).push(widget.todo.uuid);
+                  ref.read(navigationProvider).showTodo(widget.todo.uuid);
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 1.0),

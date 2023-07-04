@@ -8,9 +8,7 @@ import 'src/presentation/navigation/route_information_parser.dart';
 import 'src/presentation/provider/navigation_provider.dart';
 
 class App extends ConsumerWidget {
-  App({super.key});
-
-  final _routerInformationParser = TodoRouteInformationParser();
+  const App({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,7 +21,7 @@ class App extends ConsumerWidget {
       supportedLocales: AppLocalization.supportedLocales,
       // Navigator 2.0
       routerDelegate: ref.watch(navigationProvider),
-      routeInformationParser: _routerInformationParser,
+      routeInformationParser: TodoRouteInformationParser(ref),
     );
   }
 }

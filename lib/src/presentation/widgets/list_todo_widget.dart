@@ -96,7 +96,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
                         // кнопка Новое внизу списка
                         GestureDetector(
                           onTap: () {
-                            ref.read(navigationProvider).push(uuid.v1());
+                            ref.read(navigationProvider).showTodo(uuid.v1());
                           },
                           child: const ButtonNewTodoWidget(),
                         ),
@@ -113,7 +113,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
         padding: const EdgeInsets.only(bottom: 40.0, right: 16.0),
         child: FloatingActionButton(
           onPressed: () {
-            ref.read(navigationProvider).push(uuid.v1());
+            ref.read(navigationProvider).showTodo(uuid.v1());
           },
           tooltip: 'Add todo',
           backgroundColor: Theme.of(context).iconTheme.color,

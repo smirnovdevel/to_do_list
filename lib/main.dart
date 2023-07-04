@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app.dart';
 import 'src/locator.dart' as locator;
-import 'src/utils/core/http_overrides.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,10 +14,10 @@ Future<void> main() async {
   await initialization(null);
 
   // Костыль для тестирования, если сертификат сервера просрочен
-  HttpOverrides.global = MyHttpOverrides();
+  // HttpOverrides.global = MyHttpOverrides();
 
   runApp(
-    ProviderScope(
+    const ProviderScope(
       child: App(),
     ),
   );

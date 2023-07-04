@@ -34,14 +34,14 @@ class TodoService {
     /// check internet connection
     log.info('Get Todos from Server...');
     ConnectionStatus status = await UniversalInternetChecker.checkInternet();
-    if (status == ConnectionStatus.online) {
-      /// Получаем список задач с сервера
-      ///
-      remoteTodosList = await remoteDataSource.getTodos();
-      log.info('Get ${remoteTodosList.length} from Server');
-    } else {
-      log.warning('No Internet connection');
-    }
+    // if (status == ConnectionStatus.online) {
+    /// Получаем список задач с сервера
+    ///
+    remoteTodosList = await remoteDataSource.getTodos();
+    log.info('Get ${remoteTodosList.length} from Server');
+    // } else {
+    // log.warning('No Internet connection');
+    // }
     log.info('Get Todos from DB...');
     localTodosList = await localDataSource.getTodos();
     log.info('Get ${localTodosList.length} todos from DB');
@@ -184,15 +184,15 @@ class TodoService {
       todo = todo.copyWith(autor: deviceId);
     }
     ConnectionStatus status = await UniversalInternetChecker.checkInternet();
-    if (status == ConnectionStatus.online) {
-      log.info('Save Todo id: ${todo.uuid} to Server ...');
-      if (todo.upload) {
-        task = await remoteDataSource.updateTodo(todo: todo);
-      } else {
-        task = await remoteDataSource.saveTodo(todo: todo);
-      }
-      log.info('Save Todo upload: ${task.upload}');
+    // if (status == ConnectionStatus.online) {
+    log.info('Save Todo id: ${todo.uuid} to Server ...');
+    if (todo.upload) {
+      task = await remoteDataSource.updateTodo(todo: todo);
+    } else {
+      task = await remoteDataSource.saveTodo(todo: todo);
     }
+    log.info('Save Todo upload: ${task.upload}');
+    // }
     task ??= Todo.copyFrom(todo);
     try {
       await localDataSource.saveTodo(todo: task);

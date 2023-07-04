@@ -27,7 +27,10 @@
 Для хранения токена используется библиотека [envied](https://pub.dev/packages/envied) Поэтому,для полноценного тестирования необходимо в корневой директории создать файл `.env` с точкой впереди. В него положить свой токен в виде `TOKEN='ваш токен'` 
 <br>
 После этого, необходимо в консоли выполнить команду генерации `flutter pub run build_runner build`
-<br>
+<br><br>
+Для тестирования диплинков на эмуляторе android используется команда
+adb shell am start -W -a android.intent.action.VIEW -d app://mytodo.online/new
+<br><br>
 Архитектура приложения построена на принципе Clean Architecture
 <br><br>
 

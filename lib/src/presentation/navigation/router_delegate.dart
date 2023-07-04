@@ -5,6 +5,7 @@ import '../../utils/core/logging.dart';
 import '../provider/todo_provider.dart';
 import '../screens/main_screen.dart';
 import '../screens/todo_screen.dart';
+import '../screens/unknown_screen.dart';
 import 'route_config.dart';
 
 final Logging log = Logging('TodosRouterDelegate');
@@ -19,15 +20,12 @@ class TodosRouterDelegate extends RouterDelegate<TodosRouteConfig>
 
   TodosRouterDelegate(this.ref) : navigatorKey = GlobalKey<NavigatorState>();
 
-  String? _uuid;
+  TodosRouteConfig? state;
   final Ref ref;
 
   @override
   TodosRouteConfig get currentConfiguration {
-    if (_uuid != null) {
-      return TodosRouteConfig.todo(_uuid);
-    }
-    return TodosRouteConfig.root();
+    return state ?? TodosRouteConfig.root();
   }
 
   @override
@@ -39,26 +37,30 @@ class TodosRouterDelegate extends RouterDelegate<TodosRouteConfig>
           key: ValueKey('MainScreen'),
           child: MainScreen(),
         ),
-        if (_uuid != null)
+        if (state?.isNew == true)
           MaterialPage(
-            key: ValueKey(_uuid!),
             child: TodoScreen(
-              uuid: _uuid!,
+              uuid: state!.uuid!,
             ),
+          ),
+        if (state?.uuid != null)
+          MaterialPage(
+            key: ValueKey(state!.uuid!),
+            child: TodoScreen(
+              uuid: state!.uuid!,
+            ),
+          ),
+        if (state?.isUnknown == true)
+          const MaterialPage(
+            child: UnknownScreen(name: ''),
           ),
       ],
       onPopPage: (route, result) {
         if (!route.didPop(result)) {
           return false;
         }
+        state = TodosRouteConfig.root();
 
-        if (_uuid != null) {
-          _uuid = null;
-          notifyListeners();
-          return true;
-        }
-
-        _uuid = null;
         notifyListeners();
         return true;
       },
@@ -67,26 +69,20 @@ class TodosRouterDelegate extends RouterDelegate<TodosRouteConfig>
 
   @override
   Future<void> setNewRoutePath(TodosRouteConfig configuration) async {
-    if (configuration.isTodoScreen) {
-      _uuid = configuration.uuid;
-      ref.read(todoProvider(_uuid!));
-    } else {
-      _uuid = null;
-    }
-
+    state = configuration;
     notifyListeners();
   }
 
   void pop() {
     log.info('Pop');
-    _uuid = null;
+    state = TodosRouteConfig.root();
     notifyListeners();
   }
 
-  void push(String uuid) {
+  void showTodo(String uuid) {
     log.info('Push');
-    _uuid = uuid;
-    ref.read(todoProvider(_uuid!));
+    ref.read(todoProvider(uuid));
+    state = TodosRouteConfig.todo(uuid);
     notifyListeners();
   }
 }
