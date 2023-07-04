@@ -1,4 +1,4 @@
-import 'package:universal_internet_checker/universal_internet_checker.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../data/datasources/local_data_source.dart';
 import '../../data/datasources/remote_data_source.dart';
@@ -33,18 +33,18 @@ class TodoService {
 
     /// check internet connection
     log.info('Get Todos from Server...');
-    ConnectionStatus status = await UniversalInternetChecker.checkInternet();
-    // if (status == ConnectionStatus.online) {
+
     /// Получаем список задач с сервера
     ///
     remoteTodosList = await remoteDataSource.getTodos();
     log.info('Get ${remoteTodosList.length} from Server');
-    // } else {
-    // log.warning('No Internet connection');
-    // }
     log.info('Get Todos from DB...');
-    localTodosList = await localDataSource.getTodos();
-    log.info('Get ${localTodosList.length} todos from DB');
+
+    /// DB not need to Web
+    if (!kIsWeb) {
+      localTodosList = await localDataSource.getTodos();
+      log.info('Get ${localTodosList.length} todos from DB');
+    }
 
     /// Проверям даты последнего изменения задачи, по последней истинная
     ///
@@ -54,11 +54,13 @@ class TodoService {
       if (localTodosList.isEmpty) {
         /// База пустая
         ///
-        await localDataSource.updateTodos(todos: remoteTodosList);
+        if (!kIsWeb) {
+          await localDataSource.updateTodos(todos: remoteTodosList);
+        }
         for (Todo todo in remoteTodosList) {
           todosList.add(todo.copyWith(upload: true));
         }
-      } else {
+      } else if (!kIsWeb) {
         /// Есть список с сервера и есть список из базы,
         /// для быстрого поиска составим две мапы
         ///
@@ -183,8 +185,6 @@ class TodoService {
     if (todo.autor == null) {
       todo = todo.copyWith(autor: deviceId);
     }
-    ConnectionStatus status = await UniversalInternetChecker.checkInternet();
-    // if (status == ConnectionStatus.online) {
     log.info('Save Todo id: ${todo.uuid} to Server ...');
     if (todo.upload) {
       task = await remoteDataSource.updateTodo(todo: todo);
@@ -192,8 +192,11 @@ class TodoService {
       task = await remoteDataSource.saveTodo(todo: todo);
     }
     log.info('Save Todo upload: ${task.upload}');
-    // }
-    task ??= Todo.copyFrom(todo);
+
+    /// DB not need to Web
+    if (kIsWeb) {
+      return task;
+    }
     try {
       await localDataSource.saveTodo(todo: task);
       log.info('Save Todo uuid: ${task.uuid} to DB upload: ${task.upload}');
@@ -209,6 +212,11 @@ class TodoService {
     log.info('Delete remote todo uuid: ${todo.uuid} ...');
     bool deleted = await remoteDataSource.deleteTodo(todo: todo);
     log.info('Delete remote todo');
+
+    /// DB not need to Web
+    if (kIsWeb) {
+      return;
+    }
     try {
       log.info('Delete local todo uuid: ${todo.uuid} ...');
       if (deleted) {

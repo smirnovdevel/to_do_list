@@ -4,6 +4,7 @@ import '../../domain/models/todo.dart';
 import '../../domain/repositories/todo_service.dart';
 import '../../locator.dart';
 import '../../utils/core/logging.dart';
+import '../../utils/error/exception.dart';
 import 'todos_provider.dart';
 
 final Logging log = Logging('TodosManager');

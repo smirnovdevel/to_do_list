@@ -1,6 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../env/env.dart';
 import '../../config/common/app_urls.dart';
@@ -9,34 +10,34 @@ import '../../utils/core/logging.dart';
 import '../../utils/error/exception.dart';
 import 'web_service.dart';
 
-final Logging log = Logging('DioService');
+final Logging log = Logging('HttpService');
 
-class DioService implements IWebService {
+class HttpService implements IWebService {
   int? revision;
-
-  Dio dio = Dio();
 
   /// UPDATE Revision Todos
   ///
   Future<int?> _updateRevision() async {
     log.info('Update revision from: ${revision ?? 'null'} ...');
+    // var url = Uri.https('beta.mrdekk.ru', 'todobackend/list');
+    const String url = '${AppUrls.urlTodo}/list';
     try {
-      Response response = await dio.get(
-        '${AppUrls.urlTodo}/list',
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer ${Env.token}',
-          },
-        ),
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Access-Control-Allow-Headers': 'Access-Control-Allow-Origin, Accept',
+          'Authorization': 'Bearer ${Env.token}',
+        },
       );
       if (response.statusCode == 200) {
-        revision = response.data['revision'];
+        final result = json.decode(response.body);
+        revision = result['revision'];
         log.info('Update revision to: $revision');
       } else {
         log.info('Update revision, response code: ${response.statusCode}');
         throw ServerException(response.statusCode.toString());
       }
-    } on DioException catch (e) {
+    } on HttpException catch (e) {
       log.warning('Get Todos: ${e.message}');
     }
     return revision;
@@ -47,37 +48,35 @@ class DioService implements IWebService {
   @override
   Future<List<Todo>> getTodos() async {
     revision = await _updateRevision();
+    var url = Uri.https('beta.mrdekk.ru', 'todobackend/list');
     final List<Todo> todosList = [];
-    log.info('Get Todos ...');
+
+    log.info('Get Todos from: $url ...');
     try {
-      Response response = await dio.get(
-        '${AppUrls.urlTodo}/list',
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer ${Env.token}',
-          },
-        ),
+      final http.Response response = await http.get(
+        url,
+        headers: {
+          'Access-Control-Allow-Headers': 'Access-Control-Allow-Origin, Accept',
+          'Authorization': 'Bearer ${Env.token}',
+        },
       );
       if (response.statusCode == 200) {
+        final result = json.decode(response.body);
         int i = 1;
-        for (final Map<String, dynamic> todo in response.data['list']) {
+        for (final Map<String, dynamic> todo in result['list']) {
           log.info('Get $i todo: $todo');
           todosList.add(Todo.fromJson(todo));
           i++;
         }
-        revision = response.data['revision'];
+        revision = result['revision'];
         log.info(
             'Get Todos, load ${todosList.length} todos revision: $revision');
       } else {
         log.info('Get Todos, response code: ${response.statusCode}');
         throw ServerException(response.statusCode.toString());
       }
-    } on DioException catch (e) {
-      if (e.response != null) {
-        log.warning('Get Todos: Dio error! STATUS: ${e.response?.statusCode}');
-      } else {
-        log.warning(e.message ?? '');
-      }
+    } on HttpException catch (e) {
+      log.warning('Get Todos: Http error! STATUS: ${e.message}');
     }
     return todosList;
   }
@@ -87,34 +86,33 @@ class DioService implements IWebService {
   @override
   Future<Todo> saveTodo({required Todo todo}) async {
     revision = await _updateRevision();
+    const String url = '${AppUrls.urlTodo}/list';
     final String body = jsonEncode({
       'element': todo.toJson(),
     });
     Todo? task;
     log.info('Save Todo, revision: $revision body: $body ...');
-    const String url = '${AppUrls.urlTodo}/list';
     try {
-      Response response = await dio.post(
-        url,
-        options: Options(
-          headers: {
-            'X-Last-Known-Revision': revision.toString(),
-            'Authorization': 'Bearer ${Env.token}',
-          },
-        ),
-        data: body,
+      final http.Response response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'X-Last-Known-Revision': revision.toString(),
+          'Authorization': 'Bearer ${Env.token}',
+        },
+        body: body,
       );
 
       if (response.statusCode == 200) {
-        revision = response.data['revision'];
+        final result = json.decode(response.body);
+        revision = result['revision'];
         log.info('Save Todo');
         task = todo.copyWith(upload: true);
       } else {
         log.info('Save Todo, response code: ${response.statusCode}');
         throw ServerException(response.statusCode.toString());
       }
-    } catch (e) {
-      log.warning('Save Todo: $e');
+    } on HttpException catch (e) {
+      log.warning('Save Todo: ${e.message}');
     }
     return task ?? todo;
   }
@@ -133,28 +131,27 @@ class DioService implements IWebService {
     log.info('Update ${todos.length} Todos revision: $revision');
     const String url = '${AppUrls.urlTodo}/list';
     try {
-      Response response = await dio.patch(
-        url,
-        options: Options(
-          headers: {
-            'X-Last-Known-Revision': revision.toString(),
-            'Authorization': 'Bearer ${Env.token}',
-          },
-        ),
-        data: body,
+      final http.Response response = await http.patch(
+        Uri.parse(url),
+        headers: {
+          'X-Last-Known-Revision': revision.toString(),
+          'Authorization': 'Bearer ${Env.token}',
+        },
+        body: body,
       );
 
       if (response.statusCode == 200) {
-        revision = response.data['revision'];
-        status = response.data['status'] == 'ok';
+        final result = json.decode(response.body);
+        revision = result['revision'];
+        status = result['status'] == 'ok';
         log.info('Update Todos revision: $revision');
       } else {
         log.info(
             'Update Todos response code: ${response.statusCode} revision: $revision');
         throw ServerException(response.statusCode.toString());
       }
-    } catch (e) {
-      log.warning('Update Todo: $e');
+    } on HttpException catch (e) {
+      log.warning('Update Todo: ${e.message}');
     }
     return status;
   }
@@ -164,26 +161,24 @@ class DioService implements IWebService {
   @override
   Future<Todo> updateTodo({required Todo todo}) async {
     revision = await _updateRevision();
+    final String url = '${AppUrls.urlTodo}/list/${todo.uuid}';
     final String body = jsonEncode({
       'element': todo.toJson(),
     });
     Todo? task;
     log.info('Update Todo id: ${todo.uuid} revision: $revision');
-    final String url = '${AppUrls.urlTodo}/list/${todo.uuid}';
     try {
-      Response response = await dio.put(
-        url,
-        options: Options(
-          headers: {
-            'X-Last-Known-Revision': revision.toString(),
-            'Authorization': 'Bearer ${Env.token}',
-          },
-        ),
-        data: body,
+      final http.Response response = await http.put(
+        Uri.parse(url),
+        headers: {
+          'X-Last-Known-Revision': revision.toString(),
+          'Authorization': 'Bearer ${Env.token}',
+        },
+        body: body,
       );
-
       if (response.statusCode == 200) {
-        revision = response.data['revision'];
+        final result = json.decode(response.body);
+        revision = result['revision'];
         log.info('Update Todo revision: $revision');
         task = todo.copyWith(upload: true);
       } else {
@@ -191,8 +186,8 @@ class DioService implements IWebService {
             'Update Todo response code: ${response.statusCode} revision: $revision');
         throw ServerException(response.statusCode.toString());
       }
-    } catch (e) {
-      log.warning('Update Todo: $e');
+    } on HttpException catch (e) {
+      log.warning('Update Todo: ${e.message}');
     }
     return task ?? todo;
   }
@@ -203,29 +198,27 @@ class DioService implements IWebService {
   Future<Todo?> getTodo({required String uuid}) async {
     revision = await _updateRevision();
     Todo? todo;
-    log.info('Get Todo, revision: $revision uuid: $uuid ...');
     final String url = '${AppUrls.urlTodo}/list/$uuid';
+    log.info('Get Todo, revision: $revision uuid: $uuid ...');
     try {
-      Response response = await dio.get(
-        url,
-        options: Options(
-          headers: {
-            'X-Last-Known-Revision': revision.toString(),
-            'Authorization': 'Bearer ${Env.token}',
-          },
-        ),
+      final http.Response response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Authorization': 'Bearer ${Env.token}',
+        },
       );
 
       if (response.statusCode == 200) {
-        revision = response.data['revision'];
-        todo = Todo.fromJson(response.data['element']);
+        final todoJson = json.decode(response.body);
+        todo = Todo.fromJson(todoJson);
         log.info('Get Todo');
       } else {
         log.info('Get Todo, response code: ${response.statusCode}');
         throw ServerException(response.statusCode.toString());
       }
-    } catch (e) {
-      log.warning('Get Todo: $e');
+    } on HttpException catch (e) {
+      log.warning('Get Todo: ${e.message}');
     }
     return todo;
   }
@@ -235,40 +228,34 @@ class DioService implements IWebService {
   @override
   Future<bool> deleteTodo({required Todo todo}) async {
     revision = await _updateRevision();
-    bool result = false;
+    final String url = '${AppUrls.urlTodo}/list/${todo.uuid}';
     final String body = jsonEncode({
       'element': todo.toJson(),
     });
     log.info('Delete Todo id: ${todo.uuid} revision: $revision  body: $body');
-    final String url = '${AppUrls.urlTodo}/list/${todo.uuid}';
     try {
-      Response response = await dio.delete(
-        url,
-        options: Options(
-          headers: {
-            'X-Last-Known-Revision': revision.toString(),
-            'Authorization': 'Bearer ${Env.token}',
-          },
-          validateStatus: (status) {
-            if (status == null) return false;
-            if (status >= 200 && status < 300) {
-              return true;
-            }
-            if (status == 404) {
-              result = true;
-            }
-            return false;
-          },
-        ),
+      final http.Response response = await http.delete(
+        Uri.parse(url),
+        headers: {
+          'X-Last-Known-Revision': revision.toString(),
+          'Authorization': 'Bearer ${Env.token}',
+        },
+        body: body,
       );
 
-      revision = response.data['revision'];
-      log.info(
-          'Delete Todo response code: ${response.statusCode} revision: $revision');
-      return true;
-    } catch (e) {
-      log.warning('Delete Todo: $e');
-      return result;
+      if (response.statusCode == 200) {
+        final result = json.decode(response.body);
+        revision = result['revision'];
+        log.info('Delete Todo id: ${todo.uuid} revision: $revision');
+        return true;
+      } else {
+        log.info(
+            'Delete Todo response code: ${response.statusCode} revision: $revision');
+        throw ServerException(response.statusCode.toString());
+      }
+    } on HttpException catch (e) {
+      log.warning('Delete Todo: ${e.message}');
     }
+    return false;
   }
 }

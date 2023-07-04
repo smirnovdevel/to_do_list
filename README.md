@@ -31,6 +31,12 @@
 Для тестирования диплинков на эмуляторе android используется команда
 adb shell am start -W -a android.intent.action.VIEW -d app://mytodo.online/new
 <br><br>
+Для полноценного тестирования в chrome, необходимо скорректирвоать файл chrome.dart 
+../flutter/packages/flutter_tools/lib/src/web
+// Chrome launch.
+// '--disable-extensions',
+   '--disable-web-security',
+   '--disable-popup-blocking',
 Архитектура приложения построена на принципе Clean Architecture
 <br><br>
 
