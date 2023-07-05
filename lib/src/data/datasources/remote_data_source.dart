@@ -1,14 +1,14 @@
 import '../../domain/models/todo.dart';
 import '../../utils/core/logging.dart';
-import '../web/dio_service.dart';
+import '../web/http_service.dart';
 
 final Logging log = Logging('RemoteDataSource');
 
 class RemoteDataSource {
   /// This service maybe change to Dio or any web sevice
   ///
-  // HttpService web = HttpService();
-  DioService web = DioService();
+  HttpService web = HttpService();
+  // DioService web = DioService();
 
   Future<List<Todo>> getTodos() async {
     log.info('Get todos ...');

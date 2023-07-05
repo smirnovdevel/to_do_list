@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import '../../../env/env.dart';
 import '../../config/common/app_urls.dart';
 import '../../domain/models/todo.dart';
+import '../../presentation/localization/app_localization.dart';
 import '../../utils/core/logging.dart';
 import '../../utils/error/exception.dart';
 import 'web_service.dart';
@@ -37,8 +38,17 @@ class HttpService implements IWebService {
         log.info('Update revision, response code: ${response.statusCode}');
         throw ServerException(response.statusCode.toString());
       }
-    } on HttpException catch (e) {
-      log.warning('Get Todos: ${e.message}');
+    } on SocketException {
+      log.warning('Update revision: SocketException');
+      throw const ServerException('no_internet');
+    } on HttpException {
+      log.warning('Update revision: HttpException');
+      throw const ServerException('server_error');
+    } on FormatException {
+      log.warning('Update revision: FormatException');
+      throw const ServerException('bad_response_format');
+    } catch (e) {
+      log.warning('Update revision: ${e.toString()}');
     }
     return revision;
   }

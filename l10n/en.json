@@ -16,5 +16,8 @@
     "delete":"Delete",
     "save":"Save",
     "new":"New",
-    "page_not_found":"Page not found"
+    "page_not_found":"Page not found",
+    "server_error":"Server not answer",
+    "no_internet":"No internet connection",
+    "bad_response_format":"Bad response format"
 }

@@ -5,31 +5,52 @@ import '../../domain/repositories/todo_service.dart';
 import '../../locator.dart';
 import '../../utils/core/logging.dart';
 import '../../utils/error/exception.dart';
+import 'message_provider.dart';
 import 'todos_provider.dart';
 
 final Logging log = Logging('TodosManager');
 
-// TODO Менеджеры всегда отвечают за обработку ошибок
-
-final todosManagerProvider =
-    Provider((ref) => TodosManager(ref.watch(todosStateProvider.notifier)));
+final todosManagerProvider = Provider(
+  (ref) => TodosManager(
+    ref.watch(todosStateProvider.notifier),
+    ref.read(messageStateProvider.notifier),
+  ),
+);
 
 class TodosManager {
   final TodosStateHolder _state;
+  final MessageStateHolder _message;
 
-  TodosManager(this._state);
+  TodosManager(this._state, this._message);
   final TodoService _todoService = locator();
 
   Future<void> init() async {
+    List<Todo> localTodosList = [];
+    List<Todo> remoteTodosList = [];
+    List<Todo> todos;
     log.info('init ...');
-    await _todoService.getId();
-    List<Todo>? todos;
+    // set autor
+    await _todoService.setAutor();
+
     try {
-      todos = await _todoService.getTodos();
+      remoteTodosList = await _todoService.getRemoteTodosList();
+    } on ServerException catch (ex) {
+      _message.warning(ex.toString());
     } catch (e) {
       log.warning(e.toString());
     }
-    todos ??= [];
+    localTodosList = await _todoService.getLocalTodosList();
+
+    todos = await _todoService.matchingTodos(
+        local: localTodosList, remote: remoteTodosList);
+    try {
+      await _todoService.uploadTodosRemote(todos: todos);
+    } on ServerException catch (ex) {
+      _message.warning(ex.toString());
+    } catch (e) {
+      log.warning(e.toString());
+    }
+
     _state.init(todos: todos);
   }
 
@@ -38,12 +59,17 @@ class TodosManager {
     // добавляем в список на экране
     _state.addTodo(todo: todo);
     Todo? task;
+    // Выгружаем на сервер
     try {
-      task = await _todoService.saveTodo(todo: todo);
+      task = await _todoService.uploadTodoRemote(todo: todo);
+    } on ServerException catch (ex) {
+      log.warning(ex.toString());
     } catch (e) {
       log.warning(e.toString());
     }
     task ??= todo;
+    // Сохраняем в DB
+    _todoService.saveTodoDB(todo: task);
     if (!todo.upload && task.upload) {
       _state.updateTodo(todo: task);
     }
@@ -55,12 +81,17 @@ class TodosManager {
     // обновляем в списке на экране
     _state.updateTodo(todo: todo);
     Todo? task;
+    // Выгружаем на сервер
     try {
-      task = await _todoService.saveTodo(todo: todo);
+      task = await _todoService.uploadTodoRemote(todo: todo);
+    } on ServerException catch (ex) {
+      log.warning(ex.toString());
     } catch (e) {
       log.warning(e.toString());
     }
     task ??= todo;
+    // Сохраняем в DB
+    _todoService.saveTodoDB(todo: task);
     if (!todo.upload && task.upload) {
       _state.updateTodo(todo: task);
     }
@@ -71,11 +102,17 @@ class TodosManager {
     log.info('Delete todo uuid: ${todo.uuid} ...');
     // удаляем из списка на экране
     _state.deleteTodo(todo: todo);
+    // Удаляем с сервера
+    bool? result;
     try {
-      await _todoService.deleteTodo(todo: todo);
+      result = await _todoService.deleteTodoRemote(todo: todo);
+    } on ServerException catch (ex) {
+      log.warning(ex.toString());
     } catch (e) {
       log.warning(e.toString());
     }
+    result ??= false;
+    _todoService.deleteTodoDB(todo: todo, deleted: result);
     log.info('Delete todo');
   }
 }

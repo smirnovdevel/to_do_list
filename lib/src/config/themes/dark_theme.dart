@@ -9,6 +9,7 @@ ThemeData darkTheme = ThemeData(
   shadowColor: Colors.black.withOpacity(0.12),
   primaryColor: AppColor.white,
   indicatorColor: Colors.black.withOpacity(0.06),
+  snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
   //
   colorScheme: ColorScheme(
     brightness: Brightness.dark,
