@@ -1,12 +1,13 @@
-import '../../domain/models/todo.dart';
-import '../../utils/core/logging.dart';
-import '../web/http_service.dart';
+import 'package:to_do_list/src/domain/models/todo.dart';
+import 'package:to_do_list/src/utils/core/logging.dart';
+
+import '../web/api_http_mock.dart';
 
 final Logging log = Logging('RemoteDataSource');
 
-class RemoteDataSource {
-  RemoteDataSource(this.web);
-  final HttpService web;
+class RemoteDataSourceMock {
+  RemoteDataSourceMock(this.web);
+  final HttpMock web;
 
   Future<List<Todo>> getTodos() async {
     log.info('Get todos ...');

@@ -123,6 +123,7 @@ class _EditPageState extends ConsumerState<TodoScreen> {
         // закрыть и сохранить
         actions: [
           TextButton(
+              key: const Key('TextButtonSave'),
               onPressed: () {
                 final todo = Todo(
                     uuid: widget.uuid,

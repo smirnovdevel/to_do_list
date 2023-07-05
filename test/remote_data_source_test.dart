@@ -1,28 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:to_do_list/src/data/datasources/remote_data_source.dart';
 import 'package:to_do_list/src/domain/models/todo.dart';
-import 'package:uuid/uuid.dart';
 
-Uuid uuid = const Uuid();
-DateTime dateTimeNow =
-    DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
+import 'data/datasource/remote_data_source_mock.dart';
+import 'data/todo_mock.dart';
+import 'data/web/api_http_mock.dart';
 
 main() async {
   ///
   /// Arrange
   ///
-  RemoteDataSource remoteDataSource = RemoteDataSource();
-  Todo todo = Todo(
-      uuid: uuid.v1(),
-      title: 'Test todo',
-      done: false,
-      priority: 0,
-      deadline: dateTimeNow,
-      deleted: false,
-      created: dateTimeNow,
-      changed: dateTimeNow,
-      upload: false,
-      autor: 'Test');
+  RemoteDataSourceMock remoteDataSourceMock = RemoteDataSourceMock(HttpMock());
+  Todo todo = Todo.copyFrom(TodoMock().get(title: 'Test todo'));
 
   ///
   /// Groups
@@ -32,7 +20,7 @@ main() async {
       ///
       /// Act
       ///
-      final Todo send = await remoteDataSource.saveTodo(todo: todo);
+      final Todo send = await remoteDataSourceMock.saveTodo(todo: todo);
 
       ///
       /// Assert
@@ -43,32 +31,32 @@ main() async {
       ///
       /// Assert
       ///
-      final Todo? task = await remoteDataSource.getTodo(uuid: todo.uuid);
+      final Todo? task = await remoteDataSourceMock.getTodo(uuid: todo.uuid);
       expect(false, task == null);
     });
     test('Update todo', () async {
       ///
       /// Act
       ///
-      await remoteDataSource.updateTodo(
+      await remoteDataSourceMock.updateTodo(
           todo: todo.copyWith(title: 'Update title'));
 
       ///
       /// Assert
       ///
-      final task = await remoteDataSource.getTodo(uuid: todo.uuid);
+      final task = await remoteDataSourceMock.getTodo(uuid: todo.uuid);
       expect('Update title', task?.title);
     });
     test('Delete todo', () async {
       ///
       /// Act
       ///
-      await remoteDataSource.deleteTodo(todo: todo);
+      await remoteDataSourceMock.deleteTodo(todo: todo);
 
       ///
       /// Assert
       ///
-      final Todo? task = await remoteDataSource.getTodo(uuid: todo.uuid);
+      final Todo? task = await remoteDataSourceMock.getTodo(uuid: todo.uuid);
       expect(null, task);
     });
   });

@@ -120,7 +120,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
           onPressed: () {
             ref.read(navigationProvider).showTodo(uuid.v1());
           },
-          tooltip: 'Add todo',
+          tooltip: 'Add_todo',
           backgroundColor: Theme.of(context).iconTheme.color,
           child: const Icon(
             AppIcons.add,

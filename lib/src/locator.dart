@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'data/datasources/local_data_source.dart';
 import 'data/datasources/remote_data_source.dart';
 import 'data/db/database.dart';
+import 'data/web/http_service.dart';
 import 'domain/repositories/todo_service.dart';
 
 // This is our global ServiceLocator
@@ -23,9 +24,10 @@ Future<void> initializeDependencies() async {
   );
 
   locator.registerLazySingleton<RemoteDataSource>(
-    () => RemoteDataSource(),
+    () => RemoteDataSource(locator()),
   );
 
   // External
-  locator.registerLazySingleton(() => DBProvider(null));
+  locator.registerLazySingleton(() => DBProvider(isTest: false));
+  locator.registerLazySingleton(() => HttpService());
 }

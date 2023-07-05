@@ -1,4 +1,4 @@
-import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import '../../config/common/app_db.dart';
 import '../../domain/models/todo.dart';
 import '../../utils/core/logging.dart';
@@ -6,17 +6,36 @@ import '../../utils/core/logging.dart';
 final Logging log = Logging('DBProvider');
 
 class DBProvider {
-  DBProvider(this._database);
+  DBProvider({required this.isTest});
+  bool isTest = false;
   Database? _database;
 
   Future<Database> database() async {
     if (_database != null) return _database!;
-    _database = await _initDB();
+    if (isTest) {
+      _database = await _initTestDB();
+    } else {
+      _database = await _initDB();
+    }
+
     return _database!;
   }
 
   void _createDB(Database db, int version) {
     db.execute(AppDB.tableTodos);
+  }
+
+  /// initialize test the database
+  Future<Database> _initTestDB() async {
+    return await databaseFactoryFfi.openDatabase(
+      inMemoryDatabasePath,
+      options: OpenDatabaseOptions(
+        onCreate: (db, version) async {
+          await db.execute(AppDB.tableTodos);
+        },
+        version: AppDB.version,
+      ),
+    );
   }
 
   /// initialize the database

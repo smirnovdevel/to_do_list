@@ -1,25 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:to_do_list/src/config/common/app_db.dart';
 import 'package:to_do_list/src/data/datasources/local_data_source.dart';
 import 'package:to_do_list/src/data/db/database.dart';
 import 'package:to_do_list/src/domain/models/todo.dart';
-import 'package:uuid/uuid.dart';
 
-Uuid uuid = const Uuid();
-DateTime dateTimeNow =
-    DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
-Todo todo = Todo(
-    uuid: uuid.v1(),
-    title: 'Test todo',
-    done: false,
-    priority: 0,
-    deadline: dateTimeNow,
-    deleted: false,
-    created: dateTimeNow,
-    changed: dateTimeNow,
-    upload: false,
-    autor: 'Test');
+import 'data/todo_mock.dart';
 
 main() async {
   sqfliteFfiInit();
@@ -27,17 +12,9 @@ main() async {
   ///
   /// Arrange
   ///
-  Database database = await databaseFactoryFfi.openDatabase(
-    inMemoryDatabasePath,
-    options: OpenDatabaseOptions(
-      onCreate: (db, version) async {
-        await db.execute(AppDB.tableTodos);
-      },
-      version: AppDB.version,
-    ),
-  );
-
-  LocalDataSource localDataSource = LocalDataSource(DBProvider(database));
+  DBProvider dbProvider = DBProvider(isTest: true);
+  LocalDataSource localDataSource = LocalDataSource(dbProvider);
+  Todo todo = Todo.copyFrom(TodoMock().get(title: 'Test todo'));
 
   ///
   /// Groups

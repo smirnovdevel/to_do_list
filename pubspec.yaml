@@ -40,6 +40,8 @@ provider:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  integration_test:
+    sdk: flutter
 
   freeze: ^1.0.0
   flutter_lints: ^2.0.1
