@@ -1,14 +1,10 @@
-// import 'package:firebase_core/firebase_core.dart';
 import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 import 'app.dart';
-// import 'firebase_options.dart';
-import 'firebase_options.dart';
 import 'src/locator.dart' as locator;
 import 'src/utils/core/http_overrides.dart';
 
@@ -16,9 +12,9 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Firebase hosting app
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
 
   //инициализация зависимостей
   await locator.initializeDependencies();
