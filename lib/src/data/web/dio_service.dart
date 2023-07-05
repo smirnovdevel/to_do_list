@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../../../env/env.dart';
 import '../../config/common/app_urls.dart';
@@ -11,14 +13,35 @@ import 'web_service.dart';
 
 final Logging log = Logging('DioService');
 
+final InternetConnectionChecker customInstance =
+    InternetConnectionChecker.createInstance(
+  checkTimeout: const Duration(seconds: 1),
+  checkInterval: const Duration(seconds: 1),
+);
+
 class DioService implements IWebService {
   int? revision;
+  bool isConnected = true;
 
   Dio dio = Dio();
+
+  /// Check internet connection
+  ///
+  Future<bool> execute(
+    InternetConnectionChecker internetConnectionChecker,
+  ) async {
+    return await internetConnectionChecker.hasConnection;
+  }
 
   /// UPDATE Revision Todos
   ///
   Future<int?> _updateRevision() async {
+    if (!kIsWeb) {
+      isConnected = await execute(customInstance);
+      if (!isConnected) {
+        throw const ServerException('no_internet');
+      }
+    }
     log.info('Update revision from: ${revision ?? 'null'} ...');
     try {
       Response response = await dio.get(
