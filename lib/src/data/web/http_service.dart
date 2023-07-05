@@ -1,43 +1,47 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../../../env/env.dart';
 import '../../config/common/app_urls.dart';
 import '../../domain/models/todo.dart';
-import '../../presentation/localization/app_localization.dart';
 import '../../utils/core/logging.dart';
 import '../../utils/error/exception.dart';
 import 'web_service.dart';
 
 final Logging log = Logging('HttpService');
 
+final InternetConnectionChecker customInstance =
+    InternetConnectionChecker.createInstance(
+  checkTimeout: const Duration(seconds: 1),
+  checkInterval: const Duration(seconds: 1),
+);
+
 class HttpService implements IWebService {
   int? revision;
-  bool? isConnection;
+  bool isConnected = true;
 
-  Future<bool> checkConnection() async {
-    try {
-      final result = await InternetAddress.lookup(AppUrls.urlTodo);
-      if (result.isNotEmpty) {
-        return true;
-      }
-    } on SocketException catch (_) {
-      return false;
-    }
-    return true;
+  /// Check internet connection
+  ///
+  Future<bool> execute(
+    InternetConnectionChecker internetConnectionChecker,
+  ) async {
+    return await internetConnectionChecker.hasConnection;
   }
 
   /// UPDATE Revision Todos
   ///
   Future<int?> _updateRevision() async {
-    // isConnection ??= await checkConnection();
-    // if (!isConnection!) {
-    //   throw const ServerException('no_internet');
-    // }
+    if (!kIsWeb) {
+      isConnected = await execute(customInstance);
+      if (!isConnected) {
+        throw const ServerException('no_internet');
+      }
+    }
     log.info('Update revision from: ${revision ?? 'null'} ...');
-    // var url = Uri.https('beta.mrdekk.ru', 'todobackend/list');
     const String url = '${AppUrls.urlTodo}/list';
     try {
       final response = await http.get(
