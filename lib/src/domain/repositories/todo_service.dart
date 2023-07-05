@@ -35,7 +35,7 @@ class TodoService {
     return remoteTodosList;
   }
 
-  /// GET Remote TodoList
+  /// GET Local TodoList
   ///
   Future<List<Todo>> getLocalTodosList() async {
     /// Получаем список задач из базы данных
@@ -96,6 +96,7 @@ class TodoService {
             Todo localTodo = local.firstWhere((todo) => todo.uuid == uuid);
             if (localeTodosMap[uuid]!.isBefore(remoteTodosMap[uuid]!)) {
               /// на сервере версия свежее, проверяем не удалена ли
+              /// TODO конфликт, решение со *
               if (localTodo.deleted) {
                 localDelete.add(localTodo);
               } else {
@@ -111,7 +112,11 @@ class TodoService {
             } else {
               /// записи совпадают, просто добавляем в список, берём версию с сервера
               /// там уже upload = true
-              todosList.addAll(remote.where((todo) => todo.uuid == uuid));
+              if (localTodo.deleted) {
+                localDelete.add(localTodo);
+              } else {
+                todosList.add(local.firstWhere((todo) => todo.uuid == uuid));
+              }
             }
 
             /// сохраняем совпадения
@@ -171,7 +176,7 @@ class TodoService {
     return todosList;
   }
 
-  // UPLOAD Todo
+  // UPLOAD Todos Remote
   ///
   Future<void> uploadTodosRemote({required List<Todo> todos}) async {
     log.info('Upload Todos ...');
@@ -181,7 +186,7 @@ class TodoService {
     log.info('Upload Todos');
   }
 
-  /// UPLOAD Todo
+  /// UPLOAD Todo Remote
   ///
   Future<Todo> uploadTodoRemote({required Todo todo}) async {
     log.info('Upload Todo id: ${todo.uuid} ...');

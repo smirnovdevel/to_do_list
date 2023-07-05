@@ -33,11 +33,8 @@ class DBProvider {
   Future<List<Todo>> getTodos() async {
     log.info('Get todos ...');
     final db = await database();
-    final List<Map<String, dynamic>> todosMapList = await db.query(
-      AppDB.nameTodoTable,
-      where: 'deleted = ?',
-      whereArgs: [0],
-    );
+    final List<Map<String, dynamic>> todosMapList =
+        await db.query(AppDB.nameTodoTable);
     final List<Todo> todosList = [];
     for (final Map<String, dynamic> todoMap in todosMapList) {
       todosList.add(Todo.fromMap(todoMap));

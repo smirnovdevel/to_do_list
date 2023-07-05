@@ -15,10 +15,27 @@ final Logging log = Logging('HttpService');
 
 class HttpService implements IWebService {
   int? revision;
+  bool? isConnection;
+
+  Future<bool> checkConnection() async {
+    try {
+      final result = await InternetAddress.lookup(AppUrls.urlTodo);
+      if (result.isNotEmpty) {
+        return true;
+      }
+    } on SocketException catch (_) {
+      return false;
+    }
+    return true;
+  }
 
   /// UPDATE Revision Todos
   ///
   Future<int?> _updateRevision() async {
+    // isConnection ??= await checkConnection();
+    // if (!isConnection!) {
+    //   throw const ServerException('no_internet');
+    // }
     log.info('Update revision from: ${revision ?? 'null'} ...');
     // var url = Uri.https('beta.mrdekk.ru', 'todobackend/list');
     const String url = '${AppUrls.urlTodo}/list';
