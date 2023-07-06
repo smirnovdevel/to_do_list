@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         api-level:
-          - 32
+          - 29
           # you can add more API level if you want to run your tests on different API
       fail-fast: true
     steps:
