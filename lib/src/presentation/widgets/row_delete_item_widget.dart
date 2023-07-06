@@ -3,32 +3,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/common/app_icons.dart';
 import '../../config/routes/dialogs.dart';
-import '../../config/routes/navigation.dart';
-import '../../domain/models/todo.dart';
 import '../localization/app_localization.dart';
-import '../provider/done_provider.dart';
+import '../provider/navigation_provider.dart';
+import '../provider/todo_provider.dart';
 import '../provider/todos_manager.dart';
 
-class RowDeleteItemWidget extends ConsumerStatefulWidget {
+class RowDeleteItemWidget extends ConsumerWidget {
   const RowDeleteItemWidget({
     super.key,
-    required this.todo,
+    required this.uuid,
   });
 
-  final Todo todo;
+  final String uuid;
 
+  // void _onGoBack(Todo? todo) {
   @override
-  ConsumerState<RowDeleteItemWidget> createState() =>
-      _RowDeleteItemWidgetState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    /// Позволит в момент редактирования отловить изменения задачи
+    /// в данном случае, интересен факт выгрузки на сервер
+    ///
+    final todo = ref.watch(todoProvider(uuid));
 
-class _RowDeleteItemWidgetState extends ConsumerState<RowDeleteItemWidget> {
-  void _onGoBack(Todo? todo) {
-    NavigationManager.instance.pop(todo);
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 22.0, left: 8.0),
       child: Row(
@@ -36,12 +31,12 @@ class _RowDeleteItemWidgetState extends ConsumerState<RowDeleteItemWidget> {
         children: [
           GestureDetector(
             onTap: () async {
-              if (widget.todo.uuid != null) {
+              if (todo.changed != null) {
                 final bool confirmed =
                     await Dialogs.showConfirmCloseCountDialog(context) ?? false;
                 if (confirmed) {
-                  ref.watch(todosManagerProvider).deleteTodo(todo: widget.todo);
-                  _onGoBack(null);
+                  ref.watch(todosManagerProvider).deleteTodo(todo: todo);
+                  ref.read(navigationProvider).pop();
                 }
               }
             },
@@ -52,7 +47,7 @@ class _RowDeleteItemWidgetState extends ConsumerState<RowDeleteItemWidget> {
                   children: [
                     Icon(
                       AppIcons.delete,
-                      color: widget.todo.uuid == null
+                      color: todo.changed == null
                           ? Theme.of(context).colorScheme.outlineVariant
                           : Theme.of(context).colorScheme.onSecondary,
                       size: 21.0,
@@ -66,7 +61,7 @@ class _RowDeleteItemWidgetState extends ConsumerState<RowDeleteItemWidget> {
                             fontSize: 16.0,
                             height: 20 / 16,
                             fontFamily: 'Roboto',
-                            color: widget.todo.uuid == null
+                            color: todo.changed == null
                                 ? Theme.of(context).colorScheme.outlineVariant
                                 : Theme.of(context).colorScheme.onSecondary),
                       ),
@@ -76,23 +71,18 @@ class _RowDeleteItemWidgetState extends ConsumerState<RowDeleteItemWidget> {
               ],
             ),
           ),
-          Consumer(
-            builder: ((context, ref, child) {
-              ref.watch(todosFilter);
-              return Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: widget.todo.upload
-                    ? const Icon(
-                        Icons.cloud_done_outlined,
-                        size: 26.0,
-                      )
-                    : const Icon(
-                        Icons.cloud_off_outlined,
-                        size: 26.0,
-                      ),
-              );
-            }),
-          )
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: todo.upload
+                ? const Icon(
+                    Icons.cloud_done_outlined,
+                    size: 26.0,
+                  )
+                : const Icon(
+                    Icons.cloud_off_outlined,
+                    size: 26.0,
+                  ),
+          ),
         ],
       ),
     );

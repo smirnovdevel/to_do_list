@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-class UnknownPage extends StatelessWidget {
-  const UnknownPage({
-    required this.routeName,
+import '../localization/app_localization.dart';
+
+class UnknownScreen extends StatelessWidget {
+  const UnknownScreen({
+    required this.name,
     super.key,
   });
 
-  final String? routeName;
+  final String? name;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,7 @@ class UnknownPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(32.0),
           child: Text(
-            'Page not found\n$routeName',
+            '${AppLocalization.of(context).get('page_not_found')}\n$name',
             style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),

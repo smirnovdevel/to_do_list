@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 @immutable
-class Todo {
+class Todo extends Equatable {
   const Todo({
     required this.uuid,
     required this.title,
@@ -15,16 +16,19 @@ class Todo {
     required this.autor,
   });
 
-  final String? uuid;
+  final String uuid;
   final String title;
   final bool done;
   final int priority;
   final DateTime? deadline;
   final bool deleted;
   final DateTime created;
-  final DateTime changed;
+  final DateTime? changed;
   final bool upload;
   final String? autor;
+
+  @override
+  List<Object> get props => [uuid, title, done, priority, created, upload];
 
   Todo copyWith({
     String? uuid,
@@ -71,7 +75,7 @@ class Todo {
       'title': title,
       'done': done ? 1 : 0,
       'priority': priority,
-      'deadline': deadline.toString(),
+      'deadline': deadline == null ? '' : deadline.toString(),
       'deleted': deleted ? 1 : 0,
       'created': created.toString(),
       'changed': changed.toString(),
@@ -87,7 +91,7 @@ class Todo {
       done: (map['done'] == 1) ? true : false,
       priority: map['priority'] ?? 0,
       deadline:
-          map['deadline'] != null ? DateTime.tryParse(map['deadline']) : null,
+          map['deadline'] == '' ? DateTime.tryParse(map['deadline']) : null,
       deleted: (map['deleted'] == 1) ? true : false,
       created: DateTime.tryParse(map['created']) ?? DateTime.now(),
       changed: DateTime.tryParse(map['changed']) ?? DateTime.now(),
@@ -108,7 +112,7 @@ class Todo {
                 : 'important',
         'done': done,
         'created_at': created.millisecondsSinceEpoch,
-        'changed_at': changed.millisecondsSinceEpoch,
+        'changed_at': changed!.millisecondsSinceEpoch,
         'last_updated_by': autor
       };
     } else {
@@ -123,7 +127,7 @@ class Todo {
         'deadline': deadline!.millisecondsSinceEpoch,
         'done': done,
         'created_at': created.millisecondsSinceEpoch,
-        'changed_at': changed.millisecondsSinceEpoch,
+        'changed_at': changed!.millisecondsSinceEpoch,
         'last_updated_by': autor
       };
     }

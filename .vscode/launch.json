@@ -5,7 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "to_do_list",
+            "name": "CHROME",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": ["-d", "chrome","--web-port", "5000","--web-renderer","html"],
+        },
+        {
+            "name": "TODO",
             "request": "launch",
             "type": "dart"
         },

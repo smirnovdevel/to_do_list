@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/common/app_icons.dart';
 import '../../config/routes/dialogs.dart';
-import '../../config/routes/navigation.dart';
 import '../../domain/models/todo.dart';
 import '../../utils/core/logging.dart';
+import '../provider/navigation_provider.dart';
 import '../provider/todos_manager.dart';
 import 'icon_done_widget.dart';
 import 'subtitle_widget.dart';
@@ -16,8 +16,8 @@ import 'title_todo_widget.dart';
 
 final Logging log = Logging('ItemTodoWidget');
 
-class ItemTodoWidget extends ConsumerStatefulWidget {
-  const ItemTodoWidget({
+class CardTodoWidget extends ConsumerStatefulWidget {
+  const CardTodoWidget({
     super.key,
     required this.todo,
   });
@@ -25,10 +25,10 @@ class ItemTodoWidget extends ConsumerStatefulWidget {
   final Todo todo;
 
   @override
-  ConsumerState<ItemTodoWidget> createState() => _ItemTodoWidgetState();
+  ConsumerState<CardTodoWidget> createState() => _ItemTodoWidgetState();
 }
 
-class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
+class _ItemTodoWidgetState extends ConsumerState<CardTodoWidget> {
   double _padding = 0;
 
   @override
@@ -46,10 +46,6 @@ class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
         ));
   }
 
-  _updateTodo(Todo todo) {
-    ref.watch(todosManagerProvider).updateTodo(todo: todo);
-  }
-
   _deleteTodo(Todo todo) {
     ref.watch(todosManagerProvider).deleteTodo(todo: todo);
   }
@@ -61,7 +57,7 @@ class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
     /// Swipe
     ///
     return Dismissible(
-      key: Key(widget.todo.uuid!),
+      key: Key(widget.todo.uuid),
 
       /// swipe left
       ///
@@ -118,13 +114,13 @@ class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
                   child: IconDoneTodoWidget(todo: widget.todo),
                 ),
               ),
-              // ),
 
-              /// Title & Subtitle
+              ///
+              /// Title & Subtitle Widgets
               ///
               GestureDetector(
                 onTap: () {
-                  _onOpenEditPage(widget.todo);
+                  ref.read(navigationProvider).showTodo(widget.todo.uuid);
                 },
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width - 120,
@@ -138,9 +134,13 @@ class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
                   ),
                 ),
               ),
+
+              ///
+              /// Icon Information
+              ///
               GestureDetector(
                 onTap: () {
-                  _onOpenEditPage(widget.todo);
+                  ref.read(navigationProvider).showTodo(widget.todo.uuid);
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 1.0),
@@ -156,16 +156,5 @@ class _ItemTodoWidgetState extends ConsumerState<ItemTodoWidget> {
         ),
       ),
     );
-  }
-
-  Future<void> _onOpenEditPage(Todo todo) async {
-    final Todo? result = await NavigationManager.instance.openEditPage(todo);
-    if (result != null) {
-      if (result.deleted) {
-        _deleteTodo(result);
-      } else {
-        _updateTodo(result);
-      }
-    }
   }
 }

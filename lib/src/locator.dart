@@ -1,41 +1,33 @@
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart' as http;
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import 'data/datasources/local_data_source.dart';
 import 'data/datasources/remote_data_source.dart';
+import 'data/db/database.dart';
+import 'data/web/http_service.dart';
 import 'domain/repositories/todo_service.dart';
-import 'utils/core/network_info.dart';
 
 // This is our global ServiceLocator
 GetIt locator = GetIt.instance;
 
 Future<void> initializeDependencies() async {
-  // BLoC / Cubit
-
   /// Repository Todos
   locator.registerLazySingleton<TodoService>(
     () => TodoService(
-        remoteDataSource: locator(),
-        localDataSource: locator(),
-        networkInfo: locator()),
+      remoteDataSource: locator(),
+      localDataSource: locator(),
+    ),
   );
 
   /// Source data
-  locator.registerLazySingleton<TodoLocalDataSource>(
-    () => TodoLocalDataSource(),
+  locator.registerLazySingleton<LocalDataSource>(
+    () => LocalDataSource(locator()),
   );
 
-  locator.registerLazySingleton<TodoRemoteDataSource>(
-    () => TodoRemoteDataSource(),
-  );
-
-// Core
-  locator.registerLazySingleton<NetworkInfo>(
-    () => NetworkInfoImp(locator()),
+  locator.registerLazySingleton<RemoteDataSource>(
+    () => RemoteDataSource(locator()),
   );
 
   // External
-  locator.registerLazySingleton(() => http.Client());
-  locator.registerLazySingleton(() => InternetConnectionChecker());
+  locator.registerLazySingleton(() => DBProvider(isTest: false));
+  locator.registerLazySingleton(() => HttpService());
 }
