@@ -8,10 +8,10 @@ name: CI
 on:
   push:
     branches:
-      - origin
+      - Torvalds
   pull_request:
     branches:
-      - origin
+      - Torvalds
 
 jobs:
   flutter_test:
