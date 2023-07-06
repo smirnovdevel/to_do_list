@@ -9,7 +9,14 @@
             "type": "dart",
             "request": "launch",
             "program": "lib/main.dart",
-            "args": ["-d", "chrome","--web-port", "5000","--web-renderer","html"],
+            "args": [
+                "-d",
+                "chrome",
+                "--web-port",
+                "5000",
+                "--web-renderer",
+                "html"
+            ]
         },
         {
             "name": "TODO",
@@ -27,6 +34,51 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
+        },
+        {
+            "name": "Flutter (integration_test/app_test.dart)",
+            "type": "dart",
+            "request": "launch",
+            "program": "integration_test/app_test.dart",
+            "args": [
+                "--coverage"
+            ]
+        },
+        {
+            "name": "Flutter (test/local_data_source_test.dart)",
+            "type": "dart",
+            "request": "launch",
+            "program": "test/local_data_source_test.dart",
+            "args": [
+                "--coverage"
+            ]
+        },
+        {
+            "name": "Flutter (test/remote_data_source_test.dart)",
+            "type": "dart",
+            "request": "launch",
+            "program": "test/remote_data_source_test.dart",
+            "args": [
+                "--coverage"
+            ]
+        },
+        {
+            "name": "Flutter (test/state_holder_test.dart)",
+            "type": "dart",
+            "request": "launch",
+            "program": "test/state_holder_test.dart",
+            "args": [
+                "--coverage"
+            ]
+        },
+        {
+            "name": "Flutter (test/todo_model_test.dart)",
+            "type": "dart",
+            "request": "launch",
+            "program": "test/todo_model_test.dart",
+            "args": [
+                "--coverage"
+            ]
         }
     ]
 }
