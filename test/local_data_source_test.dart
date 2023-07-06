@@ -20,6 +20,36 @@ main() async {
   /// Groups
   ///
   group('Local data source:', () {
+    test('Get todos', () async {
+      ///
+      /// Act
+      ///
+      List<Todo> todos = await localDataSource.getTodos();
+      for (Todo todo in todos) {
+        await localDataSource.deleteTodo(todo: todo);
+      }
+
+      ///
+      /// Assert
+      ///
+      todos = await localDataSource.getTodos();
+      expect(0, todos.length);
+    });
+
+    test('Update todos', () async {
+      ///
+      /// Act
+      ///
+      Todo task = todo.copyWith(deleted: true);
+      await localDataSource.updateTodos(todos: [task]);
+
+      ///
+      /// Assert
+      ///
+      List<Todo> todos = await localDataSource.getDeletedTodos();
+      expect(todos.first, task);
+    });
+
     test('Save todo', () async {
       ///
       /// Act
@@ -37,7 +67,7 @@ main() async {
       ///
       /// Act
       ///
-      await localDataSource.saveTodo(
+      await localDataSource.updateTodo(
           todo: todo.copyWith(title: 'Update title'));
 
       ///
