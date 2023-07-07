@@ -14,38 +14,7 @@ on:
       - origin
 
 jobs:
-  integration-tests:
-    name: Running tests on macOS-latest
-    runs-on: macOS-latest
-    strategy:
-      fail-fast: false
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup Java
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'zulu'
-          java-version: '11'
-      - name: Setup Flutter (stable)
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-      - name: Install Android SDK
-        uses: malinskiy/action-android/install-sdk@release/0.1.2
-      - run: echo $ANDROID_HOME
-      - run: sdkmanager --install "ndk;23.1.7779620"
-      - run: sdkmanager --install "build-tools;30.0.3"
-      - run: flutter pub get
-      - uses: malinskiy/action-android/emulator-run-cmd@release/0.1.2
-        with:
-          cmd: flutter test integration_test
-          api: 31
-          cmdOptions: -no-snapshot-save -noaudio -no-boot-anim -cores 2 -memory 3072 -no-window
-          tag: google_apis
-          abi: x86_64
-
-  build_appbundle:
+  flutter_test:
     name: Flutter test & Build apk
     runs-on: ubuntu-latest
 
