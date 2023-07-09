@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:286928751292:android:cb251992b9615066aedeb9",
         "android_client_info": {
-          "package_name": "com.example.to_do_list"
+          "package_name": "online.mytodo.to_do_list"
         }
       },
       "oauth_client": [

@@ -67,7 +67,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '286928751292',
     projectId: 'todo-list-ce737',
     storageBucket: 'todo-list-ce737.appspot.com',
-    iosClientId: '286928751292-7sf8usi59arnrta12iv6rgp6vd3fag0l.apps.googleusercontent.com',
+    iosClientId:
+        '286928751292-7sf8usi59arnrta12iv6rgp6vd3fag0l.apps.googleusercontent.com',
     iosBundleId: 'five.live.toDoList',
   );
 
@@ -77,7 +78,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '286928751292',
     projectId: 'todo-list-ce737',
     storageBucket: 'todo-list-ce737.appspot.com',
-    iosClientId: '286928751292-1ng9toh9nrp90slvglei9jp77ukgbnn7.apps.googleusercontent.com',
-    iosBundleId: 'com.example.toDoList.RunnerTests',
+    iosClientId:
+        '286928751292-1ng9toh9nrp90slvglei9jp77ukgbnn7.apps.googleusercontent.com',
+    iosBundleId: 'online.mytodo.toDoList.RunnerTests',
   );
 }

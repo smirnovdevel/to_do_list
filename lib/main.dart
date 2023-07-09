@@ -8,7 +8,7 @@ import 'app.dart';
 import 'src/locator.dart' as locator;
 import 'src/utils/core/http_overrides.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Firebase hosting app

@@ -33,6 +33,7 @@ dependencies:
   firebase_core: ^2.14.0
   riverpod_messages: ^1.0.2
   internet_connection_checker: ^1.0.0+1
+  flutter_flavorizr: ^2.2.1
 
 provider:
   intl: ^0.18.0

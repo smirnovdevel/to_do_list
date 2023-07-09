@@ -6,6 +6,7 @@ import '../provider/todo_provider.dart';
 import '../screens/main_screen.dart';
 import '../screens/todo_screen.dart';
 import '../screens/unknown_screen.dart';
+import '../widgets/flavor_banner.dart';
 import 'route_config.dart';
 
 final Logging log = Logging('TodosRouterDelegate');
@@ -30,40 +31,42 @@ class TodosRouterDelegate extends RouterDelegate<TodosRouteConfig>
 
   @override
   Widget build(BuildContext context) {
-    return Navigator(
-      key: navigatorKey,
-      pages: [
-        const MaterialPage(
-          key: ValueKey('MainScreen'),
-          child: MainScreen(),
-        ),
-        if (state?.isNew == true)
-          MaterialPage(
-            child: TodoScreen(
-              uuid: state!.uuid!,
-            ),
-          ),
-        if (state?.uuid != null)
-          MaterialPage(
-            key: ValueKey(state!.uuid!),
-            child: TodoScreen(
-              uuid: state!.uuid!,
-            ),
-          ),
-        if (state?.isUnknown == true)
+    return FlavorBanner(
+      child: Navigator(
+        key: navigatorKey,
+        pages: [
           const MaterialPage(
-            child: UnknownScreen(name: ''),
+            key: ValueKey('MainScreen'),
+            child: MainScreen(),
           ),
-      ],
-      onPopPage: (route, result) {
-        if (!route.didPop(result)) {
-          return false;
-        }
-        state = TodosRouteConfig.root();
+          if (state?.isNew == true)
+            MaterialPage(
+              child: TodoScreen(
+                uuid: state!.uuid!,
+              ),
+            ),
+          if (state?.uuid != null)
+            MaterialPage(
+              key: ValueKey(state!.uuid!),
+              child: TodoScreen(
+                uuid: state!.uuid!,
+              ),
+            ),
+          if (state?.isUnknown == true)
+            const MaterialPage(
+              child: UnknownScreen(name: ''),
+            ),
+        ],
+        onPopPage: (route, result) {
+          if (!route.didPop(result)) {
+            return false;
+          }
+          state = TodosRouteConfig.root();
 
-        notifyListeners();
-        return true;
-      },
+          notifyListeners();
+          return true;
+        },
+      ),
     );
   }
 
