@@ -6,16 +6,16 @@ import '../localization/app_localization.dart';
 class HintPopupMenuWidget extends StatelessWidget {
   const HintPopupMenuWidget({super.key, required this.value});
 
-  final int value;
+  final String value;
   @override
   Widget build(BuildContext context) {
     switch (value) {
-      case 0:
+      case 'low':
         return Text(
           AppLocalization.of(context).get('low'),
           style: Theme.of(context).textTheme.titleSmall,
         );
-      case 1:
+      case 'basic':
         return Text(
           AppLocalization.of(context).get('basic'),
           style: Theme.of(context).textTheme.titleSmall,
@@ -28,7 +28,7 @@ class HintPopupMenuWidget extends StatelessWidget {
               size: 16.0,
               color: Theme.of(context).colorScheme.secondaryContainer,
             ),
-            Text(AppLocalization.of(context).get('high'),
+            Text(AppLocalization.of(context).get('important'),
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(
                       color: Theme.of(context).colorScheme.onSecondary,
                     )),

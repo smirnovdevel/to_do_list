@@ -8,7 +8,7 @@
     "done":"DONE",
     "low":"Low",
     "basic":"Basic",
-    "high":"Important",
+    "important":"Important",
     "delete_title":"Delete task?",
     "delete_subtitle":"This action cannot be undone",
     "deadline":"Make before:",

@@ -29,7 +29,7 @@ class TodoScreen extends ConsumerStatefulWidget {
 class _EditPageState extends ConsumerState<TodoScreen> {
   final TextEditingController _controller = TextEditingController();
 
-  int _priority = 0;
+  String _importance = 'basic';
   DateTime? _deadline;
   DateTime? _created;
   DateTime? _changed;
@@ -41,7 +41,7 @@ class _EditPageState extends ConsumerState<TodoScreen> {
     super.initState();
     final todo = ref.read(todoProvider(widget.uuid));
     _controller.text = todo.title;
-    _priority = todo.priority;
+    _importance = todo.importance;
     _deadline = todo.deadline;
     _upload = todo.upload;
     _done = todo.done;
@@ -102,7 +102,7 @@ class _EditPageState extends ConsumerState<TodoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<PopupMenuEntry<int>> popupMenuItems =
+    final List<PopupMenuEntry<String>> popupMenuItems =
         buildItemsPopupMenu(context);
 
     return Scaffold(
@@ -128,7 +128,7 @@ class _EditPageState extends ConsumerState<TodoScreen> {
                 final todo = Todo(
                     uuid: widget.uuid,
                     title: _controller.text,
-                    priority: _priority,
+                    importance: _importance,
                     deadline: _deadline,
                     created: _created ??
                         DateTime.fromMillisecondsSinceEpoch(
@@ -234,16 +234,16 @@ class _EditPageState extends ConsumerState<TodoScreen> {
   ///
   /// Строка выбора важности задачи
   ///
-  Padding popupMenuWidget(List<PopupMenuEntry<int>> popupMenuItems) {
+  Padding popupMenuWidget(List<PopupMenuEntry<String>> popupMenuItems) {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
-      child: PopupMenuButton<int>(
-        initialValue: _priority,
+      child: PopupMenuButton<String>(
+        initialValue: _importance,
         position: PopupMenuPosition.over,
         color: Theme.of(context).popupMenuTheme.color,
-        onSelected: (int value) {
+        onSelected: (String value) {
           setState(() {
-            _priority = value;
+            _importance = value;
           });
         },
         child: Column(
@@ -253,7 +253,7 @@ class _EditPageState extends ConsumerState<TodoScreen> {
               AppLocalization.of(context).get('importance'),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            HintPopupMenuWidget(value: _priority),
+            HintPopupMenuWidget(value: _importance),
           ],
         ),
         itemBuilder: (BuildContext context) => popupMenuItems,

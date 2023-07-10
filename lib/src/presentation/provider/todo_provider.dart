@@ -15,7 +15,7 @@ final todoProvider = Provider.family<Todo, String>((ref, uuid) {
       uuid: uuid,
       title: '',
       done: false,
-      priority: 0,
+      importance: 'basic',
       deadline: null,
       deleted: false,
       created: DateTime.fromMillisecondsSinceEpoch(

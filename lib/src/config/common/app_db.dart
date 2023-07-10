@@ -8,5 +8,5 @@ class AppDB {
   /// Table todos
   static const String nameTodoTable = 'todos';
   static const String tableTodos =
-      'CREATE TABLE $nameTodoTable(uuid TEXT PRIMARY KEY, title TEXT, done INTEGER, priority INTEGER,  deadline TEXT, deleted INTEGER, created TEXT, changed TEXT, upload INTEGER, autor TEXT)';
+      'CREATE TABLE $nameTodoTable(uuid TEXT PRIMARY KEY, title TEXT, done INTEGER, importance TEXT,  deadline TEXT, deleted INTEGER, created TEXT, changed TEXT, upload INTEGER, autor TEXT)';
 }

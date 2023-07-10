@@ -7,7 +7,7 @@ class Todo extends Equatable {
     required this.uuid,
     required this.title,
     required this.done,
-    required this.priority,
+    required this.importance,
     required this.deadline,
     required this.deleted,
     required this.created,
@@ -19,7 +19,7 @@ class Todo extends Equatable {
   final String uuid;
   final String title;
   final bool done;
-  final int priority;
+  final String importance;
   final DateTime? deadline;
   final bool deleted;
   final DateTime created;
@@ -28,13 +28,13 @@ class Todo extends Equatable {
   final String? autor;
 
   @override
-  List<Object> get props => [uuid, title, done, priority, created, upload];
+  List<Object> get props => [uuid, title, done, importance, created, upload];
 
   Todo copyWith({
     String? uuid,
     String? title,
     bool? done,
-    int? priority,
+    String? importance,
     DateTime? deadline,
     bool? deleted,
     DateTime? created,
@@ -46,7 +46,7 @@ class Todo extends Equatable {
       uuid: uuid ?? this.uuid,
       title: title ?? this.title,
       done: done ?? this.done,
-      priority: priority ?? this.priority,
+      importance: importance ?? this.importance,
       deadline: deadline ?? this.deadline,
       deleted: deleted ?? this.deleted,
       created: created ?? this.created,
@@ -61,7 +61,7 @@ class Todo extends Equatable {
         uuid: todo.uuid,
         title: todo.title,
         done: todo.done,
-        priority: todo.priority,
+        importance: todo.importance,
         deadline: todo.deadline,
         deleted: todo.deleted,
         created: todo.created,
@@ -74,7 +74,7 @@ class Todo extends Equatable {
       'uuid': uuid,
       'title': title,
       'done': done ? 1 : 0,
-      'priority': priority,
+      'importance': importance,
       'deadline': deadline == null ? '' : deadline.toString(),
       'deleted': deleted ? 1 : 0,
       'created': created.toString(),
@@ -89,7 +89,7 @@ class Todo extends Equatable {
       uuid: map['uuid'],
       title: map['title'] ?? '',
       done: (map['done'] == 1) ? true : false,
-      priority: map['priority'] ?? 0,
+      importance: map['importance'] ?? 'basic',
       deadline:
           map['deadline'] == '' ? DateTime.tryParse(map['deadline']) : null,
       deleted: (map['deleted'] == 1) ? true : false,
@@ -105,11 +105,7 @@ class Todo extends Equatable {
       return {
         'id': uuid, // уникальный идентификатор элемента
         'text': title,
-        'importance': priority == 0
-            ? 'low'
-            : priority == 1
-                ? 'basic'
-                : 'important',
+        'importance': importance,
         'done': done,
         'created_at': created.millisecondsSinceEpoch,
         'changed_at': changed!.millisecondsSinceEpoch,
@@ -119,11 +115,7 @@ class Todo extends Equatable {
       return {
         'id': uuid, // уникальный идентификатор элемента
         'text': title,
-        'importance': priority == 0
-            ? 'low'
-            : priority == 1
-                ? 'basic'
-                : 'important',
+        'importance': importance,
         'deadline': deadline!.millisecondsSinceEpoch,
         'done': done,
         'created_at': created.millisecondsSinceEpoch,
@@ -138,11 +130,7 @@ class Todo extends Equatable {
       uuid: parsedJson['id'],
       title: parsedJson['text'],
       done: parsedJson['done'],
-      priority: parsedJson['importance'] == 'low'
-          ? 0
-          : parsedJson['importance'] == 'basic'
-              ? 1
-              : 2,
+      importance: parsedJson['importance'],
       deadline: parsedJson['deadline'] != null
           ? DateTime.fromMillisecondsSinceEpoch(parsedJson['deadline'])
           : null,

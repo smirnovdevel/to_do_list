@@ -16,7 +16,7 @@ main() {
       uuid: uuid.v1(),
       title: 'Test todo',
       done: false,
-      priority: 0,
+      importance: 'basic',
       deadline: dateTimeNow,
       deleted: false,
       created: dateTimeNow,

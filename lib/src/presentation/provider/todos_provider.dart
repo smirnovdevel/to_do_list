@@ -29,7 +29,7 @@ class TodosStateHolder extends StateNotifier<List<Todo>?> {
     log.info('Update todo uuid: ${todo.uuid}');
     state = [
       for (Todo item in state ?? [])
-        if (item.uuid == todo.uuid) Todo.copyFrom(todo) else item,
+        if (item.uuid == todo.uuid) todo.copyWith() else item,
     ];
   }
 
