@@ -74,7 +74,7 @@ flavorizr:
   flavors:
     dev:
       app:
-        name: "DEV"
+        name: "To Do List"
 
       android:
         applicationId: "online.mytodo.dev"
@@ -83,7 +83,7 @@ flavorizr:
 
     prod:
       app:
-        name: "PROD"
+        name: "To Do List"
 
       android:
         applicationId: "online.mytodo"

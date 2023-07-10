@@ -34,12 +34,12 @@ android {
         dev {
             dimension "flavor-type"
             applicationId "online.mytodo.dev"
-            resValue "string", "app_name", "DEV"
+            resValue "string", "app_name", "To Do List"
         }
         prod {
             dimension "flavor-type"
             applicationId "online.mytodo"
-            resValue "string", "app_name", "PROD"
+            resValue "string", "app_name", "To Do List"
         }
     }
 
