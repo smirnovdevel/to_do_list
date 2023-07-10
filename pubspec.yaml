@@ -66,3 +66,26 @@ flutter:
           - asset: assets/fonts/Roboto-Regular.ttf
           - asset: assets/fonts/Roboto-Medium.ttf
 
+flavorizr:
+  app:
+    android:
+      flavorDimensions: "flavor-type"
+
+  flavors:
+    dev:
+      app:
+        name: "DEV"
+
+      android:
+        applicationId: "online.mytodo.dev"
+      ios:
+        bundleId: "online.mytodo.dev"
+
+    prod:
+      app:
+        name: "PROD"
+
+      android:
+        applicationId: "online.mytodo"
+      ios:
+        bundleId: "online.mytodo"

@@ -11,7 +11,7 @@ class FlavorBanner extends StatelessWidget {
     switch (F.appFlavor) {
       case Flavor.dev:
         return Banner(
-          location: BannerLocation.topStart,
+          location: BannerLocation.topEnd,
           message: F.name.toUpperCase(),
           color: Colors.blue.withOpacity(0.6),
           textStyle: const TextStyle(
@@ -21,7 +21,7 @@ class FlavorBanner extends StatelessWidget {
         );
       case Flavor.prod:
         return Banner(
-          location: BannerLocation.topStart,
+          location: BannerLocation.topEnd,
           message: F.name.toUpperCase(),
           color: Colors.green.withOpacity(0.6),
           textStyle: const TextStyle(
