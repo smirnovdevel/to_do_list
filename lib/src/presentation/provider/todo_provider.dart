@@ -6,6 +6,9 @@ import 'todos_provider.dart';
 
 final Logging log = Logging('FamilyProvider');
 
+/// При открытии окна редактирования задачи, идет поиск по uuid
+/// если такой не найдено, создаётся пустая
+///
 final todoProvider = Provider.family<Todo, String>((ref, uuid) {
   log.info('uuid: $uuid');
   final todos = ref.watch(todosStateProvider) ?? [];
@@ -15,14 +18,9 @@ final todoProvider = Provider.family<Todo, String>((ref, uuid) {
       uuid: uuid,
       title: '',
       done: false,
-      importance: Priority.basic,
-      deadline: null,
-      deleted: false,
-      created: DateTime.fromMillisecondsSinceEpoch(
-          DateTime.now().millisecondsSinceEpoch),
+      created: DateTime.now().toLocal().millisecondsSinceEpoch,
       changed: null,
-      upload: false,
-      autor: null,
+      deviceId: null,
     );
   });
   return todo;

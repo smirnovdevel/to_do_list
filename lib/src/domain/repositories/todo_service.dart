@@ -9,6 +9,21 @@ import '../models/todo.dart';
 
 final Logging log = Logging('TodoService');
 
+/// Расширение класса int для сравнения времени в формате
+/// unix timestamp
+///
+extension CompareUnixTimestamp on int {
+  bool isAfter(int compare) {
+    return DateTime.fromMillisecondsSinceEpoch(this)
+        .isAfter(DateTime.fromMillisecondsSinceEpoch(compare));
+  }
+
+  bool isBefore(int compare) {
+    return DateTime.fromMillisecondsSinceEpoch(this)
+        .isBefore(DateTime.fromMillisecondsSinceEpoch(compare));
+  }
+}
+
 class TodoService {
   TodoService({
     required this.remoteDataSource,
@@ -75,10 +90,10 @@ class TodoService {
         /// Есть список с сервера и есть список из базы,
         /// для быстрого поиска составим две мапы
         ///
-        Map<String, DateTime> remoteTodosMap = {
+        Map<String, int> remoteTodosMap = {
           for (var todo in remote) todo.uuid: todo.changed!
         };
-        Map<String, DateTime> localeTodosMap = {
+        Map<String, int> localeTodosMap = {
           for (var todo in local) todo.uuid: todo.changed!
         };
 
@@ -96,7 +111,6 @@ class TodoService {
             Todo localTodo = local.firstWhere((todo) => todo.uuid == uuid);
             if (localeTodosMap[uuid]!.isBefore(remoteTodosMap[uuid]!)) {
               /// на сервере версия свежее, проверяем не удалена ли
-              /// TODO конфликт, решение со *
               if (localTodo.deleted) {
                 localDelete.add(localTodo);
               } else {
@@ -171,7 +185,7 @@ class TodoService {
         }
       }
     } else {
-      todosList.addAll(local);
+      todosList.addAll(local.where((todo) => !todo.deleted));
     }
     return todosList;
   }
@@ -191,8 +205,8 @@ class TodoService {
   Future<Todo> uploadTodoRemote({required Todo todo}) async {
     log.info('Upload Todo id: ${todo.uuid} ...');
     Todo? task;
-    if (todo.autor == null) {
-      todo = todo.copyWith(autor: deviceId);
+    if (todo.deviceId == null) {
+      todo = todo.copyWith(deviceId: deviceId);
     }
     log.info('Upload Todo id: ${todo.uuid} to Server ...');
     if (todo.upload) {
@@ -215,6 +229,9 @@ class TodoService {
       return todo;
     }
     try {
+      if (todo.deviceId == null) {
+        todo = todo.copyWith(deviceId: deviceId);
+      }
       await localDataSource.saveTodo(todo: todo);
       log.info('Save Todo uuid: ${todo.uuid} to DB upload: ${todo.upload}');
     } on DBException {
@@ -240,6 +257,9 @@ class TodoService {
       return;
     }
     try {
+      if (todo.deviceId == null) {
+        todo = todo.copyWith(deviceId: deviceId);
+      }
       log.info('Delete local todo uuid: ${todo.uuid} ...');
       if (deleted) {
         await localDataSource.deleteTodo(todo: todo);

@@ -52,17 +52,17 @@ class DBProvider {
   Future<List<Todo>> getTodos() async {
     log.info('Get todos ...');
     final db = await database();
-    final List<Map<String, dynamic>> todosMapList =
-        await db.query(AppDB.nameTodoTable);
-    final List<Todo> todosList = [];
-    for (final Map<String, dynamic> todoMap in todosMapList) {
-      todosList.add(Todo.fromMap(todoMap));
+    final List<Map<String, dynamic>> maps = await db.query(AppDB.nameTodoTable);
+    final List<Todo> todos = [];
+    for (var map in maps) {
+      todos.add(Todo.fromJson(map));
     }
-    todosList.sort((Todo a, Todo b) {
-      return a.created.compareTo(b.created);
+
+    todos.sort((Todo a, Todo b) {
+      return a.created!.compareTo(b.created!);
     });
-    log.info('Get ${todosList.length} todos');
-    return todosList;
+    log.info('Get ${todos.length} todos');
+    return todos;
   }
 
   /// GET Todo
@@ -71,13 +71,13 @@ class DBProvider {
     log.info('Get todo uuid $uuid ...');
     final db = await database();
     Todo? task;
-    final List<Map<String, dynamic>> todosMapList = await db.query(
+    final List<Map<String, dynamic>> maps = await db.query(
       AppDB.nameTodoTable,
-      where: 'uuid = ?',
+      where: 'id = ?',
       whereArgs: [uuid],
     );
-    if (todosMapList.isNotEmpty) {
-      task = Todo.fromMap(todosMapList.first);
+    if (maps.isNotEmpty) {
+      task = Todo.fromJson(maps.first);
       log.info('Get todo ok');
     } else {
       log.info('Get todo not found');
@@ -90,21 +90,21 @@ class DBProvider {
   Future<List<Todo>> getDeletedTodos() async {
     log.info('Get Deleted Todos ...');
     final db = await database();
-    final List<Map<String, dynamic>> todosMapList = await db.query(
+    final List<Map<String, dynamic>> maps = await db.query(
       AppDB.nameTodoTable,
       where: 'deleted = ?',
       whereArgs: [1],
     );
-    final List<Todo> todosList = [];
-    if (todosMapList.isEmpty) {
+    final List<Todo> todos = [];
+    if (maps.isEmpty) {
       log.info('Get deleted todos not found');
-      return todosList;
+      return todos;
     }
-    for (final Map<String, dynamic> todoMap in todosMapList) {
-      todosList.add(Todo.fromMap(todoMap));
+    for (var map in maps) {
+      todos.add(Todo.fromJson(map));
     }
-    log.info('Get ${todosList.length} deleted todos');
-    return todosList;
+    log.info('Get ${todos.length} deleted todos');
+    return todos;
   }
 
   /// SAVE
@@ -113,15 +113,15 @@ class DBProvider {
     log.info('Insert todo uuid: ${todo.uuid} ...');
     Todo? task;
     final db = await database();
-    final List<Map<String, dynamic>> todosMapList = await db.query(
+    final List<Map<String, dynamic>> maps = await db.query(
       AppDB.nameTodoTable,
-      where: 'uuid = ?',
+      where: 'id = ?',
       whereArgs: [todo.uuid],
     );
-    if (todosMapList.isEmpty) {
+    if (maps.isEmpty) {
       // запись не найдена, добавляем
       try {
-        await db.insert(AppDB.nameTodoTable, todo.toMap());
+        await db.insert(AppDB.nameTodoTable, todo.toDB());
         task ??= todo;
         log.info('Insert todo uuid: ${todo.uuid}');
       } catch (e) {
@@ -133,8 +133,8 @@ class DBProvider {
       try {
         await db.update(
           AppDB.nameTodoTable,
-          todo.toMap(),
-          where: 'uuid = ?',
+          todo.toDB(),
+          where: 'id = ?',
           whereArgs: [todo.uuid],
         );
         task ??= todo;
@@ -154,15 +154,15 @@ class DBProvider {
     for (Todo task in todos) {
       /// test
       Todo todo = task.copyWith(upload: true);
-      final List<Map<String, dynamic>> todosMapList = await db.query(
+      final List<Map<String, dynamic>> maps = await db.query(
         AppDB.nameTodoTable,
-        where: 'uuid = ?',
+        where: 'id = ?',
         whereArgs: [todo.uuid],
       );
-      if (todosMapList.isEmpty) {
+      if (maps.isEmpty) {
         // запись не найдена, добавляем
         try {
-          await db.insert(AppDB.nameTodoTable, todo.toMap());
+          await db.insert(AppDB.nameTodoTable, todo.toDB());
           log.info('Insert todo uuid: ${todo.uuid}');
         } catch (e) {
           log.warning('Insert todo uuid: ${todo.uuid} $e');
@@ -182,8 +182,8 @@ class DBProvider {
     try {
       await db.update(
         AppDB.nameTodoTable,
-        todo.toMap(),
-        where: 'uuid = ?',
+        todo.toDB(),
+        where: 'id = ?',
         whereArgs: [todo.uuid],
       );
       task ??= todo;
@@ -202,7 +202,7 @@ class DBProvider {
     try {
       await db.delete(
         AppDB.nameTodoTable,
-        where: 'uuid = ?',
+        where: 'id = ?',
         whereArgs: [todo.uuid],
       );
       log.info('Delete todo uuid: ${todo.uuid}');

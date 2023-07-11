@@ -14,7 +14,7 @@ main() async {
   ///
   DBProvider dbProvider = DBProvider(isTest: true);
   LocalDataSource localDataSource = LocalDataSource(dbProvider);
-  Todo todo = Todo.copyFrom(TodoMock().get(title: 'Test todo'));
+  Todo todo = TodoMock().get(title: 'Test todo').copyWith();
 
   ///
   /// Groups

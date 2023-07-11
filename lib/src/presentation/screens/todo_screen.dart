@@ -30,9 +30,9 @@ class _EditPageState extends ConsumerState<TodoScreen> {
   final TextEditingController _controller = TextEditingController();
 
   Priority _importance = Priority.basic;
-  DateTime? _deadline;
-  DateTime? _created;
-  DateTime? _changed;
+  int? _deadline;
+  int? _created;
+  int? _changed;
   bool _upload = false;
   bool _done = false;
 
@@ -62,7 +62,9 @@ class _EditPageState extends ConsumerState<TodoScreen> {
         context: context,
         cancelText: AppLocalization.of(context).get('cancel'),
         confirmText: AppLocalization.of(context).get('done'),
-        initialDate: _deadline ?? DateTime.now(),
+        initialDate: _deadline == null
+            ? DateTime.now().toLocal()
+            : DateTime.fromMillisecondsSinceEpoch(_deadline!),
         firstDate: DateTime(2015),
         lastDate: DateTime(2050),
         builder: (BuildContext context, Widget? child) {
@@ -93,9 +95,10 @@ class _EditPageState extends ConsumerState<TodoScreen> {
             child: child!,
           );
         });
-    if (pickedDate != null && pickedDate != _deadline) {
+
+    if (pickedDate != null) {
       setState(() {
-        _deadline = pickedDate;
+        _deadline = pickedDate.millisecondsSinceEpoch;
       });
     }
   }
@@ -130,15 +133,11 @@ class _EditPageState extends ConsumerState<TodoScreen> {
                     title: _controller.text,
                     importance: _importance,
                     deadline: _deadline,
-                    created: _created ??
-                        DateTime.fromMillisecondsSinceEpoch(
-                            DateTime.now().millisecondsSinceEpoch),
-                    changed: DateTime.fromMillisecondsSinceEpoch(
-                        DateTime.now().millisecondsSinceEpoch),
+                    created: _created!,
+                    changed: DateTime.now().toLocal().millisecondsSinceEpoch,
                     upload: _upload,
                     done: _done,
-                    autor: null,
-                    deleted: false);
+                    deviceId: null);
                 if (_changed == null) {
                   ref.watch(todosManagerProvider).addTodo(todo: todo);
                 } else {
@@ -205,8 +204,9 @@ class _EditPageState extends ConsumerState<TodoScreen> {
                   Container()
                 else
                   Text(
-                    DateFormat('dd MMMM yyyy', locale)
-                        .format(_deadline ?? DateTime.now()),
+                    DateFormat('dd MMMM yyyy', locale).format(_deadline == null
+                        ? DateTime.now().toLocal()
+                        : DateTime.fromMillisecondsSinceEpoch(_deadline!)),
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium!
@@ -219,8 +219,7 @@ class _EditPageState extends ConsumerState<TodoScreen> {
               value: _deadline != null,
               onChanged: (bool value) {
                 if (value) {
-                  _deadline = DateTime.fromMillisecondsSinceEpoch(
-                      DateTime.now().millisecondsSinceEpoch);
+                  _deadline = DateTime.now().toLocal().millisecondsSinceEpoch;
                 } else {
                   _deadline = null;
                 }

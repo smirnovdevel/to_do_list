@@ -10,7 +10,7 @@ main() async {
   /// Arrange
   ///
   RemoteDataSourceMock remoteDataSourceMock = RemoteDataSourceMock(HttpMock());
-  Todo todo = Todo.copyFrom(TodoMock().get(title: 'Test todo'));
+  Todo todo = TodoMock().get(title: 'Test todo').copyWith();
 
   ///
   /// Groups

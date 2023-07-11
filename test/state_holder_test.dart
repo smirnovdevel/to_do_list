@@ -4,8 +4,7 @@ import 'package:to_do_list/src/presentation/provider/todos_provider.dart';
 import 'package:uuid/uuid.dart';
 
 Uuid uuid = const Uuid();
-DateTime dateTimeNow =
-    DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
+int unixTimeStamp = DateTime.now().toLocal().millisecondsSinceEpoch;
 
 main() {
   ///
@@ -16,13 +15,10 @@ main() {
       uuid: uuid.v1(),
       title: 'Test todo',
       done: false,
-      importance: Priority.basic,
-      deadline: dateTimeNow,
-      deleted: false,
-      created: dateTimeNow,
-      changed: dateTimeNow,
-      upload: false,
-      autor: 'Test');
+      deadline: unixTimeStamp,
+      created: unixTimeStamp,
+      changed: unixTimeStamp,
+      deviceId: 'Test');
 
   ///
   /// Groups

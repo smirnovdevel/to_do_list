@@ -41,8 +41,7 @@ class _ItemTodoWidgetState extends ConsumerState<CardTodoWidget> {
     ref.watch(todosManagerProvider).updateTodo(
             todo: widget.todo.copyWith(
           done: !todo.done,
-          changed: DateTime.fromMillisecondsSinceEpoch(
-              DateTime.now().millisecondsSinceEpoch),
+          changed: DateTime.now().toLocal().millisecondsSinceEpoch,
         ));
   }
 

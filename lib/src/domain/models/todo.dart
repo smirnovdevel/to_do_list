@@ -1,163 +1,64 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'todo.freezed.dart';
+
+part 'todo.g.dart';
 
 enum Priority { low, basic, important }
 
-extension ParseToString on Priority {
-  String toStr() {
-    return toString().split('.').last;
+@freezed
+class Todo with _$Todo {
+  const Todo._();
+  const factory Todo({
+    @JsonKey(name: 'id') required String uuid,
+    @JsonKey(name: 'text') required String title,
+    @JsonKey(fromJson: JSONConverter.boolFromJson) required bool done,
+    @JsonKey(
+        fromJson: JSONConverter.importanceFromJson,
+        toJson: JSONConverter.importanceToJson)
+    @Default(Priority.basic)
+    Priority importance,
+    @Default(null) int? deadline,
+    @JsonKey(name: 'created_at') required int? created,
+    @JsonKey(name: 'changed_at') required int? changed,
+    @Default(false) @JsonKey(fromJson: JSONConverter.boolFromJson) bool deleted,
+    @Default(false) @JsonKey(fromJson: JSONConverter.boolFromJson) bool upload,
+    @JsonKey(name: 'last_updated_by') required String? deviceId,
+  }) = _Todo;
+
+  factory Todo.fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
+
+  /// При записи в DB используется метод toDB
+  ///
+  Map<String, dynamic> toDB() {
+    Map<String, dynamic> json = toJson();
+    json['done'] = json['done'] == true ? 1 : 0;
+    json['upload'] = json['upload'] == true ? 1 : 0;
+    json['deleted'] = json['deleted'] == true ? 1 : 0;
+    return json;
   }
 }
 
-extension EnumEx on String {
-  Priority toEnum() =>
-      Priority.values.firstWhere((d) => describeEnum(d) == toLowerCase());
-}
-
-@immutable
-class Todo extends Equatable {
-  const Todo({
-    required this.uuid,
-    required this.title,
-    required this.done,
-    required this.importance,
-    required this.deadline,
-    required this.deleted,
-    required this.created,
-    required this.changed,
-    required this.upload,
-    required this.autor,
-  });
-
-  final String uuid;
-  final String title;
-  final bool done;
-  final Priority importance;
-  final DateTime? deadline;
-  final bool deleted;
-  final DateTime created;
-  final DateTime? changed;
-  final bool upload;
-  final String? autor;
-
-  @override
-  List<Object> get props => [uuid, title, done, importance, created, upload];
-
-  Todo copyWith({
-    String? uuid,
-    String? title,
-    bool? done,
-    Priority? importance,
-    DateTime? deadline,
-    bool? deleted,
-    DateTime? created,
-    DateTime? changed,
-    bool? upload,
-    String? autor,
-  }) {
-    return Todo(
-      uuid: uuid ?? this.uuid,
-      title: title ?? this.title,
-      done: done ?? this.done,
-      importance: importance ?? this.importance,
-      deadline: deadline ?? this.deadline,
-      deleted: deleted ?? this.deleted,
-      created: created ?? this.created,
-      changed: changed ?? this.changed,
-      upload: upload ?? this.upload,
-      autor: autor ?? this.autor,
-    );
-  }
-
-  factory Todo.copyFrom(Todo todo) {
-    return Todo(
-        uuid: todo.uuid,
-        title: todo.title,
-        done: todo.done,
-        importance: todo.importance,
-        deadline: todo.deadline,
-        deleted: todo.deleted,
-        created: todo.created,
-        changed: todo.changed,
-        upload: todo.upload,
-        autor: todo.autor);
-  }
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'uuid': uuid,
-      'title': title,
-      'done': done ? 1 : 0,
-      'importance': importance.toStr(),
-      'deadline': deadline == null ? '' : deadline.toString(),
-      'deleted': deleted ? 1 : 0,
-      'created': created.toString(),
-      'changed': changed.toString(),
-      'upload': upload ? 1 : 0,
-      'autor': autor,
-    };
-  }
-
-  factory Todo.fromMap(Map<String, dynamic> map) {
-    return Todo(
-      uuid: map['uuid'],
-      title: map['title'] ?? '',
-      done: (map['done'] == 1) ? true : false,
-      importance: map['importance'].toString().toEnum(),
-      deadline:
-          map['deadline'] == '' ? DateTime.tryParse(map['deadline']) : null,
-      deleted: (map['deleted'] == 1) ? true : false,
-      created: DateTime.tryParse(map['created']) ?? DateTime.now(),
-      changed: DateTime.tryParse(map['changed']) ?? DateTime.now(),
-      upload: (map['upload'] == 1) ? true : false,
-      autor: map['autor'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    if (deadline == null) {
-      return {
-        'id': uuid, // уникальный идентификатор элемента
-        'text': title,
-        'importance': importance.toStr(),
-        'done': done,
-        'created_at': created.millisecondsSinceEpoch,
-        'changed_at': changed!.millisecondsSinceEpoch,
-        'last_updated_by': autor
-      };
-    } else {
-      return {
-        'id': uuid, // уникальный идентификатор элемента
-        'text': title,
-        'importance': importance,
-        'deadline': deadline!.millisecondsSinceEpoch,
-        'done': done,
-        'created_at': created.millisecondsSinceEpoch,
-        'changed_at': changed!.millisecondsSinceEpoch,
-        'last_updated_by': autor
-      };
+/// При чтении из DB, как и при получении с бэкенда
+///  используется метод fromJson, но формат bool разный
+///
+class JSONConverter {
+  /// bool
+  static bool boolFromJson(dynamic variable) {
+    if (variable is bool) {
+      return variable;
     }
+    return variable == 0 ? false : true;
   }
 
-  factory Todo.fromJson(Map<String, dynamic> parsedJson) {
-    return Todo(
-      uuid: parsedJson['id'],
-      title: parsedJson['text'],
-      done: parsedJson['done'],
-      importance: parsedJson['importance'].toString().toEnum(),
-      deadline: parsedJson['deadline'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(parsedJson['deadline'])
-          : null,
-      deleted: false,
-      created: parsedJson['created_at'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(parsedJson['created_at'])
-          : DateTime.fromMillisecondsSinceEpoch(
-              DateTime.now().millisecondsSinceEpoch),
-      changed: parsedJson['changed_at'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(parsedJson['changed_at'])
-          : DateTime.fromMillisecondsSinceEpoch(
-              DateTime.now().millisecondsSinceEpoch),
-      upload: true,
-      autor: parsedJson['last_updated_by'],
-    );
+  /// priority
+  static Priority importanceFromJson(String variable) {
+    final importance = Priority.values.firstWhere(
+        (item) => item.toString() == 'Priority.${variable.toLowerCase()}');
+    return importance;
+  }
+
+  static String importanceToJson(Priority priority) {
+    return priority.toString().split('.').last;
   }
 }

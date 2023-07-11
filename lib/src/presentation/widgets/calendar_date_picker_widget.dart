@@ -22,9 +22,9 @@ Widget calendarDatePickerWidget() {
                 ),
               ]),
           child: CalendarDatePicker(
-            initialDate: DateTime.now(),
-            firstDate: DateTime(DateTime.now().year),
-            lastDate: DateTime(DateTime.now().year + 1),
+            initialDate: DateTime.now().toUtc(),
+            firstDate: DateTime(DateTime.now().toUtc().year),
+            lastDate: DateTime(DateTime.now().toUtc().year + 1),
             onDateChanged: (DateTime value) {},
           )));
 }

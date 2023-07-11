@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -50,6 +51,11 @@ class HttpService implements IWebService {
           'Access-Control-Allow-Headers': 'Access-Control-Allow-Origin, Accept',
           'Authorization': 'Bearer ${Env.token}',
         },
+      ).timeout(
+        const Duration(seconds: 2),
+        onTimeout: () {
+          throw const ServerException('Server timeout error');
+        },
       );
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
@@ -81,14 +87,19 @@ class HttpService implements IWebService {
     revision = await _updateRevision();
     var url = Uri.https('beta.mrdekk.ru', 'todobackend/list');
     final List<Todo> todosList = [];
-
     log.info('Get Todos from: $url ...');
+
     try {
       final http.Response response = await http.get(
         url,
         headers: {
           'Access-Control-Allow-Headers': 'Access-Control-Allow-Origin, Accept',
           'Authorization': 'Bearer ${Env.token}',
+        },
+      ).timeout(
+        const Duration(seconds: 1),
+        onTimeout: () {
+          throw const ServerException('Server timeout error');
         },
       );
       if (response.statusCode == 200) {
@@ -108,6 +119,10 @@ class HttpService implements IWebService {
       }
     } on HttpException catch (e) {
       log.warning('Get Todos: Http error! STATUS: ${e.message}');
+    } on TimeoutException catch (e) {
+      log.warning('Get Todos: Timeout error! STATUS: ${e.message}');
+    } on SocketException catch (e) {
+      log.warning('Get Todos: Socket error! STATUS: ${e.message}');
     }
     return todosList;
   }
@@ -124,13 +139,22 @@ class HttpService implements IWebService {
     Todo? task;
     log.info('Save Todo, revision: $revision body: $body ...');
     try {
-      final http.Response response = await http.post(
+      final http.Response response = await http
+          .post(
         Uri.parse(url),
         headers: {
           'X-Last-Known-Revision': revision.toString(),
           'Authorization': 'Bearer ${Env.token}',
         },
         body: body,
+      )
+          .timeout(
+        const Duration(seconds: 1),
+        onTimeout: () {
+          revision = null;
+          return http.Response(
+              'Error', 408); // Request Timeout response status code
+        },
       );
 
       if (response.statusCode == 200) {
@@ -162,13 +186,22 @@ class HttpService implements IWebService {
     log.info('Update ${todos.length} Todos revision: $revision');
     const String url = '${AppUrls.urlTodo}/list';
     try {
-      final http.Response response = await http.patch(
+      final http.Response response = await http
+          .patch(
         Uri.parse(url),
         headers: {
           'X-Last-Known-Revision': revision.toString(),
           'Authorization': 'Bearer ${Env.token}',
         },
         body: body,
+      )
+          .timeout(
+        const Duration(seconds: 1),
+        onTimeout: () {
+          revision = null;
+          return http.Response(
+              'Error', 408); // Request Timeout response status code
+        },
       );
 
       if (response.statusCode == 200) {
@@ -199,13 +232,22 @@ class HttpService implements IWebService {
     Todo? task;
     log.info('Update Todo id: ${todo.uuid} revision: $revision');
     try {
-      final http.Response response = await http.put(
+      final http.Response response = await http
+          .put(
         Uri.parse(url),
         headers: {
           'X-Last-Known-Revision': revision.toString(),
           'Authorization': 'Bearer ${Env.token}',
         },
         body: body,
+      )
+          .timeout(
+        const Duration(seconds: 1),
+        onTimeout: () {
+          // Time has run out, do what you wanted to do.
+          return http.Response(
+              'Error', 408); // Request Timeout response status code
+        },
       );
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
@@ -238,6 +280,13 @@ class HttpService implements IWebService {
           'Content-Type': 'application/json; charset=utf-8',
           'Authorization': 'Bearer ${Env.token}',
         },
+      ).timeout(
+        const Duration(seconds: 1),
+        onTimeout: () {
+          // Time has run out, do what you wanted to do.
+          return http.Response(
+              'Error', 408); // Request Timeout response status code
+        },
       );
 
       if (response.statusCode == 200) {
@@ -265,13 +314,22 @@ class HttpService implements IWebService {
     });
     log.info('Delete Todo id: ${todo.uuid} revision: $revision  body: $body');
     try {
-      final http.Response response = await http.delete(
+      final http.Response response = await http
+          .delete(
         Uri.parse(url),
         headers: {
           'X-Last-Known-Revision': revision.toString(),
           'Authorization': 'Bearer ${Env.token}',
         },
         body: body,
+      )
+          .timeout(
+        const Duration(seconds: 1),
+        onTimeout: () {
+          // Time has run out, do what you wanted to do.
+          return http.Response(
+              'Error', 408); // Request Timeout response status code
+        },
       );
 
       if (response.statusCode == 200) {

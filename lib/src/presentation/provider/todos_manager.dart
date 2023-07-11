@@ -39,7 +39,13 @@ class TodosManager {
     } catch (e) {
       log.warning(e.toString());
     }
-    localTodosList = await _todoService.getLocalTodosList();
+    try {
+      localTodosList = await _todoService.getLocalTodosList();
+    } on DBException catch (ex) {
+      _message.warning(ex.toString());
+    } catch (e) {
+      log.warning(e.toString());
+    }
 
     todos = await _todoService.matchingTodos(
         local: localTodosList, remote: remoteTodosList);

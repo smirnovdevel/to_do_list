@@ -16,7 +16,8 @@ class SubtitleTodoWidget extends StatelessWidget {
       return Container();
     }
     return Text(
-      DateFormat('dd MMMM yyyy', locale).format(todo.deadline!),
+      DateFormat('dd MMMM yyyy', locale)
+          .format(DateTime.fromMillisecondsSinceEpoch(todo.deadline!)),
       style: todo.done
           ? const TextStyle(color: Colors.grey)
           : const TextStyle(color: Colors.blue),
