@@ -29,7 +29,7 @@ class TodoScreen extends ConsumerStatefulWidget {
 class _EditPageState extends ConsumerState<TodoScreen> {
   final TextEditingController _controller = TextEditingController();
 
-  String _importance = 'basic';
+  Priority _importance = Priority.basic;
   DateTime? _deadline;
   DateTime? _created;
   DateTime? _changed;
@@ -102,7 +102,7 @@ class _EditPageState extends ConsumerState<TodoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<PopupMenuEntry<String>> popupMenuItems =
+    final List<PopupMenuEntry<Priority>> popupMenuItems =
         buildItemsPopupMenu(context);
 
     return Scaffold(
@@ -234,14 +234,14 @@ class _EditPageState extends ConsumerState<TodoScreen> {
   ///
   /// Строка выбора важности задачи
   ///
-  Padding popupMenuWidget(List<PopupMenuEntry<String>> popupMenuItems) {
+  Padding popupMenuWidget(List<PopupMenuEntry<Priority>> popupMenuItems) {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
-      child: PopupMenuButton<String>(
+      child: PopupMenuButton<Priority>(
         initialValue: _importance,
         position: PopupMenuPosition.over,
         color: Theme.of(context).popupMenuTheme.color,
-        onSelected: (String value) {
+        onSelected: (Priority value) {
           setState(() {
             _importance = value;
           });

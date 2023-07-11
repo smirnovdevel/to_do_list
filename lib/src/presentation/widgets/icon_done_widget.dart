@@ -16,7 +16,7 @@ class IconDoneTodoWidget extends StatelessWidget {
         color: Theme.of(context).colorScheme.tertiaryContainer,
         weight: 18.0,
       );
-    } else if (todo.importance == 'importance') {
+    } else if (todo.importance == Priority.important) {
       return Container(
         color: Theme.of(context).colorScheme.onSecondaryContainer,
         child: Icon(

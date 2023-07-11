@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 
 import '../../config/common/app_icons.dart';
+import '../../domain/models/todo.dart';
 import '../localization/app_localization.dart';
 
-List<PopupMenuEntry<String>> buildItemsPopupMenu(BuildContext context) {
-  List<PopupMenuEntry<String>> list = [];
-  list.add(PopupMenuItem<String>(
-      value: 'basic',
+List<PopupMenuEntry<Priority>> buildItemsPopupMenu(BuildContext context) {
+  List<PopupMenuEntry<Priority>> list = [];
+  list.add(PopupMenuItem<Priority>(
+      value: Priority.basic,
       padding: const EdgeInsets.only(left: 16),
       child: Text(
         AppLocalization.of(context).get('basic'),
         style: Theme.of(context).textTheme.bodyMedium,
       )));
-  list.add(PopupMenuItem<String>(
-      value: 'low',
+  list.add(PopupMenuItem<Priority>(
+      value: Priority.low,
       padding: const EdgeInsets.only(left: 16),
       child: Text(
         AppLocalization.of(context).get('low'),
         style: Theme.of(context).textTheme.bodyMedium,
       )));
   list.add(
-    PopupMenuItem<String>(
-      value: 'important',
+    PopupMenuItem<Priority>(
+      value: Priority.important,
       padding: const EdgeInsets.only(left: 16),
       child: SizedBox(
         width: 120,

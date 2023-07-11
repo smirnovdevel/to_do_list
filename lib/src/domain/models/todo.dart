@@ -1,5 +1,18 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+
+enum Priority { low, basic, important }
+
+extension ParseToString on Priority {
+  String toStr() {
+    return toString().split('.').last;
+  }
+}
+
+extension EnumEx on String {
+  Priority toEnum() =>
+      Priority.values.firstWhere((d) => describeEnum(d) == toLowerCase());
+}
 
 @immutable
 class Todo extends Equatable {
@@ -19,7 +32,7 @@ class Todo extends Equatable {
   final String uuid;
   final String title;
   final bool done;
-  final String importance;
+  final Priority importance;
   final DateTime? deadline;
   final bool deleted;
   final DateTime created;
@@ -34,7 +47,7 @@ class Todo extends Equatable {
     String? uuid,
     String? title,
     bool? done,
-    String? importance,
+    Priority? importance,
     DateTime? deadline,
     bool? deleted,
     DateTime? created,
@@ -74,7 +87,7 @@ class Todo extends Equatable {
       'uuid': uuid,
       'title': title,
       'done': done ? 1 : 0,
-      'importance': importance,
+      'importance': importance.toStr(),
       'deadline': deadline == null ? '' : deadline.toString(),
       'deleted': deleted ? 1 : 0,
       'created': created.toString(),
@@ -89,7 +102,7 @@ class Todo extends Equatable {
       uuid: map['uuid'],
       title: map['title'] ?? '',
       done: (map['done'] == 1) ? true : false,
-      importance: map['importance'] ?? 'basic',
+      importance: map['importance'].toString().toEnum(),
       deadline:
           map['deadline'] == '' ? DateTime.tryParse(map['deadline']) : null,
       deleted: (map['deleted'] == 1) ? true : false,
@@ -105,7 +118,7 @@ class Todo extends Equatable {
       return {
         'id': uuid, // уникальный идентификатор элемента
         'text': title,
-        'importance': importance,
+        'importance': importance.toStr(),
         'done': done,
         'created_at': created.millisecondsSinceEpoch,
         'changed_at': changed!.millisecondsSinceEpoch,
@@ -130,7 +143,7 @@ class Todo extends Equatable {
       uuid: parsedJson['id'],
       title: parsedJson['text'],
       done: parsedJson['done'],
-      importance: parsedJson['importance'],
+      importance: parsedJson['importance'].toString().toEnum(),
       deadline: parsedJson['deadline'] != null
           ? DateTime.fromMillisecondsSinceEpoch(parsedJson['deadline'])
           : null,

@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../../config/common/app_icons.dart';
+import '../../domain/models/todo.dart';
 import '../localization/app_localization.dart';
 
 class HintPopupMenuWidget extends StatelessWidget {
   const HintPopupMenuWidget({super.key, required this.value});
 
-  final String value;
+  final Priority value;
   @override
   Widget build(BuildContext context) {
     switch (value) {
-      case 'low':
+      case Priority.low:
         return Text(
           AppLocalization.of(context).get('low'),
           style: Theme.of(context).textTheme.titleSmall,
         );
-      case 'basic':
+      case Priority.basic:
         return Text(
           AppLocalization.of(context).get('basic'),
           style: Theme.of(context).textTheme.titleSmall,

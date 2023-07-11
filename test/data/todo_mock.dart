@@ -9,7 +9,7 @@ class TodoMock {
         uuid: uuid.v1(),
         title: title,
         done: false,
-        importance: 'basic',
+        importance: Priority.basic,
         deadline: DateTime.fromMillisecondsSinceEpoch(
             DateTime.now().millisecondsSinceEpoch),
         deleted: false,

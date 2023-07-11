@@ -44,7 +44,7 @@ class TitletTodoWidget extends StatelessWidget {
     /// Todo low priority icon
     ///
     switch (todo.importance) {
-      case 'low':
+      case Priority.low:
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -69,7 +69,7 @@ class TitletTodoWidget extends StatelessWidget {
       ///
       /// Todo high priority icon
       ///
-      case 'important':
+      case Priority.important:
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
