@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00403700B3C82640EC2F9518 /* devRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = AE3CD17DA70D28A573A51948 /* devRelease.xcconfig */; };
-		020C893691F5C998530AD52A /* prodRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3BF26108D3D9671227C52A2D /* prodRelease.xcconfig */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		197F72689742E86AF201E58E /* devLaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BCBCAAFD21986803105B92A /* devLaunchScreen.storyboard */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
@@ -16,15 +14,11 @@
 		4F9FC345E378BC656FBB5D6B /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F5097B226B19B078EE1B54E /* Pods_Runner.framework */; };
 		5B4AC8A2E857DA0A93FFC04B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0F7F1952DA0BEF2CD98A3178 /* GoogleService-Info.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
-		7DF74658C7920AF279BEE25E /* prodDebug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 7B0E080D89D4208CB24FAAA2 /* prodDebug.xcconfig */; };
 		8882A6B144F43931BED0182F /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A45F1DF7111496319CF38F2E /* Pods_RunnerTests.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		99AD1D4C9DD099A5FAE40A44 /* prodLaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10E25AB5806D324A180D3F1C /* prodLaunchScreen.storyboard */; };
-		9DE5CF702E7865C2523266B3 /* devProfile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 013D56EC28FDC5EA5A2ABD11 /* devProfile.xcconfig */; };
-		C080A6557CE29153440D9695 /* devDebug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 060CE4742030D34A8EC181E4 /* devDebug.xcconfig */; };
-		FE9BB06EC77648520C474842 /* prodProfile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 5922F58262B1CCAEA5EDAED7 /* prodProfile.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -315,12 +309,6 @@
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 				5B4AC8A2E857DA0A93FFC04B /* GoogleService-Info.plist in Resources */,
-				C080A6557CE29153440D9695 /* devDebug.xcconfig in Resources */,
-				9DE5CF702E7865C2523266B3 /* devProfile.xcconfig in Resources */,
-				00403700B3C82640EC2F9518 /* devRelease.xcconfig in Resources */,
-				7DF74658C7920AF279BEE25E /* prodDebug.xcconfig in Resources */,
-				FE9BB06EC77648520C474842 /* prodProfile.xcconfig in Resources */,
-				020C893691F5C998530AD52A /* prodRelease.xcconfig in Resources */,
 				197F72689742E86AF201E58E /* devLaunchScreen.storyboard in Resources */,
 				99AD1D4C9DD099A5FAE40A44 /* prodLaunchScreen.storyboard in Resources */,
 			);
@@ -508,7 +496,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -577,7 +565,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -613,7 +601,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = five.live.toDoList;
+				PRODUCT_BUNDLE_IDENTIFIER = online.mytodo.toDoList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -709,7 +697,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -785,7 +773,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -861,7 +849,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -917,6 +905,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 80E659E4211B52679DBA8C1A /* Pods-Runner.release-dev.xcconfig */;
 			buildSettings = {
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				PRODUCT_NAME = Runner;
 			};
 			name = "Release-dev";
@@ -941,6 +930,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2AE1BBC79C54C2952EB08186 /* Pods-Runner.release-prod.xcconfig */;
 			buildSettings = {
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				PRODUCT_NAME = Runner;
 			};
 			name = "Release-prod";
@@ -1028,7 +1018,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1086,7 +1076,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1122,7 +1112,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = five.live.toDoList;
+				PRODUCT_BUNDLE_IDENTIFIER = online.mytodo.toDoList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1147,7 +1137,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = five.live.toDoList;
+				PRODUCT_BUNDLE_IDENTIFIER = online.mytodo.toDoList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -1192,7 +1182,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -1265,7 +1255,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
