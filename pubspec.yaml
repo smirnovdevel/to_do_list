@@ -98,6 +98,6 @@ flavorizr:
         name: "To Do List"
 
       android:
-        applicationId: "online.mytodo"
+        applicationId: "online.mytodo.prod"
       ios:
-        bundleId: "online.mytodo"
+        bundleId: "online.mytodo.prod"

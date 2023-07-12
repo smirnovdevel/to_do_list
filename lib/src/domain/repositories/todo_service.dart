@@ -4,7 +4,7 @@ import '../../data/datasources/local_data_source.dart';
 import '../../data/datasources/remote_data_source.dart';
 import '../../data/utils/device_id.dart';
 import '../../utils/core/logging.dart';
-import '../../utils/error/exception.dart';
+import '../../utils/exceptions/db_exception.dart';
 import '../models/todo.dart';
 
 final Logging log = Logging('TodoService');

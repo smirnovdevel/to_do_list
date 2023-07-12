@@ -8,7 +8,7 @@ import '../../../env/env.dart';
 import '../../config/common/app_urls.dart';
 import '../../domain/models/todo.dart';
 import '../../utils/core/logging.dart';
-import '../../utils/error/exception.dart';
+import '../../utils/exceptions/exception.dart';
 import 'web_service.dart';
 
 final Logging log = Logging('DioService');

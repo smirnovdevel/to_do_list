@@ -4,7 +4,8 @@ import '../../domain/models/todo.dart';
 import '../../domain/repositories/todo_service.dart';
 import '../../locator.dart';
 import '../../utils/core/logging.dart';
-import '../../utils/error/exception.dart';
+import '../../utils/exceptions/db_exception.dart';
+import '../../utils/exceptions/exception.dart';
 import 'message_provider.dart';
 import 'todos_provider.dart';
 
