@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../domain/models/todo.dart';
-import '../localization/app_localization.dart';
+import '../core/localization/app_localization.dart';
 
 class SubtitleTodoWidget extends StatelessWidget {
   const SubtitleTodoWidget({super.key, required this.todo});

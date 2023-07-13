@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../config/common/app_color.dart';
-import '../localization/app_localization.dart';
+import '../core/localization/app_localization.dart';
 
 mixin SelectDate on StatefulWidget {
   Future<DateTime?> selectDate(BuildContext context, DateTime deadline) async {

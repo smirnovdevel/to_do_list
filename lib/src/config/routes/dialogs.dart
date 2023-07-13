@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../presentation/localization/app_localization.dart';
+import '../../presentation/core/localization/app_localization.dart';
 
 abstract class Dialogs {
   const Dialogs._();

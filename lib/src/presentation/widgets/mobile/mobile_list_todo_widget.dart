@@ -4,28 +4,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_messages/riverpod_messages.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../config/common/app_icons.dart';
-import '../../utils/core/logging.dart';
-import '../provider/done_provider.dart';
-import '../provider/message_provider.dart';
-import '../provider/navigation_provider.dart';
-import '../provider/todos_manager.dart';
-import 'button_new_todo_widget.dart';
-import 'header_todo_widget.dart';
-import 'card_todo_widget.dart';
+import '../../../config/common/app_icons.dart';
+import '../../../utils/core/logging.dart';
+import '../../provider/done_provider.dart';
+import '../../provider/message_provider.dart';
+import '../../provider/navigation_provider.dart';
+import '../../provider/todos_manager.dart';
+import '../button_new_todo_widget.dart';
+import 'mobile_header_todo_widget.dart';
+import 'mobile_card_todo_widget.dart';
 
-final Logging log = Logging('ListTodoWidget');
+final Logging log = Logging('MobileListTodoWidget');
 
-class ListTodoWidget extends ConsumerStatefulWidget {
-  const ListTodoWidget({
+class MobileListTodoWidget extends ConsumerStatefulWidget {
+  const MobileListTodoWidget({
     super.key,
   });
 
   @override
-  ConsumerState<ListTodoWidget> createState() => _ListTodoWidgetState();
+  ConsumerState<MobileListTodoWidget> createState() => _ListTodoWidgetState();
 }
 
-class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
+class _ListTodoWidgetState extends ConsumerState<MobileListTodoWidget> {
   final ScrollController scrollController = ScrollController();
 
   Uuid uuid = const Uuid();
@@ -65,7 +65,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
                   shadowColor: Theme.of(context).colorScheme.shadow,
                   expandedHeight: 120.0,
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  flexibleSpace: const HeaderTodoWidget(),
+                  flexibleSpace: const MobileHeaderTodoWidget(),
                 ),
                 CupertinoSliverRefreshControl(
                   onRefresh: () async {
@@ -93,7 +93,7 @@ class _ListTodoWidgetState extends ConsumerState<ListTodoWidget> {
                               shrinkWrap: true,
                               itemCount: todos.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return CardTodoWidget(todo: todos[index]);
+                                return MobileCardTodoWidget(todo: todos[index]);
                               },
                             ),
                           ),

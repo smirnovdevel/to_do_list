@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../config/common/app_icons.dart';
-import '../../domain/models/todo.dart';
+import '../../../config/common/app_icons.dart';
+import '../../../domain/models/todo.dart';
 
-class IconDoneTodoWidget extends StatelessWidget {
-  const IconDoneTodoWidget({super.key, required this.todo});
+class MobileIconDoneTodoWidget extends StatelessWidget {
+  const MobileIconDoneTodoWidget({super.key, required this.todo});
 
   final Todo todo;
 

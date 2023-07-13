@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../config/common/app_icons.dart';
-import '../localization/app_localization.dart';
+import '../core/localization/app_localization.dart';
 
 class ButtonNewTodoWidget extends StatelessWidget {
   const ButtonNewTodoWidget({

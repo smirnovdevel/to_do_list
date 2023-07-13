@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/common/app_icons.dart';
 import '../../config/routes/dialogs.dart';
-import '../localization/app_localization.dart';
+import '../core/localization/app_localization.dart';
 import '../provider/navigation_provider.dart';
 import '../provider/todo_provider.dart';
 import '../provider/todos_manager.dart';

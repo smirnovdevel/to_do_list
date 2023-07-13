@@ -2,12 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../config/common/app_icons.dart';
-import '../localization/app_localization.dart';
-import '../provider/done_provider.dart';
+import '../../../config/common/app_icons.dart';
+import '../../core/localization/app_localization.dart';
+import '../../provider/done_provider.dart';
 
-class HeaderTodoWidget extends ConsumerWidget {
-  const HeaderTodoWidget({super.key});
+class MobileHeaderTodoWidget extends ConsumerWidget {
+  const MobileHeaderTodoWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

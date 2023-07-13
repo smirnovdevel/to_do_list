@@ -3,16 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
-import '../../config/common/app_color.dart';
-import '../../domain/models/todo.dart';
-import '../localization/app_localization.dart';
-import '../provider/navigation_provider.dart';
-import '../provider/todo_provider.dart';
-import '../provider/todos_manager.dart';
-import '../widgets/build_items_popup_menu.dart';
-import '../widgets/hint_popup_menu_widget.dart';
-import '../widgets/row_delete_item_widget.dart';
-import '../widgets/todo_text_field_widget.dart';
+import '../../../config/common/app_color.dart';
+import '../../../domain/models/todo.dart';
+import '../../core/localization/app_localization.dart';
+import '../../provider/navigation_provider.dart';
+import '../../provider/todo_provider.dart';
+import '../../provider/todos_manager.dart';
+import '../../widgets/build_items_popup_menu.dart';
+import '../../widgets/hint_popup_menu_widget.dart';
+import '../../widgets/row_delete_item_widget.dart';
+import '../../widgets/todo_text_field_widget.dart';
 
 class TodoScreen extends ConsumerStatefulWidget {
   const TodoScreen({
