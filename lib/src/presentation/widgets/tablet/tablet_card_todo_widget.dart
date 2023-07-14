@@ -9,15 +9,15 @@ import '../../provider/current_todo_provider.dart';
 import '../../provider/navigation_provider.dart';
 import '../../provider/todos_manager.dart';
 import '../common_widgets/desktop_title_subtitle_widget.dart';
-import 'desktop_icon_done_widget.dart';
-import 'desktop_icon_information_widget.dart';
-import 'desktop_swipe_action_left_widget.dart';
-import 'desktop_swipe_action_right_widget.dart';
+import '../desktop/desktop_icon_done_widget.dart';
+import '../desktop/desktop_icon_information_widget.dart';
+import '../desktop/desktop_swipe_action_left_widget.dart';
+import '../desktop/desktop_swipe_action_right_widget.dart';
 
 final Logging log = Logging('DesktopCardTodoWidget');
 
-class DesktopCardTodoWidget extends ConsumerStatefulWidget {
-  const DesktopCardTodoWidget({
+class TabletCardTodoWidget extends ConsumerStatefulWidget {
+  const TabletCardTodoWidget({
     super.key,
     required this.todo,
     required this.index,
@@ -27,10 +27,10 @@ class DesktopCardTodoWidget extends ConsumerStatefulWidget {
   final int index;
 
   @override
-  ConsumerState<DesktopCardTodoWidget> createState() => _ItemTodoWidgetState();
+  ConsumerState<TabletCardTodoWidget> createState() => _ItemTodoWidgetState();
 }
 
-class _ItemTodoWidgetState extends ConsumerState<DesktopCardTodoWidget> {
+class _ItemTodoWidgetState extends ConsumerState<TabletCardTodoWidget> {
   double _padding = 0;
   bool animation = false;
 
@@ -47,13 +47,19 @@ class _ItemTodoWidgetState extends ConsumerState<DesktopCardTodoWidget> {
 
   _changeDone(Todo todo) {
     ref.watch(todosManagerProvider).updateTodo(
-            todo: widget.todo.copyWith(
-          done: !todo.done,
-          changed: DateTime.now().toLocal().millisecondsSinceEpoch,
-        ));
+          todo: widget.todo.copyWith(
+            done: !todo.done,
+            changed: DateTime.now().toLocal().millisecondsSinceEpoch,
+          ),
+        );
+    ref.read(currentTodoProvider.notifier).state = todo;
   }
 
   _deleteTodo(Todo todo) {
+    if (ref.read(currentTodoProvider)?.uuid == todo.uuid) {
+      ref.read(currentTodoProvider.notifier).state = null;
+      ref.read(editTodoProvider.notifier).state = false;
+    }
     ref.watch(todosManagerProvider).deleteTodo(todo: todo);
   }
 

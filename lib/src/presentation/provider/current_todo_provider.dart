@@ -8,3 +8,5 @@ final Logging log = Logging('currentTodoProvider');
 // For desktop/landscape
 
 final currentTodoProvider = StateProvider<Todo?>((_) => null);
+
+final editTodoProvider = StateProvider<bool>((_) => false);

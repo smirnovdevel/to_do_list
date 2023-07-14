@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../utils/core/logging.dart';
 import '../../../utils/core/scale_size.dart';
 import '../../provider/current_todo_provider.dart';
 
-class TabletHeaderDetailsWidget extends ConsumerWidget {
-  const TabletHeaderDetailsWidget({super.key});
+final Logging log = Logging('TabletHeaderDetailsWidget');
+
+class TabletHeaderEditWidget extends ConsumerWidget {
+  const TabletHeaderEditWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,14 +23,19 @@ class TabletHeaderDetailsWidget extends ConsumerWidget {
           else
             GestureDetector(
               onTap: () {
-                // Edit
+                log.debug('Edit todo close');
+                ref.read(editTodoProvider.notifier).state = false;
+                if (ref.read(currentTodoProvider)?.changed == null) {
+                  ref.read(currentTodoProvider.notifier).state = null;
+                }
               },
               child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: Icon(
-                    Icons.edit,
-                    size: 22 * ScaleSize.iconScaleFactor(context),
-                  )),
+                alignment: Alignment.bottomRight,
+                child: Icon(
+                  Icons.close,
+                  size: 24 * ScaleSize.iconScaleFactor(context),
+                ),
+              ),
             ),
         ],
       ),

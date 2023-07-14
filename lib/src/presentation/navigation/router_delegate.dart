@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../utils/core/logging.dart';
 import '../screens/common_screens/main_screen.dart';
 import '../provider/todo_provider.dart';
-import '../screens/common_screens/todo_screen.dart';
 import '../screens/common_screens/unknown_screen.dart';
+import '../screens/common_screens/todo_edit_screen.dart';
 import '../widgets/common_widgets/flavor_banner.dart';
 import 'route_config.dart';
 
@@ -41,14 +41,14 @@ class TodosRouterDelegate extends RouterDelegate<TodosRouteConfig>
           ),
           if (state?.isNew == true)
             MaterialPage(
-              child: TodoScreen(
+              child: TodoEditScreen(
                 uuid: state!.uuid!,
               ),
             ),
           if (state?.uuid != null)
             MaterialPage(
               key: ValueKey(state!.uuid!),
-              child: TodoScreen(
+              child: TodoEditScreen(
                 uuid: state!.uuid!,
               ),
             ),

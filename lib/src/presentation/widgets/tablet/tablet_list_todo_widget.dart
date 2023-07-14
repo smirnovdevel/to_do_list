@@ -7,22 +7,24 @@ import '../../../utils/core/logging.dart';
 import '../../provider/done_provider.dart';
 import '../../provider/message_provider.dart';
 import '../../provider/navigation_provider.dart';
-import 'desktop_button_new_todo_widget.dart';
-import 'desktop_card_todo_widget.dart';
-import 'desktop_header_todo_widget.dart';
+import '../desktop/desktop_button_new_todo_widget.dart';
+import '../desktop/desktop_card_todo_widget.dart';
+import '../desktop/desktop_header_todo_widget.dart';
+import 'tablet_card_todo_widget.dart';
+import 'tablet_header_list_widget.dart';
 
-final Logging log = Logging('DesktopListTodoWidget');
+final Logging log = Logging('TabletListTodoWidget');
 
-class DesktopListTodoWidget extends ConsumerStatefulWidget {
-  const DesktopListTodoWidget({
+class TabletListTodoWidget extends ConsumerStatefulWidget {
+  const TabletListTodoWidget({
     super.key,
   });
 
   @override
-  ConsumerState<DesktopListTodoWidget> createState() => _ListTodoWidgetState();
+  ConsumerState<TabletListTodoWidget> createState() => _ListTodoWidgetState();
 }
 
-class _ListTodoWidgetState extends ConsumerState<DesktopListTodoWidget> {
+class _ListTodoWidgetState extends ConsumerState<TabletListTodoWidget> {
   final ScrollController scrollController = ScrollController();
 
   Uuid uuid = const Uuid();
@@ -55,7 +57,7 @@ class _ListTodoWidgetState extends ConsumerState<DesktopListTodoWidget> {
                 shadowColor: Theme.of(context).colorScheme.shadow,
                 expandedHeight: 20.0,
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                flexibleSpace: const DesktopHeaderTodoWidget(),
+                flexibleSpace: const TabletHeaderListWidget(),
               ),
               SliverToBoxAdapter(
                 child: Padding(
@@ -69,7 +71,7 @@ class _ListTodoWidgetState extends ConsumerState<DesktopListTodoWidget> {
                         primary: false,
                         itemCount: todos.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return DesktopCardTodoWidget(
+                          return TabletCardTodoWidget(
                               todo: todos[index], index: index);
                         },
                       ),

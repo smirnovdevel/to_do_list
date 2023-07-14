@@ -5,12 +5,11 @@ import '../../../config/common/app_icons.dart';
 import '../../../config/routes/dialogs.dart';
 import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
-import '../../provider/navigation_provider.dart';
-import '../../provider/todo_provider.dart';
+import '../../provider/current_todo_provider.dart';
 import '../../provider/todos_manager.dart';
 
-class RowDeleteTodoWidget extends ConsumerWidget {
-  const RowDeleteTodoWidget({
+class TabletRowDeleteWidget extends ConsumerWidget {
+  const TabletRowDeleteWidget({
     super.key,
     required this.uuid,
   });
@@ -23,7 +22,7 @@ class RowDeleteTodoWidget extends ConsumerWidget {
     /// Позволит в момент редактирования отловить изменения задачи
     /// в данном случае, интересен факт выгрузки на сервер
     ///
-    final todo = ref.watch(todoProvider(uuid));
+    final todo = ref.watch(currentTodoProvider);
 
     return Padding(
       padding: const EdgeInsets.only(top: 22.0, left: 8.0),
@@ -32,12 +31,13 @@ class RowDeleteTodoWidget extends ConsumerWidget {
         children: [
           GestureDetector(
             onTap: () async {
-              if (todo.changed != null) {
+              if (todo?.changed != null) {
                 final bool confirmed =
                     await Dialogs.showConfirmCloseCountDialog(context) ?? false;
                 if (confirmed) {
-                  ref.watch(todosManagerProvider).deleteTodo(todo: todo);
-                  ref.read(navigationProvider).pop();
+                  ref.watch(todosManagerProvider).deleteTodo(todo: todo!);
+                  ref.watch(editTodoProvider.notifier).state = false;
+                  ref.watch(currentTodoProvider.notifier).state = null;
                 }
               }
             },
@@ -48,7 +48,7 @@ class RowDeleteTodoWidget extends ConsumerWidget {
                   children: [
                     Icon(
                       AppIcons.delete,
-                      color: todo.changed == null
+                      color: todo?.changed == null
                           ? Theme.of(context).colorScheme.outlineVariant
                           : Theme.of(context).colorScheme.onSecondary,
                       size: 21.0,
@@ -62,7 +62,7 @@ class RowDeleteTodoWidget extends ConsumerWidget {
                             fontSize: 16.0,
                             height: 20 / 16,
                             fontFamily: 'Roboto',
-                            color: todo.changed == null
+                            color: todo?.changed == null
                                 ? Theme.of(context).colorScheme.outlineVariant
                                 : Theme.of(context).colorScheme.onSecondary),
                         textScaleFactor: ScaleSize.textScaleFactor(context),
@@ -75,7 +75,7 @@ class RowDeleteTodoWidget extends ConsumerWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
-            child: todo.upload
+            child: todo!.upload
                 ? const Icon(
                     Icons.cloud_done_outlined,
                     size: 26.0,

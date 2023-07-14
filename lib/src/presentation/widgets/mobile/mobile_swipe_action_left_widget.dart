@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../config/common/app_icons.dart';
+import '../../../utils/core/scale_size.dart';
 
 class MobileSwipeActionLeftWidget extends StatelessWidget {
   const MobileSwipeActionLeftWidget({
@@ -19,10 +20,10 @@ class MobileSwipeActionLeftWidget extends StatelessWidget {
       color: const Color(0XFFFF3B30),
       child: Padding(
         padding: EdgeInsets.only(right: 27.0 + padding),
-        child: const Icon(
+        child: Icon(
           AppIcons.delete,
           color: Colors.white,
-          size: 18.0,
+          size: 18.0 * ScaleSize.iconScaleFactor(context),
         ),
       ),
     );

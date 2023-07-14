@@ -12,9 +12,10 @@ import '../../provider/current_todo_provider.dart';
 import '../../provider/todos_manager.dart';
 import '../common_widgets/build_items_popup_menu.dart';
 import '../common_widgets/hint_popup_menu_widget.dart';
-import '../common_widgets/row_delete_todo_widget.dart';
+import 'tablet_row_delete_widget.dart';
 import '../common_widgets/todo_text_field_widget.dart';
 import 'tablet_header_edit_widget.dart';
+import 'tablet_save_button_widget.dart';
 
 final Logging log = Logging('TabletTodoDetailsWidget');
 
@@ -154,7 +155,7 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
                       const Divider(
                         height: 0.2,
                       ),
-                      RowDeleteTodoWidget(uuid: widget.uuid),
+                      TabletRowDeleteWidget(uuid: widget.uuid),
                       const SizedBox(
                         height: 32.0,
                       ),
@@ -181,33 +182,9 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
                                 .updateTodo(todo: todo);
                           }
                           ref.watch(editTodoProvider.notifier).state = false;
+                          ref.watch(currentTodoProvider.notifier).state = todo;
                         },
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 8, bottom: 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.save,
-                                    size: 18.0 *
-                                        ScaleSize.iconScaleFactor(context)),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 18.0),
-                                  child: Text(
-                                    AppLocalization.of(context).get('save'),
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                    textScaleFactor:
-                                        ScaleSize.textScaleFactor(context),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: const TabletSaveButtonWidget(),
                       ),
                     ],
                   ),

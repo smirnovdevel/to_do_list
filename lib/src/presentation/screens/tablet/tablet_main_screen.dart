@@ -4,33 +4,42 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../utils/core/logging.dart';
 import '../../provider/todos_manager.dart';
 import '../../provider/todos_provider.dart';
-import '../../widgets/desktop/desktop_list_todo_widget.dart';
+import '../../widgets/tablet/tablet_list_todo_widget.dart';
 import '../../widgets/common_widgets/loading_indicator.dart';
-import '../../widgets/tablet/tablet_details_todo_widget.dart';
+import '../../widgets/tablet/tablet_switcher_widget.dart';
 
 final Logging log = Logging('DesktopMainScreen');
 
-class TabletMainScreen extends ConsumerWidget {
+class TabletMainScreen extends ConsumerStatefulWidget {
   const TabletMainScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    log.info('Is Desktop');
+  ConsumerState<TabletMainScreen> createState() => _TabletMainScreenState();
+}
+
+class _TabletMainScreenState extends ConsumerState<TabletMainScreen> {
+  late AnimationController expandController;
+  late Animation<double> animation;
+
+  @override
+  Widget build(BuildContext context) {
+    log.info('Is Tablet');
     final todos = ref.watch(todosStateProvider);
     if (todos == null) {
       ref.watch(todosManagerProvider).init();
     }
+
     return todos == null
         ? const LoadingIndicator()
         : const Row(
             children: [
               Expanded(
                 flex: 3,
-                child: DesktopListTodoWidget(),
+                child: TabletListTodoWidget(),
               ),
               Expanded(
                 flex: 2,
-                child: TabletDetailsTodoWidget(),
+                child: TabletSwitcherWidget(),
               ),
             ],
           );

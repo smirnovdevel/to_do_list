@@ -12,11 +12,11 @@ import '../../provider/todo_provider.dart';
 import '../../provider/todos_manager.dart';
 import '../../widgets/common_widgets/build_items_popup_menu.dart';
 import '../../widgets/common_widgets/hint_popup_menu_widget.dart';
-import '../../widgets/common_widgets/row_delete_todo_widget.dart';
+import '../../widgets/mobile/mobile_row_delete_widget.dart';
 import '../../widgets/common_widgets/todo_text_field_widget.dart';
 
-class TodoScreen extends ConsumerStatefulWidget {
-  const TodoScreen({
+class TodoEditScreen extends ConsumerStatefulWidget {
+  const TodoEditScreen({
     super.key,
     required this.uuid,
   });
@@ -24,10 +24,10 @@ class TodoScreen extends ConsumerStatefulWidget {
   final String uuid;
 
   @override
-  ConsumerState<TodoScreen> createState() => _EditPageState();
+  ConsumerState<TodoEditScreen> createState() => _EditPageState();
 }
 
-class _EditPageState extends ConsumerState<TodoScreen> {
+class _EditPageState extends ConsumerState<TodoEditScreen> {
   final TextEditingController _controller = TextEditingController();
 
   Priority _importance = Priority.basic;
@@ -171,7 +171,7 @@ class _EditPageState extends ConsumerState<TodoScreen> {
               const Divider(
                 height: 0.2,
               ),
-              RowDeleteTodoWidget(uuid: widget.uuid)
+              MobileRowDeleteWidget(uuid: widget.uuid)
             ],
           ),
         ),
