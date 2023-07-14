@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../config/common/app_icons.dart';
-import '../../config/routes/dialogs.dart';
-import '../core/localization/app_localization.dart';
-import '../provider/navigation_provider.dart';
-import '../provider/todo_provider.dart';
-import '../provider/todos_manager.dart';
+import '../../../config/common/app_icons.dart';
+import '../../../config/routes/dialogs.dart';
+import '../../core/localization/app_localization.dart';
+import '../../provider/navigation_provider.dart';
+import '../../provider/todo_provider.dart';
+import '../../provider/todos_manager.dart';
 
-class RowDeleteItemWidget extends ConsumerWidget {
-  const RowDeleteItemWidget({
+class RowDeleteTodoWidget extends ConsumerWidget {
+  const RowDeleteTodoWidget({
     super.key,
     required this.uuid,
   });

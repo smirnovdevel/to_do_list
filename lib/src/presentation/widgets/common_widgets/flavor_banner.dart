@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../flavors.dart';
+import '../../../../flavors.dart';
 
 class FlavorBanner extends StatelessWidget {
   const FlavorBanner({Key? key, this.child}) : super(key: key);

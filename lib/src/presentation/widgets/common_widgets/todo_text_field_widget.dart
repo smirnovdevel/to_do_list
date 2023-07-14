@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../core/localization/app_localization.dart';
+import '../../core/localization/app_localization.dart';
 
 class TodoTextFieldWidget extends StatelessWidget {
   const TodoTextFieldWidget({

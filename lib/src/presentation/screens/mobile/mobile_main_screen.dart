@@ -5,7 +5,7 @@ import '../../../utils/core/logging.dart';
 import '../../provider/todos_manager.dart';
 import '../../provider/todos_provider.dart';
 import '../../widgets/mobile/mobile_list_todo_widget.dart';
-import '../../widgets/loading_indicator.dart';
+import '../../widgets/common_widgets/loading_indicator.dart';
 
 final Logging log = Logging('MobileMainScreen');
 
@@ -18,6 +18,8 @@ class MobileMainScreen extends ConsumerWidget {
     if (todos == null) {
       ref.watch(todosManagerProvider).init();
     }
-    return todos == null ? loadingIndicator() : const MobileListTodoWidget();
+    return todos == null
+        ? const LoadingIndicator()
+        : const MobileListTodoWidget();
   }
 }

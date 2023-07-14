@@ -7,7 +7,7 @@ import '../../../utils/core/logging.dart';
 import '../../provider/done_provider.dart';
 import '../../provider/message_provider.dart';
 import '../../provider/navigation_provider.dart';
-import '../button_new_todo_widget.dart';
+import 'desktop_button_new_todo_widget.dart';
 import 'desktop_card_todo_widget.dart';
 import 'desktop_header_todo_widget.dart';
 
@@ -48,6 +48,7 @@ class _ListTodoWidgetState extends ConsumerState<DesktopListTodoWidget> {
           padding: const EdgeInsets.only(
               left: 24.0, right: 24.0, top: 8.0, bottom: 8.0),
           child: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
             slivers: [
               SliverAppBar(
                 pinned: true,
@@ -57,30 +58,29 @@ class _ListTodoWidgetState extends ConsumerState<DesktopListTodoWidget> {
                 flexibleSpace: const DesktopHeaderTodoWidget(),
               ),
               SliverToBoxAdapter(
-                child: Card(
-                  margin: const EdgeInsets.all(0),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-                    child: Column(
-                      children: [
-                        ListView.builder(
-                          padding: EdgeInsets.zero,
-                          controller: scrollController,
-                          shrinkWrap: true,
-                          itemCount: todos.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return DesktopCardTodoWidget(todo: todos[index]);
-                          },
-                        ),
-                        // кнопка Новое внизу списка
-                        GestureDetector(
-                          onTap: () {
-                            ref.read(navigationProvider).showTodo(uuid.v1());
-                          },
-                          child: const ButtonNewTodoWidget(),
-                        ),
-                      ],
-                    ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+                  child: Column(
+                    children: [
+                      ListView.builder(
+                        padding: EdgeInsets.zero,
+                        controller: scrollController,
+                        shrinkWrap: true,
+                        primary: false,
+                        itemCount: todos.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return DesktopCardTodoWidget(
+                              todo: todos[index], index: index);
+                        },
+                      ),
+                      // кнопка Новое внизу списка
+                      GestureDetector(
+                        onTap: () {
+                          ref.read(navigationProvider).showTodo(uuid.v1());
+                        },
+                        child: const DesktopButtonNewTodoWidget(),
+                      ),
+                    ],
                   ),
                 ),
               ),

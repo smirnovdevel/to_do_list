@@ -9,6 +9,15 @@ ThemeData lightTheme = ThemeData(
   shadowColor: Colors.black.withOpacity(0.12),
   primaryColor: AppColor.black,
   indicatorColor: Colors.black.withOpacity(0.06),
+  // Transitions
+  pageTransitionsTheme: const PageTransitionsTheme(
+    builders: {
+      // Set your transitions here:
+      TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+      TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
+      TargetPlatform.macOS: FadeUpwardsPageTransitionsBuilder(),
+    },
+  ),
   //
   colorScheme: ColorScheme(
     brightness: Brightness.light,

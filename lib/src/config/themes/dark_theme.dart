@@ -10,6 +10,15 @@ ThemeData darkTheme = ThemeData(
   primaryColor: AppColor.white,
   indicatorColor: Colors.black.withOpacity(0.06),
   snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
+  // Transitions
+  pageTransitionsTheme: const PageTransitionsTheme(
+    builders: {
+      // Set your transitions here:
+      TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+      TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
+      TargetPlatform.macOS: FadeUpwardsPageTransitionsBuilder(),
+    },
+  ),
   //
   colorScheme: ColorScheme(
     brightness: Brightness.dark,

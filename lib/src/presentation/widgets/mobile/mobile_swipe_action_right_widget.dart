@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../config/common/app_icons.dart';
+import '../../../config/common/app_icons.dart';
 
-class SwipeActionRightWidget extends StatelessWidget {
-  const SwipeActionRightWidget({
+class MobileSwipeActionRightWidget extends StatelessWidget {
+  const MobileSwipeActionRightWidget({
     super.key,
     required this.padding,
   });

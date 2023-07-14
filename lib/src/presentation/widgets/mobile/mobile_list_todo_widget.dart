@@ -10,7 +10,8 @@ import '../../provider/done_provider.dart';
 import '../../provider/message_provider.dart';
 import '../../provider/navigation_provider.dart';
 import '../../provider/todos_manager.dart';
-import '../button_new_todo_widget.dart';
+import '../desktop/desktop_header_todo_widget.dart';
+import 'mobile_button_new_todo_widget.dart';
 import 'mobile_header_todo_widget.dart';
 import 'mobile_card_todo_widget.dart';
 
@@ -57,75 +58,89 @@ class _ListTodoWidgetState extends ConsumerState<MobileListTodoWidget> {
           bottom: false,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: [
-                SliverAppBar(
-                  pinned: true,
-                  shadowColor: Theme.of(context).colorScheme.shadow,
-                  expandedHeight: 120.0,
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  flexibleSpace: const MobileHeaderTodoWidget(),
-                ),
-                CupertinoSliverRefreshControl(
-                  onRefresh: () async {
-                    await _updateTodoList();
-                  },
-                ),
-                SliverToBoxAdapter(
-                  child: Card(
-                    margin: const EdgeInsets.all(0),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-                      child: Column(
-                        children: [
-                          RefreshIndicator(
-                            // displacement: 250,
-                            backgroundColor: Colors.yellow,
-                            color: Colors.red,
-                            strokeWidth: 2,
-                            onRefresh: () async {
-                              await _updateTodoList();
-                            },
-                            child: ListView.builder(
-                              padding: EdgeInsets.zero,
-                              controller: scrollController,
-                              shrinkWrap: true,
-                              itemCount: todos.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return MobileCardTodoWidget(todo: todos[index]);
+            child: OrientationBuilder(
+              builder: (context, orientation) => CustomScrollView(
+                controller: scrollController,
+                slivers: [
+                  SliverAppBar(
+                    pinned: true,
+                    shadowColor: Theme.of(context).colorScheme.shadow,
+                    expandedHeight:
+                        orientation == Orientation.portrait ? 120.0 : 0.0,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    flexibleSpace: orientation == Orientation.portrait
+                        ? const MobileHeaderTodoWidget()
+                        : const DesktopHeaderTodoWidget(),
+                  ),
+                  CupertinoSliverRefreshControl(
+                    onRefresh: () async {
+                      await _updateTodoList();
+                    },
+                  ),
+                  SliverToBoxAdapter(
+                    child: Card(
+                      margin: const EdgeInsets.all(0),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+                        child: Column(
+                          children: [
+                            RefreshIndicator(
+                              // displacement: 250,
+                              backgroundColor: Colors.yellow,
+                              color: Colors.red,
+                              strokeWidth: 2,
+                              onRefresh: () async {
+                                await _updateTodoList();
                               },
+                              child: ListView.builder(
+                                padding: EdgeInsets.zero,
+                                controller: scrollController,
+                                shrinkWrap: true,
+                                itemCount: todos.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return MobileCardTodoWidget(
+                                    todo: todos[index],
+                                    index: index,
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                          // кнопка Новое внизу списка
-                          GestureDetector(
-                            onTap: () {
-                              ref.read(navigationProvider).showTodo(uuid.v1());
-                            },
-                            child: const ButtonNewTodoWidget(),
-                          ),
-                        ],
+                            // кнопка Новое внизу списка
+                            GestureDetector(
+                              onTap: () {
+                                ref
+                                    .read(navigationProvider)
+                                    .showTodo(uuid.v1());
+                              },
+                              child: const MobileButtonNewTodoWidget(),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 40.0, right: 16.0),
-        child: FloatingActionButton(
-          onPressed: () {
-            ref.read(navigationProvider).showTodo(uuid.v1());
-          },
-          tooltip: 'Add_todo',
-          backgroundColor: Theme.of(context).iconTheme.color,
-          child: const Icon(
-            AppIcons.add,
-            color: Colors.white,
-            weight: 14.0,
+      floatingActionButton: OrientationBuilder(
+        builder: (context, orientation) => Padding(
+          padding: EdgeInsets.only(
+              bottom: orientation == Orientation.portrait ? 40.0 : 0.0,
+              right: 16.0),
+          child: FloatingActionButton(
+            onPressed: () {
+              ref.read(navigationProvider).showTodo(uuid.v1());
+            },
+            tooltip: 'Add_todo',
+            backgroundColor: Theme.of(context).iconTheme.color,
+            child: const Icon(
+              AppIcons.add,
+              color: Colors.white,
+              weight: 14.0,
+            ),
           ),
         ),
       ),

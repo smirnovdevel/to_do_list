@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 
-import '../../config/common/app_icons.dart';
-import '../core/localization/app_localization.dart';
+import '../../../config/common/app_icons.dart';
+import '../../core/localization/app_localization.dart';
 
-class ButtonNewTodoWidget extends StatelessWidget {
-  const ButtonNewTodoWidget({
+class DesktopButtonNewTodoWidget extends StatelessWidget {
+  const DesktopButtonNewTodoWidget({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(
+          color: Theme.of(context).colorScheme.primary,
+          width: 0.5,
+        ),
+      ),
       color: Theme.of(context).colorScheme.primary,
       child: Padding(
         padding: const EdgeInsets.only(left: 19.0, bottom: 15.0),
