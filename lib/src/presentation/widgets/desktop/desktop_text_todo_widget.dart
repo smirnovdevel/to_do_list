@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../domain/models/todo.dart';
+import '../../../utils/core/scale_size.dart';
 
 ///
 /// Widget title item todo in list
@@ -29,15 +30,17 @@ class DesktopTitletTodoWidget extends StatelessWidget {
           decorationColor: Colors.grey,
           decorationStyle: TextDecorationStyle.solid,
         ),
+        textScaleFactor: ScaleSize.textScaleFactor(context),
       );
     }
 
     return Text(
-      todo.title.replaceAll('\n', ' '),
+      todo.title,
       overflow: TextOverflow.ellipsis,
       softWrap: false,
       maxLines: 3,
       style: Theme.of(context).textTheme.bodyMedium,
+      textScaleFactor: ScaleSize.textScaleFactor(context),
     );
   }
 }

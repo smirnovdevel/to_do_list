@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../config/common/app_icons.dart';
+import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
 
 class MobileButtonNewTodoWidget extends StatelessWidget {
@@ -38,6 +39,7 @@ class MobileButtonNewTodoWidget extends StatelessWidget {
                       fontSize: 18.0,
                       color: Colors.grey,
                     ),
+                    textScaleFactor: ScaleSize.textScaleFactor(context),
                   ),
                 ],
               ),

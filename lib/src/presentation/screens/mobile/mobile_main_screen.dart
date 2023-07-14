@@ -14,6 +14,7 @@ class MobileMainScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    log.info('Is Mobile');
     final todos = ref.watch(todosStateProvider);
     if (todos == null) {
       ref.watch(todosManagerProvider).init();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../config/common/app_icons.dart';
+import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
 import '../../provider/done_provider.dart';
 
@@ -18,6 +19,7 @@ class DesktopHeaderTodoWidget extends ConsumerWidget {
           Text(
             AppLocalization.of(context).get('my_todo'),
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            textScaleFactor: ScaleSize.textScaleFactor(context),
           ),
           const SizedBox(
             width: 20.0,
@@ -31,6 +33,7 @@ class DesktopHeaderTodoWidget extends ConsumerWidget {
                   .textTheme
                   .labelSmall!
                   .copyWith(fontSize: 16),
+              textScaleFactor: ScaleSize.textScaleFactor(context),
             ),
           if (count == 0) Container() else const Spacer(),
           if (count == 0)
@@ -52,7 +55,7 @@ class DesktopHeaderTodoWidget extends ConsumerWidget {
                         : AppIcons.visibility,
                     weight:
                         ref.watch(todosFilter) == TodosFilter.active ? 18 : 22,
-                    size: 20,
+                    size: 18 * ScaleSize.iconScaleFactor(context),
                   )),
             ),
         ],

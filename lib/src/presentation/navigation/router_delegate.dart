@@ -77,13 +77,13 @@ class TodosRouterDelegate extends RouterDelegate<TodosRouteConfig>
   }
 
   void pop() {
-    log.info('Pop');
+    log.debug('Pop');
     state = TodosRouteConfig.root();
     notifyListeners();
   }
 
   void showTodo(String uuid) {
-    log.info('Push');
+    log.debug('Push');
     ref.read(todoProvider(uuid));
     state = TodosRouteConfig.todo(uuid);
     notifyListeners();

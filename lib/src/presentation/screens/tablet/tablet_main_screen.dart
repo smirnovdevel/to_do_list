@@ -10,8 +10,8 @@ import '../../widgets/common_widgets/loading_indicator.dart';
 
 final Logging log = Logging('DesktopMainScreen');
 
-class DesktopMainScreen extends ConsumerWidget {
-  const DesktopMainScreen({super.key});
+class TabletMainScreen extends ConsumerWidget {
+  const TabletMainScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,10 +25,11 @@ class DesktopMainScreen extends ConsumerWidget {
         : const Row(
             children: [
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: DesktopListTodoWidget(),
               ),
               Expanded(
+                flex: 2,
                 child: DesktopDetailsTodoWidget(),
               ),
             ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../config/common/app_icons.dart';
 import '../../../domain/models/todo.dart';
+import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
 
 List<PopupMenuEntry<Priority>> buildItemsPopupMenu(BuildContext context) {
@@ -12,6 +13,7 @@ List<PopupMenuEntry<Priority>> buildItemsPopupMenu(BuildContext context) {
       child: Text(
         AppLocalization.of(context).get('basic'),
         style: Theme.of(context).textTheme.bodyMedium,
+        textScaleFactor: ScaleSize.textScaleFactor(context),
       )));
   list.add(PopupMenuItem<Priority>(
       value: Priority.low,
@@ -19,6 +21,7 @@ List<PopupMenuEntry<Priority>> buildItemsPopupMenu(BuildContext context) {
       child: Text(
         AppLocalization.of(context).get('low'),
         style: Theme.of(context).textTheme.bodyMedium,
+        textScaleFactor: ScaleSize.textScaleFactor(context),
       )));
   list.add(
     PopupMenuItem<Priority>(
@@ -33,10 +36,13 @@ List<PopupMenuEntry<Priority>> buildItemsPopupMenu(BuildContext context) {
               size: 16.0,
               color: Theme.of(context).colorScheme.secondaryContainer,
             ),
-            Text(AppLocalization.of(context).get('important'),
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.onSecondary,
-                    )),
+            Text(
+              AppLocalization.of(context).get('important'),
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.onSecondary,
+                  ),
+              textScaleFactor: ScaleSize.textScaleFactor(context),
+            ),
           ],
         ),
       ),

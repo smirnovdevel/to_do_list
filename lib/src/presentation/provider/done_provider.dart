@@ -19,7 +19,7 @@ final filteredTodosProvider = Provider<List<Todo>>((ref) {
   final filter = ref.watch(todosFilter);
   final todos = ref.watch(todosStateProvider) ?? [];
 
-  log.info('Change filtered to: $filter');
+  log.debug('Change filtered to: $filter');
 
   switch (filter) {
     case TodosFilter.active:

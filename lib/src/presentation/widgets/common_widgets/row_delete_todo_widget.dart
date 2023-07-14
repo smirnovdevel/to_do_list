@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../config/common/app_icons.dart';
 import '../../../config/routes/dialogs.dart';
+import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
 import '../../provider/navigation_provider.dart';
 import '../../provider/todo_provider.dart';
@@ -64,6 +65,7 @@ class RowDeleteTodoWidget extends ConsumerWidget {
                             color: todo.changed == null
                                 ? Theme.of(context).colorScheme.outlineVariant
                                 : Theme.of(context).colorScheme.onSecondary),
+                        textScaleFactor: ScaleSize.textScaleFactor(context),
                       ),
                     )
                   ],

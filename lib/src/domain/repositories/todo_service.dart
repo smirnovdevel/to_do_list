@@ -36,7 +36,7 @@ class TodoService {
 
   Future<void> setAutor() async {
     deviceId ??= await getDeviceID();
-    log.info('Device id: $deviceId');
+    log.debug('Device id: $deviceId');
   }
 
   /// GET Remote TodoList
@@ -44,9 +44,9 @@ class TodoService {
   Future<List<Todo>> getRemoteTodosList() async {
     /// Получаем список задач с сервера
     ///
-    log.info('Get Todos from Server...');
+    log.debug('Get Todos from Server...');
     List<Todo> remoteTodosList = await remoteDataSource.getTodos();
-    log.info('Get ${remoteTodosList.length} from Server');
+    log.debug('Get ${remoteTodosList.length} from Server');
     return remoteTodosList;
   }
 
@@ -56,10 +56,10 @@ class TodoService {
     /// Получаем список задач из базы данных
     ///
     List<Todo>? localTodosList;
-    log.info('Get Todos from DB...');
+    log.debug('Get Todos from DB...');
     if (!kIsWeb) {
       localTodosList = await localDataSource.getTodos();
-      log.info('Get ${localTodosList.length} todos from DB');
+      log.debug('Get ${localTodosList.length} todos from DB');
     }
     return localTodosList ??= [];
   }
@@ -70,7 +70,7 @@ class TodoService {
       {required List<Todo> local, required List<Todo> remote}) async {
     List<Todo> todosList = [];
 
-    log.info('Matching...');
+    log.debug('Matching...');
 
     /// Проверям даты последнего изменения задачи, по последней истинная
     ///
@@ -193,28 +193,28 @@ class TodoService {
   // UPLOAD Todos Remote
   ///
   Future<void> uploadTodosRemote({required List<Todo> todos}) async {
-    log.info('Upload Todos ...');
+    log.debug('Upload Todos ...');
     if (todos.isNotEmpty) {
       await remoteDataSource.updateTodos(todos: todos);
     }
-    log.info('Upload Todos');
+    log.debug('Upload Todos');
   }
 
   /// UPLOAD Todo Remote
   ///
   Future<Todo> uploadTodoRemote({required Todo todo}) async {
-    log.info('Upload Todo id: ${todo.uuid} ...');
+    log.debug('Upload Todo id: ${todo.uuid} ...');
     Todo? task;
     if (todo.deviceId == null) {
       todo = todo.copyWith(deviceId: deviceId);
     }
-    log.info('Upload Todo id: ${todo.uuid} to Server ...');
+    log.debug('Upload Todo id: ${todo.uuid} to Server ...');
     if (todo.upload) {
       task = await remoteDataSource.updateTodo(todo: todo);
     } else {
       task = await remoteDataSource.saveTodo(todo: todo);
     }
-    log.info('Upload Todo upload: ${task.upload}');
+    log.debug('Upload Todo upload: ${task.upload}');
 
     return task;
   }
@@ -222,7 +222,7 @@ class TodoService {
   /// SAVE Todo to DB
   ///
   Future<Todo> saveTodoDB({required Todo todo}) async {
-    log.info('Save Todo id: ${todo.uuid} ...');
+    log.debug('Save Todo id: ${todo.uuid} ...');
 
     /// DB not need to Web
     if (kIsWeb) {
@@ -233,7 +233,7 @@ class TodoService {
         todo = todo.copyWith(deviceId: deviceId);
       }
       await localDataSource.saveTodo(todo: todo);
-      log.info('Save Todo uuid: ${todo.uuid} to DB upload: ${todo.upload}');
+      log.debug('Save Todo uuid: ${todo.uuid} to DB upload: ${todo.upload}');
     } on DBException {
       log.warning('Save Todo uuid: ${todo.uuid}');
     }
@@ -243,9 +243,9 @@ class TodoService {
   /// DELETE Todo Remote
   ///
   Future<bool> deleteTodoRemote({required Todo todo}) async {
-    log.info('Delete remote todo uuid: ${todo.uuid} ...');
+    log.debug('Delete remote todo uuid: ${todo.uuid} ...');
     bool result = await remoteDataSource.deleteTodo(todo: todo);
-    log.info('Delete remote todo');
+    log.debug('Delete remote todo');
     return result;
   }
 
@@ -260,13 +260,13 @@ class TodoService {
       if (todo.deviceId == null) {
         todo = todo.copyWith(deviceId: deviceId);
       }
-      log.info('Delete local todo uuid: ${todo.uuid} ...');
+      log.debug('Delete local todo uuid: ${todo.uuid} ...');
       if (deleted) {
         await localDataSource.deleteTodo(todo: todo);
       } else {
         localDataSource.saveTodo(todo: todo.copyWith(deleted: true));
       }
-      log.info('Delete local todo');
+      log.debug('Delete local todo');
     } on DBException {
       log.warning('Delete local todo uuid: ${todo.uuid}');
     }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../config/common/app_icons.dart';
+import '../../../utils/core/scale_size.dart';
 
-class IconInformationWidget extends StatelessWidget {
-  const IconInformationWidget({
+class DesktopIconInformationWidget extends StatelessWidget {
+  const DesktopIconInformationWidget({
     super.key,
   });
 
@@ -14,7 +15,7 @@ class IconInformationWidget extends StatelessWidget {
       child: Icon(
         AppIcons.infoOutline,
         color: Theme.of(context).colorScheme.inverseSurface,
-        weight: 20,
+        size: 18 * ScaleSize.iconScaleFactor(context),
       ),
     );
   }

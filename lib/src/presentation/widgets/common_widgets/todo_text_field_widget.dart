@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
 
 class TodoTextFieldWidget extends StatelessWidget {
@@ -22,7 +23,10 @@ class TodoTextFieldWidget extends StatelessWidget {
           minLines: 3,
           showCursor: true,
           cursorColor: Theme.of(context).primaryColor,
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium!
+              .copyWith(fontSize: 16.0 * ScaleSize.textScaleFactor(context)),
           decoration: InputDecoration(
               contentPadding: EdgeInsets.zero,
               border: InputBorder.none,
@@ -31,10 +35,10 @@ class TodoTextFieldWidget extends StatelessWidget {
               errorBorder: InputBorder.none,
               disabledBorder: InputBorder.none,
               hintText: AppLocalization.of(context).get('whatneed'),
-              hintStyle: const TextStyle(
+              hintStyle: TextStyle(
                 color: Colors.grey,
                 fontWeight: FontWeight.w400,
-                fontSize: 16.0,
+                fontSize: 16.0 * ScaleSize.textScaleFactor(context),
                 height: 18 / 16,
               )),
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../domain/models/todo.dart';
+import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
 
 class SubtitleTodoWidget extends StatelessWidget {
@@ -21,6 +22,7 @@ class SubtitleTodoWidget extends StatelessWidget {
       style: todo.done
           ? const TextStyle(color: Colors.grey)
           : const TextStyle(color: Colors.blue),
+      textScaleFactor: ScaleSize.textScaleFactor(context),
     );
   }
 }

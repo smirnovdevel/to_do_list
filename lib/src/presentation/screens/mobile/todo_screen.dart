@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../config/common/app_color.dart';
 import '../../../domain/models/todo.dart';
+import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
 import '../../provider/navigation_provider.dart';
 import '../../provider/todo_provider.dart';
@@ -148,6 +149,7 @@ class _EditPageState extends ConsumerState<TodoScreen> {
               child: Text(
                 AppLocalization.of(context).get('save').toUpperCase(),
                 style: Theme.of(context).textTheme.titleMedium,
+                textScaleFactor: ScaleSize.textScaleFactor(context),
               ))
         ],
       ),
@@ -199,6 +201,7 @@ class _EditPageState extends ConsumerState<TodoScreen> {
                 Text(
                   AppLocalization.of(context).get('deadline'),
                   style: Theme.of(context).textTheme.bodyMedium,
+                  textScaleFactor: ScaleSize.textScaleFactor(context),
                 ),
                 if (_deadline == null)
                   Container()
@@ -211,6 +214,7 @@ class _EditPageState extends ConsumerState<TodoScreen> {
                         .textTheme
                         .bodyMedium!
                         .copyWith(color: Theme.of(context).iconTheme.color),
+                    textScaleFactor: ScaleSize.textScaleFactor(context),
                   ),
               ],
             ),
@@ -251,6 +255,7 @@ class _EditPageState extends ConsumerState<TodoScreen> {
             Text(
               AppLocalization.of(context).get('importance'),
               style: Theme.of(context).textTheme.bodyMedium,
+              textScaleFactor: ScaleSize.textScaleFactor(context),
             ),
             HintPopupMenuWidget(value: _importance),
           ],

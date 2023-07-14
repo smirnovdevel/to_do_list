@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
 
 class UnknownScreen extends StatelessWidget {
@@ -20,6 +21,7 @@ class UnknownScreen extends StatelessWidget {
           child: Text(
             '${AppLocalization.of(context).get('page_not_found')}\n$name',
             style: Theme.of(context).textTheme.headlineMedium,
+            textScaleFactor: ScaleSize.textScaleFactor(context),
           ),
         ),
       ),

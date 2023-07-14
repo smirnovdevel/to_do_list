@@ -42,7 +42,7 @@ class HttpService implements IWebService {
         throw const ServerException('no_internet');
       }
     }
-    log.info('Update revision from: ${revision ?? 'null'} ...');
+    log.debug('Update revision from: ${revision ?? 'null'} ...');
     const String url = '${AppUrls.urlTodo}/list';
     try {
       final response = await http.get(
@@ -60,9 +60,9 @@ class HttpService implements IWebService {
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
         revision = result['revision'];
-        log.info('Update revision to: $revision');
+        log.debug('Update revision to: $revision');
       } else {
-        log.info('Update revision, response code: ${response.statusCode}');
+        log.debug('Update revision, response code: ${response.statusCode}');
         throw ServerException(response.statusCode.toString());
       }
     } on SocketException {
@@ -87,7 +87,7 @@ class HttpService implements IWebService {
     revision = await _updateRevision();
     var url = Uri.https('beta.mrdekk.ru', 'todobackend/list');
     final List<Todo> todosList = [];
-    log.info('Get Todos from: $url ...');
+    log.debug('Get Todos from: $url ...');
 
     try {
       final http.Response response = await http.get(
@@ -106,15 +106,15 @@ class HttpService implements IWebService {
         final result = json.decode(response.body);
         int i = 1;
         for (final Map<String, dynamic> todo in result['list']) {
-          log.info('Get $i todo: $todo');
+          log.debug('Get $i todo: $todo');
           todosList.add(Todo.fromJson(todo));
           i++;
         }
         revision = result['revision'];
-        log.info(
+        log.debug(
             'Get Todos, load ${todosList.length} todos revision: $revision');
       } else {
-        log.info('Get Todos, response code: ${response.statusCode}');
+        log.debug('Get Todos, response code: ${response.statusCode}');
         throw ServerException(response.statusCode.toString());
       }
     } on HttpException catch (e) {
@@ -137,7 +137,7 @@ class HttpService implements IWebService {
       'element': todo.toJson(),
     });
     Todo? task;
-    log.info('Save Todo, revision: $revision body: $body ...');
+    log.debug('Save Todo, revision: $revision body: $body ...');
     try {
       final http.Response response = await http
           .post(
@@ -160,10 +160,10 @@ class HttpService implements IWebService {
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
         revision = result['revision'];
-        log.info('Save Todo');
+        log.debug('Save Todo');
         task = todo.copyWith(upload: true);
       } else {
-        log.info('Save Todo, response code: ${response.statusCode}');
+        log.debug('Save Todo, response code: ${response.statusCode}');
         throw ServerException(response.statusCode.toString());
       }
     } on HttpException catch (e) {
@@ -183,7 +183,7 @@ class HttpService implements IWebService {
     final String body = jsonEncode({
       'list': listJson,
     });
-    log.info('Update ${todos.length} Todos revision: $revision');
+    log.debug('Update ${todos.length} Todos revision: $revision');
     const String url = '${AppUrls.urlTodo}/list';
     try {
       final http.Response response = await http
@@ -208,9 +208,9 @@ class HttpService implements IWebService {
         final result = json.decode(response.body);
         revision = result['revision'];
         status = result['status'] == 'ok';
-        log.info('Update Todos revision: $revision');
+        log.debug('Update Todos revision: $revision');
       } else {
-        log.info(
+        log.debug(
             'Update Todos response code: ${response.statusCode} revision: $revision');
         throw ServerException(response.statusCode.toString());
       }
@@ -230,7 +230,7 @@ class HttpService implements IWebService {
       'element': todo.toJson(),
     });
     Todo? task;
-    log.info('Update Todo id: ${todo.uuid} revision: $revision');
+    log.debug('Update Todo id: ${todo.uuid} revision: $revision');
     try {
       final http.Response response = await http
           .put(
@@ -252,10 +252,10 @@ class HttpService implements IWebService {
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
         revision = result['revision'];
-        log.info('Update Todo revision: $revision');
+        log.debug('Update Todo revision: $revision');
         task = todo.copyWith(upload: true);
       } else {
-        log.info(
+        log.debug(
             'Update Todo response code: ${response.statusCode} revision: $revision');
         throw ServerException(response.statusCode.toString());
       }
@@ -272,7 +272,7 @@ class HttpService implements IWebService {
     revision = await _updateRevision();
     Todo? todo;
     final String url = '${AppUrls.urlTodo}/list/$uuid';
-    log.info('Get Todo, revision: $revision uuid: $uuid ...');
+    log.debug('Get Todo, revision: $revision uuid: $uuid ...');
     try {
       final http.Response response = await http.get(
         Uri.parse(url),
@@ -292,9 +292,9 @@ class HttpService implements IWebService {
       if (response.statusCode == 200) {
         final todoJson = json.decode(response.body);
         todo = Todo.fromJson(todoJson);
-        log.info('Get Todo');
+        log.debug('Get Todo');
       } else {
-        log.info('Get Todo, response code: ${response.statusCode}');
+        log.debug('Get Todo, response code: ${response.statusCode}');
         throw ServerException(response.statusCode.toString());
       }
     } on HttpException catch (e) {
@@ -312,7 +312,7 @@ class HttpService implements IWebService {
     final String body = jsonEncode({
       'element': todo.toJson(),
     });
-    log.info('Delete Todo id: ${todo.uuid} revision: $revision  body: $body');
+    log.debug('Delete Todo id: ${todo.uuid} revision: $revision  body: $body');
     try {
       final http.Response response = await http
           .delete(
@@ -335,10 +335,10 @@ class HttpService implements IWebService {
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
         revision = result['revision'];
-        log.info('Delete Todo id: ${todo.uuid} revision: $revision');
+        log.debug('Delete Todo id: ${todo.uuid} revision: $revision');
         return true;
       } else {
-        log.info(
+        log.debug(
             'Delete Todo response code: ${response.statusCode} revision: $revision');
         throw ServerException(response.statusCode.toString());
       }

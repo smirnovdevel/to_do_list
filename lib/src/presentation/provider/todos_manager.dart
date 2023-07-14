@@ -29,7 +29,7 @@ class TodosManager {
     List<Todo> localTodosList = [];
     List<Todo> remoteTodosList = [];
     List<Todo> todos;
-    log.info('init ...');
+    log.debug('init ...');
     // set autor
     await _todoService.setAutor();
 
@@ -62,7 +62,7 @@ class TodosManager {
   }
 
   Future<void> addTodo({required Todo todo}) async {
-    log.info('Save todo uuid: ${todo.uuid} ...');
+    log.debug('Save todo uuid: ${todo.uuid} ...');
     // добавляем в список на экране
     _state.addTodo(todo: todo);
     Todo? task;
@@ -80,11 +80,11 @@ class TodosManager {
     if (!todo.upload && task.upload) {
       _state.updateTodo(todo: task);
     }
-    log.info('Todo upload: ${task.upload}');
+    log.debug('Todo upload: ${task.upload}');
   }
 
   Future<void> updateTodo({required Todo todo}) async {
-    log.info('Update todo uuid: ${todo.uuid} ...');
+    log.debug('Update todo uuid: ${todo.uuid} ...');
     // обновляем в списке на экране
     _state.updateTodo(todo: todo);
     Todo? task;
@@ -102,11 +102,11 @@ class TodosManager {
     if (!todo.upload && task.upload) {
       _state.updateTodo(todo: task);
     }
-    log.info('Todo upload: ${task.upload}');
+    log.debug('Todo upload: ${task.upload}');
   }
 
   Future<void> deleteTodo({required Todo todo}) async {
-    log.info('Delete todo uuid: ${todo.uuid} ...');
+    log.debug('Delete todo uuid: ${todo.uuid} ...');
     // удаляем из списка на экране
     _state.deleteTodo(todo: todo);
     // Удаляем с сервера
@@ -120,6 +120,6 @@ class TodosManager {
     }
     result ??= false;
     _todoService.deleteTodoDB(todo: todo, deleted: result);
-    log.info('Delete todo');
+    log.debug('Delete todo');
   }
 }

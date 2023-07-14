@@ -13,26 +13,33 @@ class Logging {
   Logging(this.name);
   final String name;
 
-  // 0 - all, 1 - info, 2 - warning
-  final int level = 0;
+  // 0 - all, 1 - debug, 2 - info, 3 - fine, 4 - warning
+  final int level = 2;
 
   // green - blue
-  void fine(String event) {
-    if (kDebugMode) {
-      console.log('\u001b[1;32m $name:\u001b[1;32m $event');
+  void debug(String event) {
+    if (kDebugMode && level < 2) {
+      console.log('\u001b[1;32m $name:\u001b[1;34m $event');
     }
   }
 
-  // green - blue
+  // green - white
   void info(String event) {
-    if (kDebugMode) {
-      console.log('\u001b[1;32m $name:\u001b[1;34m $event');
+    if (kDebugMode && level < 3) {
+      console.log('\u001b[1;32m $name:\u001b[1;37m $event');
+    }
+  }
+
+// green - blue
+  void fine(String event) {
+    if (kDebugMode && level < 4) {
+      console.log('\u001b[1;32m $name:\u001b[1;32m $event');
     }
   }
 
   // green - red
   void warning(String event) {
-    if (kDebugMode) {
+    if (kDebugMode && level < 5) {
       console.log('\u001b[1;32m $name:\u001b[1;31m $event');
     }
   }

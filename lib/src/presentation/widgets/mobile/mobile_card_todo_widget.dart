@@ -8,7 +8,7 @@ import '../../../utils/core/logging.dart';
 import '../../provider/navigation_provider.dart';
 import '../../provider/todos_manager.dart';
 import '../common_widgets/desktop_title_subtitle_widget.dart';
-import '../common_widgets/icon_information_widget.dart';
+import 'mobile_icon_information_widget.dart';
 import 'mobile_swipe_action_left_widget.dart';
 import 'mobile_swipe_action_right_widget.dart';
 import 'mobile_icon_done_widget.dart';
@@ -139,7 +139,7 @@ class _ItemTodoWidgetState extends ConsumerState<MobileCardTodoWidget> {
                   ///
                   /// Icon Information
                   ///
-                  const IconInformationWidget(),
+                  const MobileIconInformationWidget(),
                 ],
               ),
             ),

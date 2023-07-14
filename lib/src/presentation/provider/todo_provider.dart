@@ -10,10 +10,10 @@ final Logging log = Logging('FamilyProvider');
 /// если такой не найдено, создаётся пустая
 ///
 final todoProvider = Provider.family<Todo, String>((ref, uuid) {
-  log.info('uuid: $uuid');
+  log.debug('uuid: $uuid');
   final todos = ref.watch(todosStateProvider) ?? [];
   Todo todo = todos.firstWhere((item) => item.uuid == uuid, orElse: () {
-    log.info('uuid: $uuid not found');
+    log.debug('uuid: $uuid not found');
     return Todo(
       uuid: uuid,
       title: '',

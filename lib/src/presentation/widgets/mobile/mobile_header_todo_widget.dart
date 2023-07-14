@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../config/common/app_icons.dart';
+import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
 import '../../provider/done_provider.dart';
 
@@ -43,6 +44,7 @@ class MobileHeaderTodoWidget extends ConsumerWidget {
                   style: TextStyle(
                       fontSize: 20 + 12 * currentValue,
                       fontWeight: FontWeight.w500),
+                  textScaleFactor: ScaleSize.textScaleFactor(context),
                 ),
                 if (count == 0)
                   Container()
@@ -53,6 +55,7 @@ class MobileHeaderTodoWidget extends ConsumerWidget {
                         .textTheme
                         .labelSmall!
                         .copyWith(fontSize: 16 * currentValue),
+                    textScaleFactor: ScaleSize.textScaleFactor(context),
                   ),
               ],
             ),

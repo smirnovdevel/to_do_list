@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../config/common/app_icons.dart';
 import '../../../domain/models/todo.dart';
+import '../../../utils/core/scale_size.dart';
 
 class DesktopIconDoneTodoWidget extends StatelessWidget {
   const DesktopIconDoneTodoWidget({super.key, required this.todo});
@@ -16,7 +17,7 @@ class DesktopIconDoneTodoWidget extends StatelessWidget {
         child: Icon(
           AppIcons.checked,
           color: Theme.of(context).colorScheme.tertiaryContainer,
-          weight: 18.0,
+          size: 18.0 * ScaleSize.iconScaleFactor(context),
         ),
       );
     } else if (todo.importance == Priority.important) {
@@ -27,7 +28,7 @@ class DesktopIconDoneTodoWidget extends StatelessWidget {
           child: Icon(
             AppIcons.unchecked,
             color: Theme.of(context).colorScheme.secondaryContainer,
-            weight: 18.0,
+            size: 18.0 * ScaleSize.iconScaleFactor(context),
           ),
         ),
       );
@@ -37,7 +38,7 @@ class DesktopIconDoneTodoWidget extends StatelessWidget {
         child: Icon(
           AppIcons.unchecked,
           color: Theme.of(context).colorScheme.primaryContainer,
-          weight: 18.0,
+          size: 18.0 * ScaleSize.iconScaleFactor(context),
         ),
       );
     }

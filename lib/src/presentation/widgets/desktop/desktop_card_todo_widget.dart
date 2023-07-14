@@ -9,8 +9,8 @@ import '../../provider/current_todo_provider.dart';
 import '../../provider/navigation_provider.dart';
 import '../../provider/todos_manager.dart';
 import '../common_widgets/desktop_title_subtitle_widget.dart';
-import '../common_widgets/icon_information_widget.dart';
 import 'desktop_icon_done_widget.dart';
+import 'desktop_icon_information_widget.dart';
 import 'desktop_swipe_action_left_widget.dart';
 import 'desktop_swipe_action_right_widget.dart';
 
@@ -153,7 +153,7 @@ class _ItemTodoWidgetState extends ConsumerState<DesktopCardTodoWidget> {
                     onTap: () {
                       ref.read(navigationProvider).showTodo(widget.todo.uuid);
                     },
-                    child: const IconInformationWidget(),
+                    child: const DesktopIconInformationWidget(),
                   ),
                 ],
               ),

@@ -13,12 +13,12 @@ class TodosStateHolder extends StateNotifier<List<Todo>?> {
   TodosStateHolder([List<Todo>? empty]) : super(empty);
 
   void init({required List<Todo> todos}) {
-    log.info('Loaded');
+    log.debug('Loaded');
     state = todos;
   }
 
   void addTodo({required Todo todo}) {
-    log.info('Save todo uuid: ${todo.uuid}');
+    log.debug('Save todo uuid: ${todo.uuid}');
     state = [
       ...state ??= [],
       todo,
@@ -26,7 +26,7 @@ class TodosStateHolder extends StateNotifier<List<Todo>?> {
   }
 
   void updateTodo({required Todo todo}) {
-    log.info('Update todo uuid: ${todo.uuid}');
+    log.debug('Update todo uuid: ${todo.uuid}');
     state = [
       for (Todo item in state ?? [])
         if (item.uuid == todo.uuid) todo.copyWith() else item,
@@ -34,7 +34,7 @@ class TodosStateHolder extends StateNotifier<List<Todo>?> {
   }
 
   void deleteTodo({required Todo todo}) {
-    log.info('Delete todo uuid: ${todo.uuid}');
+    log.debug('Delete todo uuid: ${todo.uuid}');
     state = state?.where((item) => item.uuid != todo.uuid).toList();
   }
 }

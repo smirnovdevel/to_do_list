@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../presentation/core/localization/app_localization.dart';
+import '../../utils/core/scale_size.dart';
 
 abstract class Dialogs {
   const Dialogs._();
@@ -27,6 +28,7 @@ class ConfirmCloseCountDialog extends StatelessWidget {
       title: Text(
         AppLocalization.of(context).get('delete_title'),
         style: TextStyle(color: Theme.of(context).primaryColor),
+        textScaleFactor: ScaleSize.textScaleFactor(context),
       ),
       content: Text(AppLocalization.of(context).get('delete_subtitle')),
       actions: [
@@ -39,6 +41,7 @@ class ConfirmCloseCountDialog extends StatelessWidget {
               fontWeight: FontWeight.bold,
               fontSize: 16.0,
             ),
+            textScaleFactor: ScaleSize.textScaleFactor(context),
           ),
         ),
         SimpleDialogOption(
@@ -49,6 +52,7 @@ class ConfirmCloseCountDialog extends StatelessWidget {
                 color: Colors.green,
                 fontWeight: FontWeight.bold,
                 fontSize: 16.0),
+            textScaleFactor: ScaleSize.textScaleFactor(context),
           ),
         ),
       ],
