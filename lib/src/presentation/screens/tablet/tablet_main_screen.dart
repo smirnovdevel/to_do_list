@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../utils/core/logging.dart';
 import '../../provider/todos_manager.dart';
 import '../../provider/todos_provider.dart';
-import '../../widgets/desktop/desktop_details_todo_widget.dart';
 import '../../widgets/desktop/desktop_list_todo_widget.dart';
 import '../../widgets/common_widgets/loading_indicator.dart';
+import '../../widgets/tablet/tablet_details_todo_widget.dart';
 
 final Logging log = Logging('DesktopMainScreen');
 
@@ -30,7 +30,7 @@ class TabletMainScreen extends ConsumerWidget {
               ),
               Expanded(
                 flex: 2,
-                child: DesktopDetailsTodoWidget(),
+                child: TabletDetailsTodoWidget(),
               ),
             ],
           );

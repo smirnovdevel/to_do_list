@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../utils/core/logging.dart';
 import '../screens/common_screens/main_screen.dart';
 import '../provider/todo_provider.dart';
-import '../screens/mobile/todo_screen.dart';
+import '../screens/common_screens/todo_screen.dart';
 import '../screens/common_screens/unknown_screen.dart';
 import '../widgets/common_widgets/flavor_banner.dart';
 import 'route_config.dart';
