@@ -26,8 +26,16 @@ dependencies:
   riverpod_messages: ^1.0.2
   # Secure token
   envied: ^0.3.0+3
+  
   # Firebase
   firebase_core: ^2.14.0
+  firebase_crashlytics: ^3.3.3
+  firebase_analytics: ^10.4.3
+  firebase_auth: ^4.6.3
+  firebase_ui_auth: ^1.5.0
+  cloud_firestore: ^4.8.2
+  firebase_remote_config: ^4.2.3
+  
   # Internet
   internet_connection_checker: ^1.0.0+1
   url_strategy: ^0.2.0
