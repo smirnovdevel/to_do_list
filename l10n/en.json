@@ -19,5 +19,6 @@
     "page_not_found":"Page not found",
     "server_error":"Server not answer",
     "no_internet":"No internet connection",
-    "bad_response_format":"Bad response format"
+    "bad_response_format":"Bad response format",
+    "choise_todo":"Select an item from the list on the left"
 }

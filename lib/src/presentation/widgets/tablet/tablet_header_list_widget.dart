@@ -45,8 +45,8 @@ class TabletHeaderListWidget extends ConsumerWidget {
                 if (ref.read(todosFilter) == TodosFilter.all) {
                   ref.read(todosFilter.notifier).state = TodosFilter.active;
                   if (ref.read(currentTodoProvider)?.done == true) {
-                    ref.read(currentTodoProvider.notifier).state = null;
-                    ref.read(editTodoProvider.notifier).state = false;
+                    ref.watch(currentTodoProvider.notifier).state = null;
+                    ref.watch(editTodoProvider.notifier).state = false;
                   }
                 } else {
                   ref.read(todosFilter.notifier).state = TodosFilter.all;

@@ -135,6 +135,7 @@ class _ListTodoWidgetState extends ConsumerState<MobileListTodoWidget> {
               ref.read(navigationProvider).showTodo(uuid.v1());
             },
             tooltip: 'Add_todo',
+            mini: orientation == Orientation.portrait ? false : true,
             backgroundColor: Theme.of(context).iconTheme.color,
             child: const Icon(
               AppIcons.add,

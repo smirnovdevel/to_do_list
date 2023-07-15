@@ -8,8 +8,6 @@ import '../../provider/done_provider.dart';
 import '../../provider/message_provider.dart';
 import '../../provider/navigation_provider.dart';
 import '../desktop/desktop_button_new_todo_widget.dart';
-import '../desktop/desktop_card_todo_widget.dart';
-import '../desktop/desktop_header_todo_widget.dart';
 import 'tablet_card_todo_widget.dart';
 import 'tablet_header_list_widget.dart';
 

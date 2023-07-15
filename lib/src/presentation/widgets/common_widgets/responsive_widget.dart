@@ -12,7 +12,7 @@ class ResponsiveWidget extends StatelessWidget {
   final Widget tabletWidget;
   final Widget desktopWidget;
 
-  static int tabletWidth = 720;
+  static int tabletWidth = 900;
   static int desktopWidth = 1440;
 
   @override

@@ -13,6 +13,8 @@ import '../desktop/desktop_icon_done_widget.dart';
 import '../desktop/desktop_icon_information_widget.dart';
 import '../desktop/desktop_swipe_action_left_widget.dart';
 import '../desktop/desktop_swipe_action_right_widget.dart';
+import 'tablet_swipe_action_left_widget.dart';
+import 'tablet_swipe_action_right_widget.dart';
 
 final Logging log = Logging('DesktopCardTodoWidget');
 
@@ -80,15 +82,15 @@ class _ItemTodoWidgetState extends ConsumerState<TabletCardTodoWidget> {
 
         /// swipe left
         ///
-        secondaryBackground: DesktopSwipeActionLeftWidget(
+        secondaryBackground: TabletSwipeActionLeftWidget(
           padding: _padding,
         ),
 
         /// swipe right
         ///
-        background: DesktopSwipeActionRightWidget(padding: _padding),
+        background: TabletSwipeActionRightWidget(padding: _padding),
         onUpdate: (DismissUpdateDetails details) {
-          final double offset = (width / 3 * 2 - 46) * details.progress;
+          final double offset = (width / 5 * 3 - 46) * details.progress;
           if (offset >= 86) {
             setState(() {
               _padding = offset - 86;
@@ -116,7 +118,10 @@ class _ItemTodoWidgetState extends ConsumerState<TabletCardTodoWidget> {
         ///
         child: InkWell(
           onTap: () {
-            ref.watch(currentTodoProvider.notifier).state = widget.todo;
+            if (ref.read(currentTodoProvider) != widget.todo) {
+              ref.read(editTodoProvider.notifier).state = false;
+            }
+            ref.read(currentTodoProvider.notifier).state = widget.todo;
           },
           child: Card(
             shape: RoundedRectangleBorder(
@@ -157,7 +162,9 @@ class _ItemTodoWidgetState extends ConsumerState<TabletCardTodoWidget> {
                   ///
                   GestureDetector(
                     onTap: () {
-                      ref.read(navigationProvider).showTodo(widget.todo.uuid);
+                      ref.read(currentTodoProvider.notifier).state =
+                          widget.todo;
+                      ref.read(editTodoProvider.notifier).state = true;
                     },
                     child: const DesktopIconInformationWidget(),
                   ),

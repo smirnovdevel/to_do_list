@@ -14,7 +14,7 @@ class Logging {
   final String name;
 
   // 0 - all, 1 - debug, 2 - info, 3 - fine, 4 - warning
-  final int level = 2;
+  final int level = 0;
 
   // green - blue
   void debug(String event) {

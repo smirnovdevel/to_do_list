@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 import '../../../config/common/app_icons.dart';
 import '../../../domain/models/todo.dart';
 import '../../../utils/core/scale_size.dart';
+import '../../core/localization/app_localization.dart';
 import '../../provider/current_todo_provider.dart';
 
 Uuid uuid = const Uuid();
@@ -17,7 +18,7 @@ class TabletEmptyWidget extends ConsumerWidget {
     return Scaffold(
       body: Center(
         child: Text(
-          'Выберите ToDo из списка слева',
+          AppLocalization.of(context).get('choise_todo'),
           textScaleFactor: ScaleSize.textScaleFactor(context),
         ),
       ),
