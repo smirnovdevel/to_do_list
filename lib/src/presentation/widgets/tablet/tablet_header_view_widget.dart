@@ -11,29 +11,25 @@ class TabletHeaderViewWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final todo = ref.watch(currentTodoProvider);
     return Padding(
       padding: const EdgeInsets.only(left: 12, bottom: 16, right: 10.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           const Spacer(),
-          if (todo == null)
-            Container()
-          else
-            GestureDetector(
-              onTap: () {
-                log.debug('Edit todo');
-                ref.read(editTodoProvider.notifier).state = true;
-              },
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Icon(
-                  Icons.edit,
-                  size: 22 * ScaleSize.iconScaleFactor(context),
-                ),
+          GestureDetector(
+            onTap: () {
+              log.debug('Edit todo');
+              ref.read(editTodoProvider.notifier).state = true;
+            },
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Icon(
+                Icons.edit,
+                size: 22 * ScaleSize.iconScaleFactor(context),
               ),
             ),
+          ),
         ],
       ),
     );

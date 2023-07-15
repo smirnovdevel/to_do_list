@@ -10,7 +10,7 @@ import '../../provider/done_provider.dart';
 import '../../provider/message_provider.dart';
 import '../../provider/navigation_provider.dart';
 import '../../provider/todos_manager.dart';
-import '../desktop/desktop_header_todo_widget.dart';
+import '../tablet/tablet_header_list_widget.dart';
 import 'mobile_button_new_todo_widget.dart';
 import 'mobile_header_todo_widget.dart';
 import 'mobile_card_todo_widget.dart';
@@ -70,7 +70,7 @@ class _ListTodoWidgetState extends ConsumerState<MobileListTodoWidget> {
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     flexibleSpace: orientation == Orientation.portrait
                         ? const MobileHeaderTodoWidget()
-                        : const DesktopHeaderTodoWidget(),
+                        : const TabletHeaderListWidget(),
                   ),
                   CupertinoSliverRefreshControl(
                     onRefresh: () async {
@@ -108,11 +108,11 @@ class _ListTodoWidgetState extends ConsumerState<MobileListTodoWidget> {
                             // кнопка Новое внизу списка
                             GestureDetector(
                               onTap: () {
-                                ref
-                                    .read(navigationProvider)
-                                    .showTodo(uuid.v1());
+                                ref.read(navigationProvider).showTodo(null);
                               },
-                              child: const MobileButtonNewTodoWidget(),
+                              child: MobileButtonNewTodoWidget(
+                                index: todos.length,
+                              ),
                             ),
                           ],
                         ),
@@ -132,7 +132,7 @@ class _ListTodoWidgetState extends ConsumerState<MobileListTodoWidget> {
               right: 16.0),
           child: FloatingActionButton(
             onPressed: () {
-              ref.read(navigationProvider).showTodo(uuid.v1());
+              ref.read(navigationProvider).showTodo(null);
             },
             tooltip: 'Add_todo',
             mini: orientation == Orientation.portrait ? false : true,

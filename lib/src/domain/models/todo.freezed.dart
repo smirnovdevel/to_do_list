@@ -21,7 +21,7 @@ Todo _$TodoFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Todo {
   @JsonKey(name: 'id')
-  String get uuid => throw _privateConstructorUsedError;
+  String? get uuid => throw _privateConstructorUsedError;
   @JsonKey(name: 'text')
   String get title => throw _privateConstructorUsedError;
   @JsonKey(fromJson: JSONConverter.boolFromJson)
@@ -53,7 +53,7 @@ abstract class $TodoCopyWith<$Res> {
       _$TodoCopyWithImpl<$Res, Todo>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'id') String uuid,
+      {@JsonKey(name: 'id') String? uuid,
       @JsonKey(name: 'text') String title,
       @JsonKey(fromJson: JSONConverter.boolFromJson) bool done,
       @JsonKey(
@@ -81,7 +81,7 @@ class _$TodoCopyWithImpl<$Res, $Val extends Todo>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? uuid = null,
+    Object? uuid = freezed,
     Object? title = null,
     Object? done = null,
     Object? importance = null,
@@ -93,10 +93,10 @@ class _$TodoCopyWithImpl<$Res, $Val extends Todo>
     Object? deviceId = freezed,
   }) {
     return _then(_value.copyWith(
-      uuid: null == uuid
+      uuid: freezed == uuid
           ? _value.uuid
           : uuid // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -144,7 +144,7 @@ abstract class _$$_TodoCopyWith<$Res> implements $TodoCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'id') String uuid,
+      {@JsonKey(name: 'id') String? uuid,
       @JsonKey(name: 'text') String title,
       @JsonKey(fromJson: JSONConverter.boolFromJson) bool done,
       @JsonKey(
@@ -168,7 +168,7 @@ class __$$_TodoCopyWithImpl<$Res> extends _$TodoCopyWithImpl<$Res, _$_Todo>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? uuid = null,
+    Object? uuid = freezed,
     Object? title = null,
     Object? done = null,
     Object? importance = null,
@@ -180,10 +180,10 @@ class __$$_TodoCopyWithImpl<$Res> extends _$TodoCopyWithImpl<$Res, _$_Todo>
     Object? deviceId = freezed,
   }) {
     return _then(_$_Todo(
-      uuid: null == uuid
+      uuid: freezed == uuid
           ? _value.uuid
           : uuid // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -247,7 +247,7 @@ class _$_Todo extends _Todo {
 
   @override
   @JsonKey(name: 'id')
-  final String uuid;
+  final String? uuid;
   @override
   @JsonKey(name: 'text')
   final String title;
@@ -324,7 +324,7 @@ class _$_Todo extends _Todo {
 
 abstract class _Todo extends Todo {
   const factory _Todo(
-      {@JsonKey(name: 'id') required final String uuid,
+      {@JsonKey(name: 'id') required final String? uuid,
       @JsonKey(name: 'text') required final String title,
       @JsonKey(fromJson: JSONConverter.boolFromJson) required final bool done,
       @JsonKey(
@@ -344,7 +344,7 @@ abstract class _Todo extends Todo {
 
   @override
   @JsonKey(name: 'id')
-  String get uuid;
+  String? get uuid;
   @override
   @JsonKey(name: 'text')
   String get title;

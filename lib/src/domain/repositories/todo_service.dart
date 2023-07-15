@@ -91,10 +91,10 @@ class TodoService {
         /// для быстрого поиска составим две мапы
         ///
         Map<String, int> remoteTodosMap = {
-          for (var todo in remote) todo.uuid: todo.changed!
+          for (var todo in remote) todo.uuid!: todo.changed!
         };
         Map<String, int> localeTodosMap = {
-          for (var todo in local) todo.uuid: todo.changed!
+          for (var todo in local) todo.uuid!: todo.changed!
         };
 
         /// Перебираем все задания с сервера и сравниваем с теми, что загружены из базы
@@ -185,7 +185,10 @@ class TodoService {
         }
       }
     } else {
-      todosList.addAll(local.where((todo) => !todo.deleted));
+      todosList.addAll(local.where((todo) => !todo.deleted && !todo.upload));
+      for (Todo todo in local.where((item) => item.upload)) {
+        localDataSource.deleteTodo(todo: todo);
+      }
     }
     return todosList;
   }

@@ -30,7 +30,10 @@ class ConfirmCloseCountDialog extends StatelessWidget {
         style: TextStyle(color: Theme.of(context).primaryColor),
         textScaleFactor: ScaleSize.textScaleFactor(context),
       ),
-      content: Text(AppLocalization.of(context).get('delete_subtitle')),
+      content: Text(
+        AppLocalization.of(context).get('delete_subtitle'),
+        textScaleFactor: ScaleSize.textScaleFactor(context),
+      ),
       actions: [
         SimpleDialogOption(
           onPressed: () => Navigator.of(context).pop(false),

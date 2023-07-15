@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../config/common/app_color.dart';
 import '../../../domain/models/todo.dart';
@@ -10,22 +11,22 @@ import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
 import '../../provider/current_todo_provider.dart';
 import '../../provider/todos_manager.dart';
-import '../common_widgets/build_items_popup_menu.dart';
-import '../common_widgets/hint_popup_menu_widget.dart';
+import 'tablet_items_popup_menu.dart';
+import 'tablet_popup_menu_widget.dart';
 import 'tablet_row_delete_widget.dart';
 import '../common_widgets/todo_text_field_widget.dart';
 import 'tablet_header_edit_widget.dart';
 import 'tablet_save_button_widget.dart';
 
-final Logging log = Logging('TabletTodoDetailsWidget');
+final Logging log = Logging('TabletEditTodoWidget');
 
 class TabletEditTodoWidget extends ConsumerStatefulWidget {
   const TabletEditTodoWidget({
     super.key,
-    required this.uuid,
+    required this.todo,
   });
 
-  final String uuid;
+  final Todo todo;
 
   @override
   ConsumerState<TabletEditTodoWidget> createState() => _EditPageState();
@@ -35,19 +36,15 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
   final TextEditingController _controller = TextEditingController();
 
   Priority _importance = Priority.basic;
+  String? _uuid;
   int? _deadline;
   int? _created;
   int? _changed;
   bool _upload = false;
   bool _done = false;
 
-  @override
-  void initState() {
-    super.initState();
-    initializeDateFormatting();
-  }
-
   void initTodo(Todo todo) {
+    _uuid = todo.uuid;
     _controller.text = todo.title;
     _importance = todo.importance;
     _deadline = todo.deadline;
@@ -55,6 +52,12 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
     _done = todo.done;
     _created = todo.created;
     _changed = todo.changed;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting();
   }
 
   @override
@@ -112,16 +115,14 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    log.info('Is Tablet');
-    final List<PopupMenuEntry<Priority>> popupMenuItems =
-        buildItemsPopupMenu(context);
-    final todo = ref.watch(currentTodoProvider);
-    if (todo == null) {
-      ref.watch(editTodoProvider.notifier).state = false;
-      return Container();
-    }
-    initTodo(todo);
+    ref.watch(choiseTodoProvider);
+    initTodo(widget.todo);
+    final List<PopupMenuEntry<Priority>> tabletPopupMenuItems =
+        tabletItemsPopupMenu(context);
 
+    // ignore: prefer_const_constructors
+    var uuid = Uuid();
+    log.debug('Edit todo ${widget.todo.uuid}');
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(top: 8.0, bottom: 24.0, right: 48.0),
@@ -144,7 +145,7 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TodoTextFieldWidget(controller: _controller),
-                      popupMenuWidget(popupMenuItems),
+                      tabletPopupMenuWidget(tabletPopupMenuItems),
                       const Padding(
                         padding: EdgeInsets.only(top: 18.0),
                         child: Divider(
@@ -155,7 +156,7 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
                       const Divider(
                         height: 0.2,
                       ),
-                      TabletRowDeleteWidget(uuid: widget.uuid),
+                      const TabletRowDeleteWidget(),
                       const SizedBox(
                         height: 32.0,
                       ),
@@ -163,7 +164,7 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
                         key: const Key('TextButtonSave'),
                         onTap: () {
                           final todo = Todo(
-                              uuid: widget.uuid,
+                              uuid: _uuid ?? uuid.v1(),
                               title: _controller.text,
                               importance: _importance,
                               deadline: _deadline,
@@ -182,7 +183,7 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
                                 .updateTodo(todo: todo);
                           }
                           ref.watch(editTodoProvider.notifier).state = false;
-                          ref.watch(currentTodoProvider.notifier).state = todo;
+                          ref.watch(choiseTodoProvider.notifier).state = todo;
                         },
                         child: const TabletSaveButtonWidget(),
                       ),
@@ -209,6 +210,7 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
         children: [
           GestureDetector(
             onTap: () {
+              print('Chanhe');
               if (_deadline != null) {
                 _selectDate(context);
               }
@@ -240,12 +242,16 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
           Switch(
               value: _deadline != null,
               onChanged: (bool value) {
+                log.debug('Change deadline to $value deadline: $_deadline');
                 if (value) {
-                  _deadline = DateTime.now().toLocal().millisecondsSinceEpoch;
+                  setState(() {
+                    _deadline = DateTime.now().toLocal().millisecondsSinceEpoch;
+                  });
                 } else {
-                  _deadline = null;
+                  setState(() {
+                    _deadline = null;
+                  });
                 }
-                setState(() {});
               }),
         ],
       ),
@@ -255,7 +261,8 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
   ///
   /// Строка выбора важности задачи
   ///
-  Padding popupMenuWidget(List<PopupMenuEntry<Priority>> popupMenuItems) {
+  Padding tabletPopupMenuWidget(
+      List<PopupMenuEntry<Priority>> tabletPopupMenuItems) {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: PopupMenuButton<Priority>(
@@ -275,10 +282,10 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
               style: Theme.of(context).textTheme.bodyMedium,
               textScaleFactor: ScaleSize.textScaleFactor(context),
             ),
-            HintPopupMenuWidget(value: _importance),
+            TabletPopupMenuWidget(value: _importance),
           ],
         ),
-        itemBuilder: (BuildContext context) => popupMenuItems,
+        itemBuilder: (BuildContext context) => tabletPopupMenuItems,
       ),
     );
   }

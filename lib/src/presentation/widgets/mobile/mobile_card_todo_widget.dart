@@ -58,89 +58,92 @@ class _ItemTodoWidgetState extends ConsumerState<MobileCardTodoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
 
     /// Swipe
     ///
     return AnimatedContainer(
       curve: Curves.easeInOut,
-      duration: Duration(milliseconds: 600 + (widget.index * 100)),
-      transform: Matrix4.translationValues(animation ? 0 : width, 0, 0),
+      duration: Duration(milliseconds: 400 + (widget.index * 100)),
+      transform: Matrix4.translationValues(0, animation ? 0 : height, 0),
       padding: const EdgeInsets.only(bottom: 8.0),
-      child: Dismissible(
-        key: Key(widget.todo.uuid),
+      child: LayoutBuilder(
+        builder: (context, constraints) => Dismissible(
+          key: Key(widget.todo.uuid!),
 
-        /// swipe left
-        ///
-        secondaryBackground: MobileSwipeActionLeftWidget(
-          padding: _padding,
-        ),
+          /// swipe left
+          ///
+          secondaryBackground: MobileSwipeActionLeftWidget(
+            padding: _padding,
+          ),
 
-        /// swipe right
-        ///
-        background: MobileSwipeActionRightWidget(padding: _padding),
-        onUpdate: (DismissUpdateDetails details) {
-          final double offset = (width - 16) * details.progress;
-          if (offset >= 72) {
-            setState(() {
-              _padding = offset - 72;
-            });
-          }
-        },
+          /// swipe right
+          ///
+          background: MobileSwipeActionRightWidget(padding: _padding),
+          onUpdate: (DismissUpdateDetails details) {
+            final double offset = constraints.maxWidth * details.progress;
 
-        /// confirm and action
-        ///
-        confirmDismiss: (DismissDirection direction) async {
-          if (direction == DismissDirection.endToStart) {
-            final bool confirmed =
-                await Dialogs.showConfirmCloseCountDialog(context) ?? false;
-            if (confirmed) {
-              _deleteTodo(widget.todo);
+            if (offset >= 72) {
+              setState(() {
+                _padding = offset - 72;
+              });
             }
-            return confirmed;
-          } else if (direction == DismissDirection.startToEnd) {
-            _changeDone(widget.todo);
-          }
-          return false;
-        },
-
-        /// item todo
-        ///
-        child: InkWell(
-          onTap: () {
-            ref.read(navigationProvider).showTodo(widget.todo.uuid);
           },
-          child: Container(
-            color: Theme.of(context).colorScheme.primary,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  /// Activity icon
-                  ///
-                  InkWell(
-                    onTap: () {
-                      _changeDone(widget.todo);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16.0, right: 14.0, top: 2.0),
-                      child: MobileIconDoneTodoWidget(todo: widget.todo),
+
+          /// confirm and action
+          ///
+          confirmDismiss: (DismissDirection direction) async {
+            if (direction == DismissDirection.endToStart) {
+              final bool confirmed =
+                  await Dialogs.showConfirmCloseCountDialog(context) ?? false;
+              if (confirmed) {
+                _deleteTodo(widget.todo);
+              }
+              return confirmed;
+            } else if (direction == DismissDirection.startToEnd) {
+              _changeDone(widget.todo);
+            }
+            return false;
+          },
+
+          /// item todo
+          ///
+          child: InkWell(
+            onTap: () {
+              ref.read(navigationProvider).showTodo(widget.todo.uuid!);
+            },
+            child: Container(
+              color: Theme.of(context).colorScheme.primary,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    /// Activity icon
+                    ///
+                    InkWell(
+                      onTap: () {
+                        _changeDone(widget.todo);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 16.0, right: 14.0, top: 2.0),
+                        child: MobileIconDoneTodoWidget(todo: widget.todo),
+                      ),
                     ),
-                  ),
 
-                  ///
-                  /// Title & Subtitle Widgets
-                  ///
-                  TitleSubtitleWidget(todo: widget.todo),
+                    ///
+                    /// Title & Subtitle Widgets
+                    ///
+                    TitleSubtitleWidget(todo: widget.todo),
 
-                  ///
-                  /// Icon Information
-                  ///
-                  const MobileIconInformationWidget(),
-                ],
+                    ///
+                    /// Icon Information
+                    ///
+                    const MobileIconInformationWidget(),
+                  ],
+                ),
               ),
             ),
           ),

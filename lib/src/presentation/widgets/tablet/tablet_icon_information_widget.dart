@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../config/common/app_icons.dart';
 import '../../../utils/core/scale_size.dart';
 
-class DesktopIconInformationWidget extends StatelessWidget {
-  const DesktopIconInformationWidget({
+class TabletIconInformationWidget extends StatelessWidget {
+  const TabletIconInformationWidget({
     super.key,
   });
 

@@ -10,7 +10,7 @@ enum Priority { low, basic, important }
 class Todo with _$Todo {
   const Todo._();
   const factory Todo({
-    @JsonKey(name: 'id') required String uuid,
+    @JsonKey(name: 'id') required String? uuid,
     @JsonKey(name: 'text') required String title,
     @JsonKey(fromJson: JSONConverter.boolFromJson) required bool done,
     @JsonKey(

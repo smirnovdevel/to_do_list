@@ -10,7 +10,7 @@ import '../../core/localization/app_localization.dart';
 import '../../provider/navigation_provider.dart';
 import '../../provider/todo_provider.dart';
 import '../../provider/todos_manager.dart';
-import '../../widgets/common_widgets/build_items_popup_menu.dart';
+import 'mobile_items_popup_menu.dart';
 import '../../widgets/common_widgets/hint_popup_menu_widget.dart';
 import '../../widgets/common_widgets/todo_text_field_widget.dart';
 import 'mobile_row_delete_widget.dart';
@@ -107,7 +107,7 @@ class _EditPageState extends ConsumerState<TodoScreen> {
   @override
   Widget build(BuildContext context) {
     final List<PopupMenuEntry<Priority>> popupMenuItems =
-        buildItemsPopupMenu(context);
+        mobileItemsPopupMenu(context);
 
     return Scaffold(
       appBar: AppBar(

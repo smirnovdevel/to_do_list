@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_messages/riverpod_messages.dart';
-import 'package:uuid/uuid.dart';
 
+import '../../../domain/models/todo.dart';
 import '../../../utils/core/logging.dart';
+import '../../provider/current_todo_provider.dart';
 import '../../provider/done_provider.dart';
 import '../../provider/message_provider.dart';
-import '../../provider/navigation_provider.dart';
-import '../desktop/desktop_button_new_todo_widget.dart';
+import 'tablet_button_new_widget.dart';
 import 'tablet_card_todo_widget.dart';
 import 'tablet_header_list_widget.dart';
 
@@ -24,8 +24,6 @@ class TabletListTodoWidget extends ConsumerStatefulWidget {
 
 class _ListTodoWidgetState extends ConsumerState<TabletListTodoWidget> {
   final ScrollController scrollController = ScrollController();
-
-  Uuid uuid = const Uuid();
 
   @override
   void dispose() {
@@ -76,9 +74,20 @@ class _ListTodoWidgetState extends ConsumerState<TabletListTodoWidget> {
                       // кнопка Новое внизу списка
                       GestureDetector(
                         onTap: () {
-                          ref.read(navigationProvider).showTodo(uuid.v1());
+                          ref.read(choiseTodoProvider.notifier).state = Todo(
+                            uuid: null,
+                            title: '',
+                            done: false,
+                            created:
+                                DateTime.now().toLocal().millisecondsSinceEpoch,
+                            changed: null,
+                            deviceId: null,
+                          );
+                          ref.read(editTodoProvider.notifier).state = true;
                         },
-                        child: const DesktopButtonNewTodoWidget(),
+                        child: TabletButtonNewWidget(
+                          index: todos.length,
+                        ),
                       ),
                     ],
                   ),

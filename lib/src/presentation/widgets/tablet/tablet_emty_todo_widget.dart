@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../config/common/app_icons.dart';
 import '../../../domain/models/todo.dart';
+import '../../../utils/core/logging.dart';
 import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
 import '../../provider/current_todo_provider.dart';
 
-Uuid uuid = const Uuid();
+final Logging log = Logging('TabletEmptyWidget');
 
 class TabletEmptyWidget extends ConsumerWidget {
   const TabletEmptyWidget({super.key});
@@ -26,14 +26,16 @@ class TabletEmptyWidget extends ConsumerWidget {
         padding: const EdgeInsets.only(bottom: 40.0, right: 40.0),
         child: FloatingActionButton(
           onPressed: () {
-            ref.read(currentTodoProvider.notifier).state = Todo(
-              uuid: uuid.v1(),
+            Todo todo = Todo(
+              uuid: null,
               title: '',
               done: false,
               created: DateTime.now().toLocal().millisecondsSinceEpoch,
               changed: null,
               deviceId: null,
             );
+            log.debug('Add todo ${todo.uuid}');
+            ref.read(choiseTodoProvider.notifier).state = todo;
             ref.read(editTodoProvider.notifier).state = true;
           },
           tooltip: 'Add_todo',

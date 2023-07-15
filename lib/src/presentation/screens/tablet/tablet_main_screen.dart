@@ -8,7 +8,7 @@ import '../../widgets/tablet/tablet_list_todo_widget.dart';
 import '../../widgets/common_widgets/loading_indicator.dart';
 import '../../widgets/tablet/tablet_switcher_widget.dart';
 
-final Logging log = Logging('DesktopMainScreen');
+final Logging log = Logging('TabletMainScreen');
 
 class TabletMainScreen extends ConsumerStatefulWidget {
   const TabletMainScreen({super.key});

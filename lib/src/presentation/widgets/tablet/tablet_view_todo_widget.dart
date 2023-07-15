@@ -4,11 +4,13 @@ import 'package:uuid/uuid.dart';
 
 import '../../../config/common/app_icons.dart';
 import '../../../domain/models/todo.dart';
+import '../../../utils/core/logging.dart';
 import '../../../utils/core/scale_size.dart';
 import '../../provider/current_todo_provider.dart';
 import 'tablet_header_view_widget.dart';
 
 Uuid uuid = const Uuid();
+final Logging log = Logging('TabletViewTodoWidget');
 
 class TabletViewTodoWidget extends ConsumerWidget {
   const TabletViewTodoWidget({
@@ -17,7 +19,7 @@ class TabletViewTodoWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final todo = ref.watch(currentTodoProvider);
+    final todo = ref.watch(choiseTodoProvider);
 
     return Scaffold(
       body: Padding(
@@ -50,14 +52,16 @@ class TabletViewTodoWidget extends ConsumerWidget {
         padding: const EdgeInsets.only(bottom: 40.0, right: 40.0),
         child: FloatingActionButton(
           onPressed: () {
-            ref.read(currentTodoProvider.notifier).state = Todo(
-              uuid: uuid.v1(),
+            Todo todo = Todo(
+              uuid: null,
               title: '',
               done: false,
               created: DateTime.now().toLocal().millisecondsSinceEpoch,
               changed: null,
               deviceId: null,
             );
+            log.debug('Add todo ${todo.uuid}');
+            ref.read(choiseTodoProvider.notifier).state = todo;
             ref.read(editTodoProvider.notifier).state = true;
           },
           tooltip: 'Add_todo',

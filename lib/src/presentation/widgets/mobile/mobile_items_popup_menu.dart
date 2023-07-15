@@ -5,7 +5,7 @@ import '../../../domain/models/todo.dart';
 import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
 
-List<PopupMenuEntry<Priority>> buildItemsPopupMenu(BuildContext context) {
+List<PopupMenuEntry<Priority>> mobileItemsPopupMenu(BuildContext context) {
   List<PopupMenuEntry<Priority>> list = [];
   list.add(PopupMenuItem<Priority>(
       value: Priority.basic,

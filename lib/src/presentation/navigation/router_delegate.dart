@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../utils/core/logging.dart';
 import '../screens/common_screens/main_screen.dart';
 import '../provider/todo_provider.dart';
 import '../screens/common_screens/unknown_screen.dart';
-import '../screens/common_screens/todo_edit_screen.dart';
+import '../screens/mobile/mobile_edit_screen.dart';
 import '../widgets/common_widgets/flavor_banner.dart';
 import 'route_config.dart';
 
@@ -41,14 +42,14 @@ class TodosRouterDelegate extends RouterDelegate<TodosRouteConfig>
           ),
           if (state?.isNew == true)
             MaterialPage(
-              child: TodoEditScreen(
+              child: MobileEditScreen(
                 uuid: state!.uuid!,
               ),
             ),
           if (state?.uuid != null)
             MaterialPage(
               key: ValueKey(state!.uuid!),
-              child: TodoEditScreen(
+              child: MobileEditScreen(
                 uuid: state!.uuid!,
               ),
             ),
@@ -82,8 +83,10 @@ class TodosRouterDelegate extends RouterDelegate<TodosRouteConfig>
     notifyListeners();
   }
 
-  void showTodo(String uuid) {
+  void showTodo(String? uuid) {
     log.debug('Push');
+    // ignore: prefer_const_constructors
+    uuid ??= Uuid().v1();
     ref.read(todoProvider(uuid));
     state = TodosRouteConfig.todo(uuid);
     notifyListeners();

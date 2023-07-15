@@ -4,8 +4,8 @@ import '../../../config/common/app_icons.dart';
 import '../../../domain/models/todo.dart';
 import '../../../utils/core/scale_size.dart';
 
-class DesktopIconDoneTodoWidget extends StatelessWidget {
-  const DesktopIconDoneTodoWidget({super.key, required this.todo});
+class TabletIconDoneTodoWidget extends StatelessWidget {
+  const TabletIconDoneTodoWidget({super.key, required this.todo});
 
   final Todo todo;
 
@@ -13,7 +13,7 @@ class DesktopIconDoneTodoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (todo.done) {
       return Padding(
-        padding: const EdgeInsets.only(left: 10.0, right: 14.0),
+        padding: const EdgeInsets.only(top: 2.0, left: 10.0, right: 14.0),
         child: Icon(
           AppIcons.checked,
           color: Theme.of(context).colorScheme.tertiaryContainer,
@@ -22,7 +22,7 @@ class DesktopIconDoneTodoWidget extends StatelessWidget {
       );
     } else if (todo.importance == Priority.important) {
       return Padding(
-        padding: const EdgeInsets.only(left: 10.0, right: 14.0),
+        padding: const EdgeInsets.only(top: 2.0, left: 10.0, right: 14.0),
         child: Container(
           color: Theme.of(context).colorScheme.onSecondaryContainer,
           child: Icon(
@@ -34,7 +34,7 @@ class DesktopIconDoneTodoWidget extends StatelessWidget {
       );
     } else {
       return Padding(
-        padding: const EdgeInsets.only(left: 10.0, right: 14.0),
+        padding: const EdgeInsets.only(top: 2.0, left: 10.0, right: 14.0),
         child: Icon(
           AppIcons.unchecked,
           color: Theme.of(context).colorScheme.primaryContainer,

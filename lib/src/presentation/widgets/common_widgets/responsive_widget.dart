@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../config/common/app_screens.dart';
+
 class ResponsiveWidget extends StatelessWidget {
   const ResponsiveWidget({
     super.key,
@@ -12,8 +14,8 @@ class ResponsiveWidget extends StatelessWidget {
   final Widget tabletWidget;
   final Widget desktopWidget;
 
-  static int tabletWidth = 900;
-  static int desktopWidth = 1440;
+  static int tabletWidth = AppScreens.tabletScreen;
+  static int desktopWidth = AppScreens.desktopScreen;
 
   @override
   Widget build(BuildContext context) {

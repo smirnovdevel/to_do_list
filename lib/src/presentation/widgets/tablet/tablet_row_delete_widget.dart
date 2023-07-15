@@ -3,18 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../config/common/app_icons.dart';
 import '../../../config/routes/dialogs.dart';
+import '../../../utils/core/logging.dart';
 import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
 import '../../provider/current_todo_provider.dart';
 import '../../provider/todos_manager.dart';
 
+final Logging log = Logging('TabletRowDeleteWidget');
+
 class TabletRowDeleteWidget extends ConsumerWidget {
   const TabletRowDeleteWidget({
     super.key,
-    required this.uuid,
   });
-
-  final String uuid;
 
   // void _onGoBack(Todo? todo) {
   @override
@@ -22,7 +22,7 @@ class TabletRowDeleteWidget extends ConsumerWidget {
     /// Позволит в момент редактирования отловить изменения задачи
     /// в данном случае, интересен факт выгрузки на сервер
     ///
-    final todo = ref.watch(currentTodoProvider);
+    final todo = ref.watch(choiseTodoProvider);
 
     return Padding(
       padding: const EdgeInsets.only(top: 22.0, left: 8.0),
@@ -37,7 +37,7 @@ class TabletRowDeleteWidget extends ConsumerWidget {
                 if (confirmed) {
                   ref.watch(todosManagerProvider).deleteTodo(todo: todo!);
                   ref.watch(editTodoProvider.notifier).state = false;
-                  ref.watch(currentTodoProvider.notifier).state = null;
+                  ref.watch(choiseTodoProvider.notifier).state = null;
                 }
               }
             },

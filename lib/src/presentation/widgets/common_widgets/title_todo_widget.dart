@@ -49,11 +49,11 @@ class TitletTodoWidget extends StatelessWidget {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 4.5, right: 5.5),
+            Padding(
+              padding: const EdgeInsets.only(top: 4.5, right: 5.5),
               child: Icon(
                 AppIcons.arrowDown,
-                size: 16.0,
+                size: 16.0 * ScaleSize.iconScaleFactor(context),
                 color: Colors.grey,
               ),
             ),
@@ -78,10 +78,10 @@ class TitletTodoWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 2.5, right: 6.0),
+              padding: const EdgeInsets.only(top: 1.0, right: 6.0),
               child: Icon(
                 AppIcons.priority,
-                size: 18.0,
+                size: 18.0 * ScaleSize.iconScaleFactor(context),
                 color: Theme.of(context).colorScheme.secondaryContainer,
               ),
             ),
