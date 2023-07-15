@@ -32,7 +32,7 @@ class TabletSwitcherWidget extends ConsumerWidget {
         child: todo == null
             ? const TabletEmptyWidget()
             : edit
-                ? TabletEditTodoWidget(todo: todo)
+                ? const TabletEditTodoWidget()
                 : const TabletViewTodoWidget(),
       ),
     );

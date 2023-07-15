@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../config/common/app_color.dart';
 import '../../../domain/models/todo.dart';
@@ -23,10 +22,10 @@ final Logging log = Logging('TabletEditTodoWidget');
 class TabletEditTodoWidget extends ConsumerStatefulWidget {
   const TabletEditTodoWidget({
     super.key,
-    required this.todo,
+    // required this.todo,
   });
 
-  final Todo todo;
+  // final Todo todo;
 
   @override
   ConsumerState<TabletEditTodoWidget> createState() => _EditPageState();
@@ -46,6 +45,7 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
   void initTodo(Todo todo) {
     _uuid = todo.uuid;
     _controller.text = todo.title;
+    _created = todo.created;
     _importance = todo.importance;
     _deadline = todo.deadline;
     _upload = todo.upload;
@@ -115,14 +115,15 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(choiseTodoProvider);
-    initTodo(widget.todo);
+    Todo? todo = ref.watch(choiseTodoProvider);
+    if (todo != null && todo.uuid != _uuid) {
+      log.debug('Edit todo ${todo.uuid}');
+      initTodo(todo);
+    }
+
     final List<PopupMenuEntry<Priority>> tabletPopupMenuItems =
         tabletItemsPopupMenu(context);
 
-    // ignore: prefer_const_constructors
-    var uuid = Uuid();
-    log.debug('Edit todo ${widget.todo.uuid}');
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(top: 8.0, bottom: 24.0, right: 48.0),
@@ -163,12 +164,12 @@ class _EditPageState extends ConsumerState<TabletEditTodoWidget> {
                       InkWell(
                         key: const Key('TextButtonSave'),
                         onTap: () {
-                          final todo = Todo(
-                              uuid: _uuid ?? uuid.v1(),
+                          Todo todo = Todo(
+                              uuid: _uuid,
                               title: _controller.text,
                               importance: _importance,
                               deadline: _deadline,
-                              created: _created!,
+                              created: _created,
                               changed: DateTime.now()
                                   .toLocal()
                                   .millisecondsSinceEpoch,

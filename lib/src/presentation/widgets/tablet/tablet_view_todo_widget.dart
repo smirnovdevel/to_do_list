@@ -9,7 +9,6 @@ import '../../../utils/core/scale_size.dart';
 import '../../provider/current_todo_provider.dart';
 import 'tablet_header_view_widget.dart';
 
-Uuid uuid = const Uuid();
 final Logging log = Logging('TabletViewTodoWidget');
 
 class TabletViewTodoWidget extends ConsumerWidget {
@@ -53,7 +52,8 @@ class TabletViewTodoWidget extends ConsumerWidget {
         child: FloatingActionButton(
           onPressed: () {
             Todo todo = Todo(
-              uuid: null,
+              // ignore: prefer_const_constructors
+              uuid: Uuid().v1(),
               title: '',
               done: false,
               created: DateTime.now().toLocal().millisecondsSinceEpoch,

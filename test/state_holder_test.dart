@@ -3,7 +3,6 @@ import 'package:to_do_list/src/domain/models/todo.dart';
 import 'package:to_do_list/src/presentation/provider/todos_provider.dart';
 import 'package:uuid/uuid.dart';
 
-Uuid uuid = const Uuid();
 int unixTimeStamp = DateTime.now().toLocal().millisecondsSinceEpoch;
 
 main() {
@@ -12,7 +11,8 @@ main() {
   ///
   TodosStateHolder todosStateHolder = TodosStateHolder();
   Todo todo = Todo(
-      uuid: uuid.v1(),
+      // ignore: prefer_const_constructors
+      uuid: Uuid().v1(),
       title: 'Test todo',
       done: false,
       deadline: unixTimeStamp,

@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_messages/riverpod_messages.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../config/common/app_icons.dart';
 import '../../../utils/core/logging.dart';
@@ -28,8 +27,6 @@ class MobileListTodoWidget extends ConsumerStatefulWidget {
 
 class _ListTodoWidgetState extends ConsumerState<MobileListTodoWidget> {
   final ScrollController scrollController = ScrollController();
-
-  Uuid uuid = const Uuid();
 
   @override
   void dispose() {

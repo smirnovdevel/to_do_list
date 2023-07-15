@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_messages/riverpod_messages.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../domain/models/todo.dart';
 import '../../../utils/core/logging.dart';
@@ -75,7 +76,8 @@ class _ListTodoWidgetState extends ConsumerState<TabletListTodoWidget> {
                       GestureDetector(
                         onTap: () {
                           ref.read(choiseTodoProvider.notifier).state = Todo(
-                            uuid: null,
+                            // ignore: prefer_const_constructors
+                            uuid: Uuid().v1(),
                             title: '',
                             done: false,
                             created:

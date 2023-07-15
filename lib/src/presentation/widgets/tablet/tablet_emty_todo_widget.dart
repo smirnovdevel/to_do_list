@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../config/common/app_icons.dart';
 import '../../../domain/models/todo.dart';
@@ -27,7 +28,8 @@ class TabletEmptyWidget extends ConsumerWidget {
         child: FloatingActionButton(
           onPressed: () {
             Todo todo = Todo(
-              uuid: null,
+              // ignore: prefer_const_constructors
+              uuid: Uuid().v1(),
               title: '',
               done: false,
               created: DateTime.now().toLocal().millisecondsSinceEpoch,

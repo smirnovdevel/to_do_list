@@ -8,7 +8,6 @@ import '../provider/todos_provider.dart';
 import 'route_config.dart';
 
 final Logging log = Logging('RouteInformationParser');
-Uuid newUuid = const Uuid();
 
 /// URL -> NavigationState
 class TodoRouteInformationParser
@@ -50,7 +49,8 @@ class TodoRouteInformationParser
       log.debug('first segment: ${uri.pathSegments[0]}');
       if (uri.pathSegments[0] == Routes.create) {
         log.debug('open new todo');
-        return TodosRouteConfig.create(newUuid.v1());
+        // ignore: prefer_const_constructors
+        return TodosRouteConfig.create(Uuid().v1());
       }
 
       return TodosRouteConfig.unknown();
