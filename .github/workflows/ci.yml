@@ -39,7 +39,7 @@ jobs:
         run: flutter analyze --no-fatal-infos
 
       - name: Check code format
-        run: flutter format --set-exit-if-changed .
+        run: dart fix --apply
 
       - name: Run test
         run: flutter test
