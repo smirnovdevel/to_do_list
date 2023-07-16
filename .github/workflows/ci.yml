@@ -47,7 +47,7 @@ jobs:
       - name: Run test
         run: flutter test
 
-      - name: Build prod Apk
+      - name: Build Prod Apk
         run: flutter build apk --flavor prod -t lib/main_prod.dart --release
       - uses: actions/upload-artifact@v1
         with:
