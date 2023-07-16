@@ -45,8 +45,7 @@ jobs:
         run: flutter test
 
       - name: Building APK
-        working-directory: ./to_do_list
-        run: flutter build apk --release --bundle-sksl-path android.sksl.json --dart-define=environment=production
+        run: flutter build apk
 
       # - run: flutter build apk
       # - run: flutter build appbundle
