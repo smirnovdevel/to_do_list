@@ -29,7 +29,8 @@ jobs:
           java-version: '11'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.10.5'
+          flutter-version: '3.13.0-0.1.pre'
+          channel: "beta"
 
       - name: Get dependencies
         run: flutter pub get
