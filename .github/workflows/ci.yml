@@ -48,7 +48,8 @@ jobs:
         run: flutter test
 
       - name: Build prod Apk
-        run: flutter build apk --flavor prod -t lib/main_prod.dart
+        # run: flutter build apk --flavor prod -t lib/main_prod.dart
+        run: flutter build apk
       - uses: actions/upload-artifact@v1
         with:
           name: release-apk
@@ -59,5 +60,5 @@ jobs:
         with:
           appId: ${{secrets.FIREBASE_APP_ID_STAGING}}
           token: ${{secrets.FIREBASE_TOKEN}}
-          groups: ToDoTesters
+          groups: "todo-list"
           file: build/app/outputs/apk/release/app-release.apk
