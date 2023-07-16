@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBWUOSsrvGkFH7XPpaKW1um0g5ifkfo50w',
-    appId: '1:286928751292:android:58294b7f356c67c4aedeb9',
+    appId: '1:286928751292:android:454de7c3b63b0cb1aedeb9',
     messagingSenderId: '286928751292',
     projectId: 'todo-list-ce737',
     storageBucket: 'todo-list-ce737.appspot.com',
@@ -59,11 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAoTMMumQDgAprmXR4x1JgedNOoHogwnQM',
-    appId: '1:286928751292:ios:4be76e933f62c731aedeb9',
+    appId: '1:286928751292:ios:4a260e2b6428cb27aedeb9',
     messagingSenderId: '286928751292',
     projectId: 'todo-list-ce737',
     storageBucket: 'todo-list-ce737.appspot.com',
-    iosClientId: '286928751292-uvumeeqs9qrpiiv02a1buf0cu0q8bljn.apps.googleusercontent.com',
-    iosBundleId: 'online.mytodo',
+    iosClientId: '286928751292-i9l6bf4gi7vi8jfv8j69b9p0db514tsc.apps.googleusercontent.com',
+    iosBundleId: 'online.mytodo.toDoList',
   );
 }
