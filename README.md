@@ -25,18 +25,18 @@
 <img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/9e64042a-2426-4716-99ca-6b4b0c24a976" alt="drawing" width="300"/>
 <br><br>
 Настроен CI на GitHub. Скрипт выполняет тестирование, форматирование, проверку линтером, сборку и деплой на Firebase App Distribution.
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/46da50da-5366-453c-85e2-023ff0016d39" alt="drawing" width="500"/>
+<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/46da50da-5366-453c-85e2-023ff0016d39" alt="drawing" width="600"/>
 <br><br>
 Управления состоянием в приложении реализовано с помощью пакета [Riverpod](https://pub.dev/packages/riverpod)
 <br><br>
 Добавлен инструмент для аналитики: Firebase/AppMetrica. Собирается аналитика по событиям: добавление, удаление, выполнение, переходы по экранам.
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/6a69a99a-64d4-493c-8e1f-3af34c5ba50d" alt="drawing" width="400"/>
+<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/6a69a99a-64d4-493c-8e1f-3af34c5ba50d" alt="drawing" width="600"/>
 <br><br>
 Локально данные сохраняются в базе с помощью пакета [sqflite](https://pub.dev/packages/sqflite), сетевой трафик на выбор, [dio](https://pub.dev/packages/dio) и [http](https://pub.dev/packages/http). Для обоих реализованы методы в слое `data`. По умолчанию используется http.
 <br><br>
 При свайпе задач вправо, задача отмечается выполненной, при свайпе влево удаляется из базы. Для удаление задачи требуется подтверждение
 <br><br>
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/6cd9e65e-fb51-4c1c-81b1-86c19b793343" alt="drawing" width="500"/>
+<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/6cd9e65e-fb51-4c1c-81b1-86c19b793343" alt="drawing" width="300"/>
 <br><br>
 Для хранения токена используется библиотека [envied](https://pub.dev/packages/envied) Поэтому,для полноценного тестирования необходимо в корневой директории создать файл `.env` с точкой впереди. В него положить свой токен в виде `TOKEN='ваш токен'` 
 <br><br>
@@ -44,7 +44,7 @@
 <br><br>
 Добавлена обработка ошибок, с выдачей сообщений и без. Например, при отсутсвии интернета будет выдано сообщение, один раз при запуске программы.
 <br><br>
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/1ecf2bb6-7cc4-4904-95e9-98392858804f" alt="drawing" width="400"/>
+<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/1ecf2bb6-7cc4-4904-95e9-98392858804f" alt="drawing" width="300"/>
 <br><br>
 Тестами покрыто больше 80% строк кода
 <br><br>
@@ -70,4 +70,4 @@ Unit тесты покрывают классы работы с сетью, ра
 Архитектура приложения построена на принципе Clean Architecture
 <br><br>
 
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/c847de1d-1dc9-4e29-ba82-67e763603701" alt="drawing" width="400"/>
+<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/c847de1d-1dc9-4e29-ba82-67e763603701" alt="drawing" width="500"/>
