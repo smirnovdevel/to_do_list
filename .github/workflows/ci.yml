@@ -39,7 +39,7 @@ jobs:
         run: flutter analyze --no-fatal-infos
 
       - name: Check code format
-        run: find . -name "*.dart" ! -name "firebase_options.dart" ! -name "*.g.dart" ! -name "*.freezed.dart" ! -name "*.i18n.dart" | tr '\n' ' ' | xargs flutter format --set-exit-if-changed
+        run: flutter format --set-exit-if-changed .
 
       - name: Run test
         run: flutter test
