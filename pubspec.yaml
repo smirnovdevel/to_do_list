@@ -41,8 +41,10 @@ dependencies:
   url_strategy: ^0.2.0
   http: ^1.1.0
   dio: ^5.2.1+1
+
   # Flavor
-  flutter_flavorizr: ^2.2.1
+  # flutter_flavorizr: ^2.2.1
+
   # Freezed
   freezed: ^2.3.5
   freezed_annotation: ^2.2.0
@@ -84,26 +86,26 @@ flutter:
           - asset: assets/fonts/Roboto-Regular.ttf
           - asset: assets/fonts/Roboto-Medium.ttf
 
-flavorizr:
-  app:
-    android:
-      flavorDimensions: "flavor-type"
+# flavorizr:
+#   app:
+#     android:
+#       flavorDimensions: "flavor-type"
 
-  flavors:
-    dev:
-      app:
-        name: "To Do List"
+#   flavors:
+#     dev:
+#       app:
+#         name: "To Do List"
 
-      android:
-        applicationId: "online.mytodo.dev"
-      ios:
-        bundleId: "online.mytodo.dev"
+#       android:
+#         applicationId: "online.mytodo.dev"
+#       ios:
+#         bundleId: "online.mytodo.dev"
 
-    prod:
-      app:
-        name: "To Do List"
+#     prod:
+#       app:
+#         name: "To Do List"
 
-      android:
-        applicationId: "online.mytodo.prod"
-      ios:
-        bundleId: "online.mytodo.prod"
+#       android:
+#         applicationId: "online.mytodo.prod"
+#       ios:
+#         bundleId: "online.mytodo.prod"
