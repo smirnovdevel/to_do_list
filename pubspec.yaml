@@ -99,6 +99,9 @@ flavorizr:
 
       android:
         applicationId: "online.mytodo.to_do_list.dev"
+        firebase:
+          config: "firebase/dev/google-services.json"
+
       ios:
         bundleId: "online.mytodo.to_do_list.dev"
 
@@ -108,5 +111,8 @@ flavorizr:
 
       android:
         applicationId: "online.mytodo.to_do_list"
+        firebase:
+          config: "firebase/prod/google-services.json"
+
       ios:
         bundleId: "online.mytodo.to_do_list"

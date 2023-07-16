@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:286928751292:android:b7b22e3aa2ec57edaedeb9",
+        "mobilesdk_app_id": "1:286928751292:android:454de7c3b63b0cb1aedeb9",
         "android_client_info": {
-          "package_name": "online.mytod"
+          "package_name": "online.mytodo.to_do_list"
         }
       },
       "oauth_client": [
@@ -43,9 +43,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:286928751292:android:4acd5d53e1f9a950aedeb9",
+        "mobilesdk_app_id": "1:286928751292:android:8aaab7ab036040a4aedeb9",
         "android_client_info": {
-          "package_name": "online.mytodo.dev"
+          "package_name": "online.mytodo.to_do_list.dev"
         }
       },
       "oauth_client": [
