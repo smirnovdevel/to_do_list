@@ -17,15 +17,15 @@
 <br><br>
 К проекту подключён и настроен Firebase Crashlytics, репортинг ошибок работает.
 <br><br>
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/d5820952-2e15-4940-9915-4f38c315a5a1" alt="drawing" width="400"/>
+<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/d5820952-2e15-4940-9915-4f38c315a5a1" alt="drawing" width="600"/>
 <br><br>
 Поддержаны 2 флейвора: для сборки тестинг и прод окружения.
 <br><br>
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/f531b598-b579-4cbb-91bf-0c570392102e" alt="drawing" width="400"/>
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/9e64042a-2426-4716-99ca-6b4b0c24a976" alt="drawing" width="400"/>
+<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/f531b598-b579-4cbb-91bf-0c570392102e" alt="drawing" width="300"/>
+<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/9e64042a-2426-4716-99ca-6b4b0c24a976" alt="drawing" width="300"/>
 <br><br>
 Настроен CI на GitHub. Скрипт выполняет тестирование, форматирование, проверку линтером, сборку и деплой на Firebase App Distribution.
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/46da50da-5366-453c-85e2-023ff0016d39" alt="drawing" width="400"/>
+<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/46da50da-5366-453c-85e2-023ff0016d39" alt="drawing" width="500"/>
 <br><br>
 Управления состоянием в приложении реализовано с помощью пакета [Riverpod](https://pub.dev/packages/riverpod)
 <br><br>
@@ -36,7 +36,7 @@
 <br><br>
 При свайпе задач вправо, задача отмечается выполненной, при свайпе влево удаляется из базы. Для удаление задачи требуется подтверждение
 <br><br>
-<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/6cd9e65e-fb51-4c1c-81b1-86c19b793343" alt="drawing" width="400"/>
+<img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/6cd9e65e-fb51-4c1c-81b1-86c19b793343" alt="drawing" width="500"/>
 <br><br>
 Для хранения токена используется библиотека [envied](https://pub.dev/packages/envied) Поэтому,для полноценного тестирования необходимо в корневой директории создать файл `.env` с точкой впереди. В него положить свой токен в виде `TOKEN='ваш токен'` 
 <br><br>
