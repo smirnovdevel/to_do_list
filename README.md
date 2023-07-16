@@ -9,6 +9,7 @@
 ### Текущее состояние
 
 Написано API для получения, отправки и удаления задач с бэкенда. Добавлен функционал сохранения задач в локальную базу данных. При создании задачи, она отправляется в бэкенд и сохраняется в базе данных с фиксацией статуса отправки. Синхронизация списка задач выполняется при запуске. Добавлена анимация переходов и заполнения списка. Есть поддержка планшетов и больших экранов. Интерфейс можно посмотреть на https://mytodo.online/
+<br><br>
 <img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/a7782f15-dbb9-4cd1-9392-3073dda7555e" alt="drawing" width="600"/>
 <br><br>
 Навигация переписана на Navigator 2.0 с использованием Riverpod для управлением стейтом.
@@ -19,17 +20,19 @@
 <br><br>
 <img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/d5820952-2e15-4940-9915-4f38c315a5a1" alt="drawing" width="600"/>
 <br><br>
-Поддержаны 2 флейвора: для сборки тестинг и прод окружения.
+Поддержаны 2 флейвора: для сборки: тестинг и прод окружения.
 <br><br>
 <img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/f531b598-b579-4cbb-91bf-0c570392102e" alt="drawing" width="300"/>
 <img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/9e64042a-2426-4716-99ca-6b4b0c24a976" alt="drawing" width="300"/>
 <br><br>
 Настроен CI на GitHub. Скрипт выполняет тестирование, форматирование, проверку линтером, сборку и деплой на Firebase App Distribution.
+<br><br>
 <img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/46da50da-5366-453c-85e2-023ff0016d39" alt="drawing" width="600"/>
 <br><br>
 Управления состоянием в приложении реализовано с помощью пакета [Riverpod](https://pub.dev/packages/riverpod)
 <br><br>
 Добавлен инструмент для аналитики: Firebase/AppMetrica. Собирается аналитика по событиям: добавление, удаление, выполнение, переходы по экранам.
+<br><br>
 <img src="https://github.com/smirnovdevel/to_do_list/assets/122177529/6a69a99a-64d4-493c-8e1f-3af34c5ba50d" alt="drawing" width="600"/>
 <br><br>
 Локально данные сохраняются в базе с помощью пакета [sqflite](https://pub.dev/packages/sqflite), сетевой трафик на выбор, [dio](https://pub.dev/packages/dio) и [http](https://pub.dev/packages/http). Для обоих реализованы методы в слое `data`. По умолчанию используется http.
