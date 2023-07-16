@@ -10,7 +10,6 @@ import 'package:url_strategy/url_strategy.dart';
 import 'app.dart';
 import 'firebase_options.dart';
 import 'src/locator.dart' as locator;
-import 'src/locator.dart';
 import 'src/utils/core/http_overrides.dart';
 import 'src/utils/core/logging.dart';
 
