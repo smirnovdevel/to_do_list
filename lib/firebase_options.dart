@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -49,6 +46,16 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAQmgyN6suafjytBCK5UWJjY0NhdMvmkgY',
+    appId: '1:286928751292:web:f4e3fdfa61d30fd0aedeb9',
+    messagingSenderId: '286928751292',
+    projectId: 'todo-list-ce737',
+    authDomain: 'todo-list-ce737.firebaseapp.com',
+    storageBucket: 'todo-list-ce737.appspot.com',
+    measurementId: 'G-8GLL8BFLNV',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBWUOSsrvGkFH7XPpaKW1um0g5ifkfo50w',
     appId: '1:286928751292:android:454de7c3b63b0cb1aedeb9',
@@ -59,7 +66,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAoTMMumQDgAprmXR4x1JgedNOoHogwnQM',
-    appId: '1:286928751292:ios:4a260e2b6428cb27aedeb9',
+    appId: '1:286928751292:ios:44a28b954e76559caedeb9',
     messagingSenderId: '286928751292',
     projectId: 'todo-list-ce737',
     storageBucket: 'todo-list-ce737.appspot.com',

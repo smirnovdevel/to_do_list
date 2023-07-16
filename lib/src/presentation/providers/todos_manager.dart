@@ -6,6 +6,7 @@ import '../../locator.dart';
 import '../../utils/core/logging.dart';
 import '../../utils/exceptions/db_exception.dart';
 import '../../utils/exceptions/exception.dart';
+import 'analitics_provider.dart';
 import 'message_provider.dart';
 import 'todos_provider.dart';
 
@@ -15,14 +16,16 @@ final todosManagerProvider = Provider(
   (ref) => TodosManager(
     ref.watch(todosStateProvider.notifier),
     ref.read(messageStateProvider.notifier),
+    ref,
   ),
 );
 
 class TodosManager {
   final TodosStateHolder _state;
   final MessageStateHolder _message;
+  final Ref _ref;
 
-  TodosManager(this._state, this._message);
+  TodosManager(this._state, this._message, this._ref);
   final TodoService _todoService = locator();
 
   Future<void> init() async {
@@ -62,6 +65,9 @@ class TodosManager {
   }
 
   Future<void> addTodo({required Todo todo}) async {
+    _ref
+        .read(analyticsProvider)
+        .logEvent(name: 'addTodo', parameters: {'source': 'TodosManager'});
     log.debug('Save todo uuid: ${todo.uuid} ...');
     // добавляем в список на экране
     _state.addTodo(todo: todo);
@@ -84,6 +90,9 @@ class TodosManager {
   }
 
   Future<void> updateTodo({required Todo todo}) async {
+    _ref
+        .read(analyticsProvider)
+        .logEvent(name: 'updateTodo', parameters: {'source': 'TodosManager'});
     log.debug('Update todo uuid: ${todo.uuid} ...');
     // обновляем в списке на экране
     _state.updateTodo(todo: todo);
@@ -106,6 +115,9 @@ class TodosManager {
   }
 
   Future<void> deleteTodo({required Todo todo}) async {
+    _ref
+        .read(analyticsProvider)
+        .logEvent(name: 'deleteTodo', parameters: {'source': 'TodosManager'});
     log.debug('Delete todo uuid: ${todo.uuid} ...');
     // удаляем из списка на экране
     _state.deleteTodo(todo: todo);

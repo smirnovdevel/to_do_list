@@ -6,7 +6,7 @@ import '../../../config/common/app_icons.dart';
 import '../../../domain/models/todo.dart';
 import '../../../utils/core/logging.dart';
 import '../../../utils/core/scale_size.dart';
-import '../../provider/current_todo_provider.dart';
+import '../../providers/current_todo_provider.dart';
 import 'tablet_header_view_widget.dart';
 
 final Logging log = Logging('TabletViewTodoWidget');

@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../utils/core/logging.dart';
+import '../providers/analitics_provider.dart';
 import '../screens/common_screens/main_screen.dart';
-import '../provider/todo_provider.dart';
+import '../providers/todo_provider.dart';
 import '../screens/common_screens/unknown_screen.dart';
 import '../screens/mobile/mobile_edit_screen.dart';
 import '../widgets/common_widgets/flavor_banner.dart';
@@ -20,14 +21,14 @@ class TodosRouterDelegate extends RouterDelegate<TodosRouteConfig>
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
-  TodosRouterDelegate(this.ref) : navigatorKey = GlobalKey<NavigatorState>();
+  TodosRouterDelegate(this._ref) : navigatorKey = GlobalKey<NavigatorState>();
 
-  TodosRouteConfig? state;
-  final Ref ref;
+  TodosRouteConfig? _state;
+  final Ref _ref;
 
   @override
   TodosRouteConfig get currentConfiguration {
-    return state ?? TodosRouteConfig.root();
+    return _state ?? TodosRouteConfig.root();
   }
 
   @override
@@ -40,20 +41,20 @@ class TodosRouterDelegate extends RouterDelegate<TodosRouteConfig>
             key: ValueKey('MainScreen'),
             child: MainScreen(),
           ),
-          if (state?.isNew == true)
+          if (_state?.isNew == true)
             MaterialPage(
               child: MobileEditScreen(
-                uuid: state!.uuid!,
+                uuid: _state!.uuid!,
               ),
             ),
-          if (state?.uuid != null)
+          if (_state?.uuid != null)
             MaterialPage(
-              key: ValueKey(state!.uuid!),
+              key: ValueKey(_state!.uuid!),
               child: MobileEditScreen(
-                uuid: state!.uuid!,
+                uuid: _state!.uuid!,
               ),
             ),
-          if (state?.isUnknown == true)
+          if (_state?.isUnknown == true)
             const MaterialPage(
               child: UnknownScreen(name: ''),
             ),
@@ -62,7 +63,7 @@ class TodosRouterDelegate extends RouterDelegate<TodosRouteConfig>
           if (!route.didPop(result)) {
             return false;
           }
-          state = TodosRouteConfig.root();
+          _state = TodosRouteConfig.root();
 
           notifyListeners();
           return true;
@@ -73,22 +74,27 @@ class TodosRouterDelegate extends RouterDelegate<TodosRouteConfig>
 
   @override
   Future<void> setNewRoutePath(TodosRouteConfig configuration) async {
-    state = configuration;
+    _state = configuration;
     notifyListeners();
   }
 
   void pop() {
+    _ref
+        .read(analyticsProvider)
+        .logEvent(name: 'Pop', parameters: {'source': 'TodosRouterDelegate'});
     log.debug('Pop');
-    state = TodosRouteConfig.root();
+    _state = TodosRouteConfig.root();
     notifyListeners();
   }
 
   void showTodo(String? uuid) {
+    _ref.read(analyticsProvider).logEvent(
+        name: 'showTodo', parameters: {'source': 'TodosRouterDelegate'});
     log.debug('Push');
     // ignore: prefer_const_constructors
     uuid ??= Uuid().v1();
-    ref.read(todoProvider(uuid));
-    state = TodosRouteConfig.todo(uuid);
+    _ref.read(todoProvider(uuid));
+    _state = TodosRouteConfig.todo(uuid);
     notifyListeners();
   }
 }

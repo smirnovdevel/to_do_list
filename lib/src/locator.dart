@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 
 import 'data/datasources/local_data_source.dart';
 import 'data/datasources/remote_data_source.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'data/db/database.dart';
 import 'data/web/http_service.dart';
 import 'domain/repositories/todo_service.dart';
@@ -31,3 +32,5 @@ Future<void> initializeDependencies() async {
   locator.registerLazySingleton(() => DBProvider(isTest: false));
   locator.registerLazySingleton(() => HttpService());
 }
+
+abstract class Locator {}

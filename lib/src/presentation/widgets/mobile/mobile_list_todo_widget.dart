@@ -5,10 +5,10 @@ import 'package:riverpod_messages/riverpod_messages.dart';
 
 import '../../../config/common/app_icons.dart';
 import '../../../utils/core/logging.dart';
-import '../../provider/done_provider.dart';
-import '../../provider/message_provider.dart';
-import '../../provider/navigation_provider.dart';
-import '../../provider/todos_manager.dart';
+import '../../providers/done_provider.dart';
+import '../../providers/message_provider.dart';
+import '../../providers/navigation_provider.dart';
+import '../../providers/todos_manager.dart';
 import '../tablet/tablet_header_list_widget.dart';
 import 'mobile_button_new_todo_widget.dart';
 import 'mobile_header_todo_widget.dart';

@@ -7,7 +7,7 @@ import '../../../domain/models/todo.dart';
 import '../../../utils/core/logging.dart';
 import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
-import '../../provider/current_todo_provider.dart';
+import '../../providers/current_todo_provider.dart';
 
 final Logging log = Logging('TabletEmptyWidget');
 

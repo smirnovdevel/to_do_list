@@ -13,8 +13,8 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    log.debug('Screen resolution height: ${size.height} width: ${size.width}');
+    // final size = MediaQuery.of(context).size;
+    // log.debug('Screen resolution height: ${size.height} width: ${size.width}');
     return const ResponsiveWidget(
       mobileWidget: MobileMainScreen(),
       tabletWidget: TabletMainScreen(),

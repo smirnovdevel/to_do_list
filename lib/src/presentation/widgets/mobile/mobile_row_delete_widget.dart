@@ -3,11 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../config/common/app_icons.dart';
 import '../../../config/routes/dialogs.dart';
+import '../../../utils/core/logging.dart';
 import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
-import '../../provider/navigation_provider.dart';
-import '../../provider/todo_provider.dart';
-import '../../provider/todos_manager.dart';
+import '../../providers/navigation_provider.dart';
+import '../../providers/todo_provider.dart';
+import '../../providers/todos_manager.dart';
+
+final Logging log = Logging('MobileRowDeleteWidget');
 
 class MobileRowDeleteWidget extends ConsumerWidget {
   const MobileRowDeleteWidget({
@@ -73,17 +76,25 @@ class MobileRowDeleteWidget extends ConsumerWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: todo.upload
-                ? const Icon(
-                    Icons.cloud_done_outlined,
-                    size: 26.0,
-                  )
-                : const Icon(
-                    Icons.cloud_off_outlined,
-                    size: 26.0,
-                  ),
+          InkWell(
+            onTap: () {
+              // throw const SocketException('Test Crashlytics');
+              // throw const HttpException('Test Crashlytics');
+              // throw Exception('Test Crashlytics');
+              // throw const FormatException('Test Crashlytics');
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: todo.upload
+                  ? const Icon(
+                      Icons.cloud_done_outlined,
+                      size: 26.0,
+                    )
+                  : const Icon(
+                      Icons.cloud_off_outlined,
+                      size: 26.0,
+                    ),
+            ),
           ),
         ],
       ),

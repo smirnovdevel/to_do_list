@@ -1,10 +1,11 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../domain/models/routes.dart';
 import '../../utils/core/logging.dart';
-import '../provider/todos_provider.dart';
+import '../providers/todos_provider.dart';
 import 'route_config.dart';
 
 final Logging log = Logging('RouteInformationParser');
@@ -42,6 +43,7 @@ class TodoRouteInformationParser
         log.debug('todo uuid: $uuid not found');
       }
 
+      FirebaseCrashlytics.instance.log('Page not found $location');
       return TodosRouteConfig.unknown();
     }
 
@@ -53,6 +55,7 @@ class TodoRouteInformationParser
         return TodosRouteConfig.create(Uuid().v1());
       }
 
+      FirebaseCrashlytics.instance.log('Page not found $location');
       return TodosRouteConfig.unknown();
     }
 

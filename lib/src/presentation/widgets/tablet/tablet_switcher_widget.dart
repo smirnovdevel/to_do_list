@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../utils/core/logging.dart';
-import '../../provider/current_todo_provider.dart';
+import '../../providers/current_todo_provider.dart';
 import 'tablet_view_todo_widget.dart';
 import 'tablet_edit_todo_widget.dart';
 import 'tablet_emty_todo_widget.dart';

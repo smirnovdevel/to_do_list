@@ -6,8 +6,8 @@ import '../../../config/routes/dialogs.dart';
 import '../../../utils/core/logging.dart';
 import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
-import '../../provider/current_todo_provider.dart';
-import '../../provider/todos_manager.dart';
+import '../../providers/current_todo_provider.dart';
+import '../../providers/todos_manager.dart';
 
 final Logging log = Logging('TabletRowDeleteWidget');
 

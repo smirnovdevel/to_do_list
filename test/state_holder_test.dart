@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:to_do_list/src/domain/models/todo.dart';
-import 'package:to_do_list/src/presentation/provider/todos_provider.dart';
+import 'package:to_do_list/src/presentation/providers/todos_provider.dart';
 import 'package:uuid/uuid.dart';
 
 int unixTimeStamp = DateTime.now().toLocal().millisecondsSinceEpoch;

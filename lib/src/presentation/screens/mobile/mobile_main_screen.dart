@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../utils/core/logging.dart';
-import '../../provider/todos_manager.dart';
-import '../../provider/todos_provider.dart';
+import '../../providers/todos_manager.dart';
+import '../../providers/todos_provider.dart';
 import '../../widgets/mobile/mobile_list_todo_widget.dart';
 import '../../widgets/common_widgets/loading_indicator.dart';
 

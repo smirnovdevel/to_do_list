@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../utils/core/logging.dart';
 import '../../../utils/core/scale_size.dart';
-import '../../provider/current_todo_provider.dart';
+import '../../providers/current_todo_provider.dart';
 
 final Logging log = Logging('TabletHeaderViewWidget');
 

@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../config/common/app_icons.dart';
 import '../../../utils/core/scale_size.dart';
 import '../../core/localization/app_localization.dart';
-import '../../provider/current_todo_provider.dart';
-import '../../provider/done_provider.dart';
+import '../../providers/current_todo_provider.dart';
+import '../../providers/done_provider.dart';
 
 class TabletHeaderListWidget extends ConsumerWidget {
   const TabletHeaderListWidget({super.key});

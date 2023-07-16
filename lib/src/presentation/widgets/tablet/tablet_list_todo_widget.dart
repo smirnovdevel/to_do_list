@@ -5,9 +5,9 @@ import 'package:uuid/uuid.dart';
 
 import '../../../domain/models/todo.dart';
 import '../../../utils/core/logging.dart';
-import '../../provider/current_todo_provider.dart';
-import '../../provider/done_provider.dart';
-import '../../provider/message_provider.dart';
+import '../../providers/current_todo_provider.dart';
+import '../../providers/done_provider.dart';
+import '../../providers/message_provider.dart';
 import 'tablet_button_new_widget.dart';
 import 'tablet_card_todo_widget.dart';
 import 'tablet_header_list_widget.dart';
