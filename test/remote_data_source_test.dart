@@ -10,7 +10,7 @@ main() async {
   /// Arrange
   ///
   RemoteDataSourceMock remoteDataSourceMock = RemoteDataSourceMock(HttpMock());
-  Todo todo = Todo.copyFrom(TodoMock().get(title: 'Test todo'));
+  Todo todo = TodoMock().get(title: 'Test todo').copyWith();
 
   ///
   /// Groups
@@ -31,7 +31,7 @@ main() async {
       ///
       /// Assert
       ///
-      final Todo? task = await remoteDataSourceMock.getTodo(uuid: todo.uuid);
+      final Todo? task = await remoteDataSourceMock.getTodo(uuid: todo.uuid!);
       expect(false, task == null);
     });
     test('Update todo', () async {
@@ -44,7 +44,7 @@ main() async {
       ///
       /// Assert
       ///
-      final task = await remoteDataSourceMock.getTodo(uuid: todo.uuid);
+      final task = await remoteDataSourceMock.getTodo(uuid: todo.uuid!);
       expect('Update title', task?.title);
     });
     test('Delete todo', () async {
@@ -56,7 +56,7 @@ main() async {
       ///
       /// Assert
       ///
-      final Todo? task = await remoteDataSourceMock.getTodo(uuid: todo.uuid);
+      final Todo? task = await remoteDataSourceMock.getTodo(uuid: todo.uuid!);
       expect(null, task);
     });
   });

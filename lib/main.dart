@@ -1,20 +1,46 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 import 'app.dart';
+import 'firebase_options.dart';
 import 'src/locator.dart' as locator;
 import 'src/utils/core/http_overrides.dart';
+import 'src/utils/core/logging.dart';
 
-Future<void> main() async {
+final Logging log = Logging('main');
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Firebase hosting app
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  log.debug('Firebase initialized');
+
+  FlutterError.onError = (errorDetails) {
+    log.warning('Caught error in FlutterError.onError');
+    FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+  };
+
+  PlatformDispatcher.instance.onError = (error, stack) {
+    log.warning('Caught error in PlatformDispatcher.onError');
+    FirebaseCrashlytics.instance.recordError(
+      error,
+      stack,
+      fatal: true,
+    );
+    return true;
+  };
+  log.debug('Crashlytics initialized');
+
+  // await DI.init();
 
   //инициализация зависимостей
   await locator.initializeDependencies();

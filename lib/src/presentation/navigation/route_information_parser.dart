@@ -1,14 +1,14 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../domain/models/routes.dart';
 import '../../utils/core/logging.dart';
-import '../provider/todos_provider.dart';
+import '../providers/todos_provider.dart';
 import 'route_config.dart';
 
 final Logging log = Logging('RouteInformationParser');
-Uuid newUuid = const Uuid();
 
 /// URL -> NavigationState
 class TodoRouteInformationParser
@@ -21,13 +21,13 @@ class TodoRouteInformationParser
       RouteInformation routeInformation) async {
     final location = routeInformation.uri.path;
 
-    log.info(location);
+    log.debug(location);
 
     final uri = Uri.parse(location);
-    log.info('path segment length: ${uri.pathSegments.length}');
+    log.debug('path segment length: ${uri.pathSegments.length}');
 
     if (uri.pathSegments.isEmpty) {
-      log.info('path emty, open root');
+      log.debug('path emty, open root');
       return TodosRouteConfig.root();
     }
 
@@ -40,19 +40,22 @@ class TodoRouteInformationParser
         if (result) {
           return TodosRouteConfig.todo(uuid);
         }
-        log.info('todo uuid: $uuid not found');
+        log.debug('todo uuid: $uuid not found');
       }
 
+      FirebaseCrashlytics.instance.log('Page not found $location');
       return TodosRouteConfig.unknown();
     }
 
     if (uri.pathSegments.length == 1) {
-      log.info('first segment: ${uri.pathSegments[0]}');
+      log.debug('first segment: ${uri.pathSegments[0]}');
       if (uri.pathSegments[0] == Routes.create) {
-        log.info('open new todo');
-        return TodosRouteConfig.create(newUuid.v1());
+        log.debug('open new todo');
+        // ignore: prefer_const_constructors
+        return TodosRouteConfig.create(Uuid().v1());
       }
 
+      FirebaseCrashlytics.instance.log('Page not found $location');
       return TodosRouteConfig.unknown();
     }
 

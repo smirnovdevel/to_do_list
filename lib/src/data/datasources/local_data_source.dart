@@ -14,56 +14,56 @@ class LocalDataSource implements IDataSource {
 
   @override
   Future<List<Todo>> getTodos() async {
-    log.info('Get Todos ...');
+    log.debug('Get Todos ...');
     final List<Todo> todosList = await db.getTodos();
-    log.info('Get ${todosList.length} todos');
+    log.debug('Get ${todosList.length} todos');
     return Future.value(todosList);
   }
 
   @override
   Future<Todo?> getTodo({required String uuid}) async {
-    log.info('Get Todo uuid: $uuid ...');
+    log.debug('Get Todo uuid: $uuid ...');
     final Todo? todo = await db.getTodo(uuid: uuid);
-    log.info('Get todo ${todo == null ? 'not found' : 'ok'}');
+    log.debug('Get todo ${todo == null ? 'not found' : 'ok'}');
     return todo;
   }
 
   @override
   Future<bool> updateTodos({required List<Todo> todos}) async {
-    log.info('Update ${todos.length} todos ...');
+    log.debug('Update ${todos.length} todos ...');
     await db.updateTodos(todos: todos);
-    log.info('Update todos');
+    log.debug('Update todos');
     return true;
   }
 
   @override
   Future<Todo?> updateTodo({required Todo todo}) async {
-    log.info('Update todo uuid: ${todo.uuid} ...');
+    log.debug('Update todo uuid: ${todo.uuid} ...');
     final Todo? task = await db.updateTodo(todo: todo);
-    log.info('Update todos');
+    log.debug('Update todos');
     return task;
   }
 
   Future<List<Todo>> getDeletedTodos() async {
-    log.info('Get Deleted Todos ...');
+    log.debug('Get Deleted Todos ...');
     final List<Todo> todosList = await db.getDeletedTodos();
-    log.info('Get ${todosList.length} deleted todos');
+    log.debug('Get ${todosList.length} deleted todos');
     return Future.value(todosList);
   }
 
   @override
   Future<Todo?> saveTodo({required Todo todo}) async {
-    log.info('Save todo uuid: ${todo.uuid} ...');
+    log.debug('Save todo uuid: ${todo.uuid} ...');
     final task = await db.saveTodo(todo: todo);
-    log.info('Save todo ok?');
+    log.debug('Save todo ok?');
     return task;
   }
 
   @override
   Future<bool> deleteTodo({required Todo todo}) async {
-    log.info('Delete Todo uuid: ${todo.uuid} ...');
+    log.debug('Delete Todo uuid: ${todo.uuid} ...');
     final bool result = await db.deleteTodo(todo: todo);
-    log.info('Delete Todo ok?');
+    log.debug('Delete Todo ok?');
     return result;
   }
 }

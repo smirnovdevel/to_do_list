@@ -7,7 +7,7 @@ main() async {
   ///
   /// Arrange
   ///
-  Todo todo = Todo.copyFrom(TodoMock().get(title: 'Test todo'));
+  Todo todo = TodoMock().get(title: 'Test todo').copyWith();
 
   ///
   /// Groups

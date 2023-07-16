@@ -29,9 +29,35 @@ jobs:
           java-version: '11'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.10.5'
-      - run: flutter pub get
-      - run: flutter test
-      # - run: flutter build apk
-      # - run: flutter build appbundle
+          flutter-version: '3.13.0-0.1.pre'
+          channel: "beta"
 
+      - name: Flutter doctor
+        run: flutter doctor --verbose
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analazy by linter rules
+        run: flutter analyze --no-fatal-infos
+
+      - name: Check code format
+        run: dart fix --apply
+
+      - name: Run test
+        run: flutter test
+
+      - name: Build Prod Apk
+        run: flutter build apk --flavor prod -t lib/main_prod.dart --release
+      - uses: actions/upload-artifact@v1
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-prod-release.apk
+
+      - name: Upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID_STAGING}}
+          token: ${{secrets.FIREBASE_TOKEN}}
+          groups: "todo-list"
+          file: build/app/outputs/flutter-apk/app-prod-release.apk

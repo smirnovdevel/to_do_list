@@ -25,7 +25,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -45,17 +48,17 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyAQmgyN6suafjytBCK5UWJjY0NhdMvmkgY',
-    appId: '1:286928751292:web:c36edd11e0bad381aedeb9',
+    appId: '1:286928751292:web:f4e3fdfa61d30fd0aedeb9',
     messagingSenderId: '286928751292',
     projectId: 'todo-list-ce737',
     authDomain: 'todo-list-ce737.firebaseapp.com',
     storageBucket: 'todo-list-ce737.appspot.com',
-    measurementId: 'G-9C7R8DEQ5H',
+    measurementId: 'G-8GLL8BFLNV',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBWUOSsrvGkFH7XPpaKW1um0g5ifkfo50w',
-    appId: '1:286928751292:android:cb251992b9615066aedeb9',
+    appId: '1:286928751292:android:454de7c3b63b0cb1aedeb9',
     messagingSenderId: '286928751292',
     projectId: 'todo-list-ce737',
     storageBucket: 'todo-list-ce737.appspot.com',
@@ -63,21 +66,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAoTMMumQDgAprmXR4x1JgedNOoHogwnQM',
-    appId: '1:286928751292:ios:ea87b23bb9619863aedeb9',
+    appId: '1:286928751292:ios:44a28b954e76559caedeb9',
     messagingSenderId: '286928751292',
     projectId: 'todo-list-ce737',
     storageBucket: 'todo-list-ce737.appspot.com',
-    iosClientId: '286928751292-7sf8usi59arnrta12iv6rgp6vd3fag0l.apps.googleusercontent.com',
-    iosBundleId: 'five.live.toDoList',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAoTMMumQDgAprmXR4x1JgedNOoHogwnQM',
-    appId: '1:286928751292:ios:0d38945c9eb1f80eaedeb9',
-    messagingSenderId: '286928751292',
-    projectId: 'todo-list-ce737',
-    storageBucket: 'todo-list-ce737.appspot.com',
-    iosClientId: '286928751292-1ng9toh9nrp90slvglei9jp77ukgbnn7.apps.googleusercontent.com',
-    iosBundleId: 'com.example.toDoList.RunnerTests',
+    iosClientId: '286928751292-i9l6bf4gi7vi8jfv8j69b9p0db514tsc.apps.googleusercontent.com',
+    iosBundleId: 'online.mytodo.toDoList',
   );
 }
