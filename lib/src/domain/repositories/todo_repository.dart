@@ -24,13 +24,14 @@ extension CompareUnixTimestamp on int {
   }
 }
 
-class TodoService {
-  TodoService({
+class TodoRepository {
+  final RemoteDataSource remoteDataSource;
+  final LocalDataSource localDataSource;
+
+  TodoRepository({
     required this.remoteDataSource,
     required this.localDataSource,
   });
-  final RemoteDataSource remoteDataSource;
-  final LocalDataSource localDataSource;
 
   String? deviceId;
 

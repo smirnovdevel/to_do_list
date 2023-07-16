@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +10,7 @@ import 'package:url_strategy/url_strategy.dart';
 import 'app.dart';
 import 'firebase_options.dart';
 import 'src/locator.dart' as locator;
+import 'src/locator.dart';
 import 'src/utils/core/http_overrides.dart';
 import 'src/utils/core/logging.dart';
 
@@ -40,6 +40,8 @@ void main() async {
     return true;
   };
   log.debug('Crashlytics initialized');
+
+  // await DI.init();
 
   //инициализация зависимостей
   await locator.initializeDependencies();

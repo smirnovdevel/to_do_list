@@ -54,6 +54,7 @@ dependencies:
   uuid: ^3.0.7
   equatable: ^2.0.5
   path_provider: ^2.0.15
+  hexcolor: ^3.0.1
 
 provider:
   intl: ^0.18.0

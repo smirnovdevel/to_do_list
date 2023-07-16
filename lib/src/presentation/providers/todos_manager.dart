@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/models/todo.dart';
-import '../../domain/repositories/todo_service.dart';
+import '../../domain/repositories/todo_repository.dart';
 import '../../locator.dart';
 import '../../utils/core/logging.dart';
 import '../../utils/exceptions/db_exception.dart';
@@ -12,7 +12,7 @@ import 'todos_provider.dart';
 
 final Logging log = Logging('TodosManager');
 
-final todosManagerProvider = Provider(
+final Provider todosManagerProvider = Provider(
   (ref) => TodosManager(
     ref.watch(todosStateProvider.notifier),
     ref.read(messageStateProvider.notifier),
@@ -26,7 +26,7 @@ class TodosManager {
   final Ref _ref;
 
   TodosManager(this._state, this._message, this._ref);
-  final TodoService _todoService = locator();
+  final TodoRepository _todoService = locator();
 
   Future<void> init() async {
     List<Todo> localTodosList = [];
